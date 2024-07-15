@@ -17,7 +17,7 @@ class readPDF:
         for lobj in layout:
             if isinstance(lobj, LTTextBox):
                 riga = lobj.get_text()
-                parole_riga = readPDF.split_sentence(riga)
+                parole_riga = readPDF._split_sentence(riga)
                 row_words.append(parole_riga)
         return row_words
 
@@ -36,7 +36,7 @@ class readPDF:
                     print('Processing next page...')
                     interpreter.process_page(page)
                     layout = device.get_result()
-                    page_struct[index] = readPDF.create_matrix(layout)
+                    page_struct[index] = readPDF._create_matrix(layout)
                     index += 1
             return page_struct
         except FileNotFoundError:

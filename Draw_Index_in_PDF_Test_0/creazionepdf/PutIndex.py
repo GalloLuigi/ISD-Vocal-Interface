@@ -1,4 +1,4 @@
-<path = "prova.pdf"
+path = "documento_0.pdf"
 
 
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfReader, PdfWriter
@@ -47,14 +47,14 @@ def drowIndex(x,y,incremental_index):
     packet.seek(0)
     new_pdf = PdfReader(packet)
 
-    existing_pdf = PdfReader(open("prova.pdf", "rb"))
+    existing_pdf = PdfReader(open("documento_0.pdf", "rb"))
     output = PdfWriter()
 
     page = existing_pdf.pages[0]
     page.merge_page(new_pdf.pages[0])
     output.add_page(page)
 
-    outputStream = open("prova.pdf", "wb")
+    outputStream = open("documento_0.pdf", "wb")
     output.write(outputStream)
     outputStream.close()
 
