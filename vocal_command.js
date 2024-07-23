@@ -1,11 +1,12 @@
 // Delay utile a dare tempo allo script take_text
+/*
 function delayTwoSeconds() {
   setTimeout(() => {
     console.log('Two seconds have passed!');
   }, 2000);
 }
 delayTwoSeconds();
-
+*/
 
 //Iniziallizzo campo che conterra' il comando in output
 const output=document.getElementById('outputElement');
@@ -144,6 +145,20 @@ function check_command(){
         modifyDivText(row_number,addNumberToEndOfWords(document.getElementById(row_number).textContent))
 
     }
+
+    //Command: <lines <x> <y>>
+
+    // command <add note <u> <v>>
+
+    // command <complete note>
+
+    //<delete note <id>>
+
+    //<correct <u> <v>>
+
+    //<approve correction <id>>
+
+
 
 output_content='';
 return;

@@ -60,13 +60,13 @@
         <!-- Result section (hidden initially) -->
         <div class="afterupload">
             <!-- Display text "Select Page" -->
-            <span>Select Page</span>
+            <span style="display: none;">Select Page</span>
             <!-- Dropdown menu for selecting the page -->
-            <select class="selectpage" onchange="afterProcess()"></select>
+            <select class="selectpage" onchange="afterProcess()" style="display: none;"></select>
             <!-- Download link for the extracted text file -->
-            <a href="" class="download" download>Download Pdf Text</a>
+            <a href="" style="display: none;" class="download" download>Download Pdf Text</a>
             <!-- Textarea to display the extracted text -->
-            <textarea class="pdftext"></textarea>
+            <textarea style="display: none;" class="pdftext"></textarea>
         </div>
     </div>
 
