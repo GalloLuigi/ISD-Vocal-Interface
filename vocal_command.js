@@ -13,7 +13,8 @@ const output=document.getElementById('outputElement');
 document.getElementById('outputElement').style.display = "none";
 var output_content; 
 
-
+//PER FUNZIONE "Rx"
+/*********************************************************************************************/
 function checkString(str) {
   const regex = /R[0-9]/; // Regular expression pattern
   const regex_1 =  /r[0-9]/;
@@ -46,6 +47,36 @@ if (matches) {
   console.log("No numbers found in the string.");
 }
 }
+/*********************************************************************************************/
+
+//PER FUNZIONE "Rx Ry"
+/*********************************************************************************************/
+function checkStringRR(inputString) {
+  // Regular expression pattern for the specified format
+  const regex = /^[rR]\d+ [rR]\d+$/;
+
+  // Check if the input string matches the regex
+  return regex.test(inputString);
+}
+
+function extract_numer_from_StringRR(inputString) {
+  // Regular expression pattern to match the format "R1 R2"
+  const regex = /R(\d+) R(\d+)/;
+
+  // Match the input string against the regex
+  const match = regex.exec(inputString);
+
+  // If there's a match, extract the integers
+  if (match) {
+    const integer1 = parseInt(match[1]);
+    const integer2 = parseInt(match[2]);
+    return [integer1, integer2];
+  } else {
+    // If there's no match, return an empty array indicating invalid input
+    return [];
+  }
+}
+/*********************************************************************************************/
 
 
     //funzione per aggiungere numeri interi alla fine delle righe
@@ -97,7 +128,7 @@ recognition.addEventListener('result', e => {
         .join('')
 
         output.innerHTML = transcript;
-        output_content=output.textContent;
+        output_content=output.textContent;        // output_content e' una stringa contente l'ultimo comando lanciato
     console.log(transcript);
 });
 
@@ -118,6 +149,7 @@ function check_command(){
     return
 }
 
+
 //lancia comando add
     if(output_content=='add'||output_content=='Add'||output_content=='ad'){
         add_flag=true;
@@ -137,6 +169,9 @@ function check_command(){
         index++
     });
     }
+
+
+    //Comando "Rx"
     //controlla se è un comando "Riga" con una regex
     if(checkString(output_content)==true){
         
@@ -146,7 +181,19 @@ function check_command(){
 
     }
 
-    //Command: <lines <x> <y>>
+
+    //comando "Rx Ry"
+    /*
+    if(checkStringRR(output_content)==true){
+
+      list_of_number = extract_numer_from_StringRR(output_content);
+
+    }
+    */
+   
+    //Command: <lines <x> <y>> 
+    //il nostro sara' Rx Ry es: "R1 R3"
+
 
     // command <add note <u> <v>>
 
@@ -160,6 +207,8 @@ function check_command(){
 
 
 
+
+    //"Pulisco" il campo contente il comando
 output_content='';
 return;
 
