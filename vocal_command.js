@@ -1,17 +1,51 @@
-// Delay utile a dare tempo allo script take_text
-/*
-function delayTwoSeconds() {
-  setTimeout(() => {
-    console.log('Two seconds have passed!');
-  }, 2000);
+//Definizione strutturura dati - I componenti della struttura dati hanno nomi in italiano
+// Define the 'word' structure
+class Word {
+  constructor(integer, string) {
+    this.integer = integer;
+    this.string = string;
+  }
 }
-delayTwoSeconds();
-*/
+
+// Create a list of words (sentence)
+const frase = [];
+
+// Create a list of sentences (text)
+const testo = [];
+
+var word_count=0;
+
+function modifyWordCount(delta) {
+  // Update the global variable using the delta value
+  word_count = delta;
+}
+
+
+function split_sentence_Into_Words(inputString) {
+  // Regular expression pattern to match words
+  const regex = /\w+/g;
+
+  // Split the input string into an array using the regex
+  const words = inputString.match(regex);
+
+  // If there are matches (words found), return the array
+  if (words) {
+    return words;
+  } else {
+    // If no matches (no words found), return an empty array
+    return [];
+  }
+}
+
+//fine strutture dati
+
 
 //Iniziallizzo campo che conterra' il comando in output
 const output=document.getElementById('outputElement');
 document.getElementById('outputElement').style.display = "none";
 var output_content; 
+
+old_command=''; //ultimo comando lanciato
 
 //PER FUNZIONE "Rx"
 /*********************************************************************************************/
@@ -80,28 +114,22 @@ function extract_numer_from_StringRR(inputString) {
 
 
     //funzione per aggiungere numeri interi alla fine delle righe
-    
+    //DA FARE: Dovra aggiornare la struttura dati     
     function addNumberToEndOfWords(str) {
-        // Split the string into words
         const words = str.split(' ');
-      
-        // Modify each word and append the number
-        const modifiedWords = words.map((word, index) => {
-          return word + (index + 1);
-        });
-      
-        // Join the modified words back into a string
-        const modifiedString = modifiedWords.join(' ');
-      
-        // Return the modified string
-        return modifiedString;
+        let new_string="";
+      words.forEach(word=>{
+        new_string=new_string+" "+word_count+word;
+        word_count++;
+      });
+        return new_string+" ";
       }
     
 
       function modifyDivText(divId, newText) {
         // Get the target <div> element using document.getElementById()
         const targetDiv = document.getElementById(divId);
-      
+        console.log("targetDiv is "+ targetDiv.textContent);
         // Check if the element exists
         if (!targetDiv) {
           console.error(`Error: Element with ID "${divId}" not found`);
@@ -144,7 +172,7 @@ setInterval(listen, 7000); // 5000 milliseconds = 5 seconds
 function check_command(){
 
 //controlla se è stato lanciato un comando
-    if(output_content==''){
+    if(output_content=='' || output_content==old_command){
 
     return
 }
@@ -155,19 +183,60 @@ function check_command(){
         add_flag=true;
         const targetElement = document.getElementById('target-div'); //prendo in input il div
         const textContent = targetElement.textContent; //estrapolo il testo
-        const sentences = textContent.split('. '); // divido il testo in una lista di frasi
+        //const sentences = textContent.split('. '); // divido il testo in una lista di frasi
+
+        //Divido il testo ogni 50 caratteri
+        
+        const sentences = []; // Initialize an empty array to store sentences
+        let currentSentence = ''; // Variable to hold the current sentence being constructed
+
+        // Iterate over the text content character by character
+      for (let i = 0; i < textContent.length; i++) {
+        const currentChar = textContent[i];
+
+        // Append current character to the current sentence
+        currentSentence += currentChar;
+
+        // Check if we've reached the 50-character limit
+        if (currentSentence.length === 100) {
+          // If so, add the current sentence to the sentences array
+          sentences.push(currentSentence);
+
+          // Reset the current sentence variable
+          currentSentence = '';
+        }
+
+      }
+
+// Add any remaining characters to the last sentence
+if (currentSentence.length > 0) {
+  sentences.push(currentSentence);
+}
+
         targetElement.textContent = ''; // Elimino il vecchio testo
     
         var index =0;
     
-        //creo i nuovi paragrafi
+        //creo i nuovi div
         sentences.forEach(sentence => {
         const paragraph = document.createElement('div');
         paragraph.id=index+""; //imposto l'id del div pari quello del indice
         paragraph.textContent = index+" "+sentence;
         targetElement.appendChild(paragraph);
+
+        //Aggiornamento strutura dati: per ogni parola nella frase 
+        split_sentence_Into_Words(sentence).forEach(parola =>{
+          frase.push(new Word(-1, parola));
+        });
+        testo.push(frase);
+        
+        //fine aggiornamento struttura dati
+
         index++
     });
+
+    //console.log(testo);
+    old_command=output_content; //aggiorno old command
     }
 
 
@@ -176,8 +245,10 @@ function check_command(){
     if(checkString(output_content)==true){
         
         row_number = extract_numer_from_String(output_content); //prendo il numero dalla stringa
+
         console.log("mark a line:"+row_number)
-        modifyDivText(row_number,addNumberToEndOfWords(document.getElementById(row_number).textContent))
+        modifyDivText(row_number,row_number+" "+addNumberToEndOfWords(document.getElementById(row_number).textContent.slice(1)))
+        old_command=output_content; //aggiorno old command
 
     }
 
