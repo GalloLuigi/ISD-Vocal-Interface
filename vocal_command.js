@@ -19,7 +19,7 @@ const frase = [];
 
 // Create a list of sentences (text)
 const testo = {};
-
+var map = new Map();
 var word_count = 0;
 
 function modifyWordCount(delta) {
@@ -136,7 +136,7 @@ function getIntegersInRange(start, end) {
 //funzione per aggiungere numeri interi alla fine delle righe
 function addNumberToEndOfWords(row_number, start_index, input_map) {
   if(row_number){
-    let map = input_map
+     map = input_map
     console.log(input_map)
     let word_index = start_index + 1
     let new_string = ""
@@ -179,20 +179,15 @@ function addNumberToEndOfWords(row_number, start_index, input_map) {
 
 
 
-function modifyDivText(divId, newText) {
-  // Get the target <div> element using document.getElementById()
-  const targetDiv = document.getElementById(divId);
-  console.log("targetDiv is " + targetDiv.textContent);
-  // Check if the element exists
-  if (!targetDiv) {
-    console.error(`Error: Element with ID "${divId}" not found`);
-    return; // Or handle the error as needed
+
+function modificaTestoDiv(idDiv, nuovoTesto) {
+  const div = document.getElementById(idDiv);
+  if (div) {
+    div.innerHTML = nuovoTesto; // Usa innerHTML invece di textContent
+  } else {
+    console.error(`Elemento con ID "${idDiv}" non trovato.`);
   }
-
-  // Modify the text content using targetDiv.textContent
-  targetDiv.textContent = newText;
 }
-
 
 function listen() {
   console.log("Listen...")
@@ -311,7 +306,7 @@ function check_command() {
       let editedString = ret[0]
       let end_map = ret[1]
       let end_index = ret[2] 
-      modifyDivText(parseInt(r), r + " " + editedString)
+      modificaTestoDiv(parseInt(r), r + " " + editedString)
       start_index = end_index
       start_map = end_map
     }
@@ -332,7 +327,7 @@ function check_command() {
       let editedString = ret[0]
       let end_map = ret[1]
       let end_index = ret[2] 
-      modifyDivText(parseInt(r), r + " " + editedString)
+      modificaTestoDiv(parseInt(r), r + " " + editedString)
       start_index = end_index
       start_map = end_map
     }
@@ -343,28 +338,31 @@ function check_command() {
 
 
   //Test underline
-  function test(){
-    let parole = [3,4,5]
-    let backupTesto = testo
-    for(const k of parole){
-      let word = map[k]
-      let editedWord = "<u>"+word.word+"</u>"
-      backupTesto[word.row][word.pos] = editedWord
-    }
-  
-    for (const [key, value] of Object.entries(backupTesto)) {
-      let finalText = finalText + String(key) + " "
+  function test() {
+    let parole = [3, 4, 5];
+    let backupTesto = { ...testo };
 
-      for (const [k, v] of Object.entries(value)) {
-        finalText = finalText + v + " "
-      }
+    parole.forEach(k => {
+      let word = map[k];
+      backupTesto[word.row][word.pos] = `<u>${word.word}</u>`;
+    });
 
-      finalText = finalText
-
-      modifyDivText(parseInt(key), finalText)
-    }
+    Object.entries(backupTesto).forEach(([key, value]) => {
+      let finalText = `${key} ${Object.values(value).join(' ')}`;
+      modificaTestoDiv(parseInt(key), finalText);
+    });
+  }
+// Function to be called when spacebar is pressed
+  function onSpacebarPress() {
+    test()    // Add your function logic here
   }
 
+// Add event listener for keydown event
+  document.addEventListener('keydown', function(event) {
+    if (event.code === 'Space') {
+      onSpacebarPress();
+    }
+  });
   if (output_content == 'a') {
     test();
   }
