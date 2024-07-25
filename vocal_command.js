@@ -369,19 +369,6 @@ function check_command() {
     test();
   }
 
-  //comando "Rx Ry"
-  /*
-  if(checkStringRR(output_content)==true){
-
-    list_of_number = extract_numer_from_StringRR(output_content);
-
-  }
-  */
-
-  //Command: <lines <x> <y>> 
-  //il nostro sara' Rx Ry es: "R1 R3"
-
-
   // command <add note <u> <v>>
 
   // command <complete note>
