@@ -62,16 +62,16 @@ function checkString(str) {
 
   const result = regex.test(str); // Apply the regular expression to the string
   if (result) {
-    console.log(`${str} matches the pattern`);
+    console.log(`${str} matches the pattern Rx`);
     return true
   } else {
     const result_1 = regex_1.test(str);
 
     if (result_1) {
-      console.log(`${str} matches the pattern`);
+      console.log(`${str} matches the pattern Rx`);
       return true
     } else {
-      console.log(`${str} does not match the pattern`);
+      console.log(`${str} does not match the pattern Rx`);
 
       return false
     }
@@ -98,27 +98,37 @@ function extract_numer_from_String(str) {
 function checkStringRR(inputString) {
   // Regular expression pattern for the specified format
   const regex = /^[rR]\d+ [rR]\d+$/;
-
+  console.log(`${inputString} match the pattern Rx Ry`);
   // Check if the input string matches the regex
   return regex.test(inputString);
 }
 
 function extract_numer_from_StringRR(inputString) {
-  // Regular expression pattern to match the format "R1 R2"
-  const regex = /R(\d+) R(\d+)/;
+ // Regex per estrarre i due interi
+ const regex = /^([rR])(\d+)\s+([rR])(\d+)$/;
+ const match = inputString.match(regex);
 
-  // Match the input string against the regex
-  const match = regex.exec(inputString);
+ // Se la stringa corrisponde al pattern, estraiamo i numeri
+ if (match) {
+   const intero1 = parseInt(match[2]);
+   const intero2 = parseInt(match[4]);
+   console.log(intero1,intero2);
+   return [intero1, intero2];
+ } else {
+   return null; // La stringa non corrisponde al formato richiesto
+ }
+}
 
-  // If there's a match, extract the integers
-  if (match) {
-    const integer1 = parseInt(match[1]);
-    const integer2 = parseInt(match[2]);
-    return [integer1, integer2];
-  } else {
-    // If there's no match, return an empty array indicating invalid input
+function getIntegersInRange(start, end) {
+  if (start > end) {
     return [];
   }
+
+  const result = [];
+  for (let i = start; i <= end; i++) {
+    result.push(i);
+  }
+  return result;
 }
 /*********************************************************************************************/
 
@@ -127,6 +137,7 @@ function extract_numer_from_StringRR(inputString) {
 function addNumberToEndOfWords(row_number, start_index, input_map) {
   if(row_number){
     let map = input_map
+    console.log(input_map)
     let word_index = start_index + 1
     let new_string = ""
     let row = testo[row_number]
@@ -137,7 +148,7 @@ function addNumberToEndOfWords(row_number, start_index, input_map) {
         map[word_index] = {
           word: String(value),
           row: row_number,
-          pos: k
+          pos: key   //Ho cambiato k (era undef.) con key: Luigi
         }
         word_index++
       }
@@ -255,7 +266,8 @@ function check_command() {
 
     targetElement.textContent = ''; // Elimino il vecchio testo
 
-    var index = 0;
+    var index = 1;
+
 
     //creo i nuovi div
     sentences.forEach(sentence => {
@@ -288,11 +300,12 @@ function check_command() {
 
   //Comando "Rx"
   //controlla se è un comando "Riga" con una regex
+  //IL COMANDO R0 è buggato
   if (checkString(output_content) == true) {
     let rows = extract_numer_from_String(output_content); //prendo il numero dalla stringa
     let start_index = 0
     let start_map = {}
-    rows = [1,2,3]
+    //rows = [1,2,3]
     for(const r of rows){
       let ret = addNumberToEndOfWords(parseInt(r), start_index, start_map)
       let editedString = ret[0]
@@ -305,6 +318,31 @@ function check_command() {
     old_command = output_content; //aggiorno old command
   }
 
+
+  //Comando "RxRy"
+  if (checkStringRR(output_content) == true) {
+    let rows = extract_numer_from_StringRR(output_content); //prendo i numeri dalla stringa
+    rows=getIntegersInRange(rows[0],rows[1]);               // prendo tutti i numeri nel range
+
+    let start_index = 0
+    let start_map = {}
+    console.log("The rows:"+rows);
+    for(const r of rows){
+      let ret = addNumberToEndOfWords(parseInt(r), start_index, start_map)
+      let editedString = ret[0]
+      let end_map = ret[1]
+      let end_index = ret[2] 
+      modifyDivText(parseInt(r), r + " " + editedString)
+      start_index = end_index
+      start_map = end_map
+    }
+    old_command = output_content; //aggiorno old command
+  }
+
+
+
+
+  //Test underline
   function test(){
     let parole = [3,4,5]
     let backupTesto = testo
@@ -325,6 +363,10 @@ function check_command() {
 
       modifyDivText(parseInt(key), finalText)
     }
+  }
+
+  if (output_content == 'a') {
+    test();
   }
 
   //comando "Rx Ry"
