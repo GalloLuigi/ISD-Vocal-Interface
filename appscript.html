@@ -112,6 +112,23 @@
         }
     }
     
+
+    function divideTesto(allText, targetDiv, maxCharsPerDiv = 89) {
+  const textDiv = document.getElementById(targetDiv);
+  textDiv.innerHTML = ''; // Pulisci il div prima di aggiungere nuovi elementi
+
+  let currentText = '';
+  for (let i = 0; i < allText[0].length; i++) {
+    currentText += allText[0][i];
+    if (currentText.length === maxCharsPerDiv) {
+      const newDiv = document.createElement('div');
+      newDiv.textContent = currentText;
+      textDiv.appendChild(newDiv);
+      currentText = '';
+    }
+  }
+}
+
     // Function to handle the post-processing after text extraction
     function afterProcess() {
         pdftext.value = alltext[select.value - 1]; // Display the extracted text for the selected page
@@ -123,9 +140,12 @@
         const textDiv = document.getElementById('target-div');
 
         //for (const text of alltext) {
+        /*
             const paragraph = document.createElement('p');
             paragraph.innerHTML= alltext
             currentSentence=""
+        */
+            divideTesto(alltext,"target-div");
             /*
             for (let i = 0; i < alltext.length; i++) {
                 const currentChar = alltext[i];
@@ -141,7 +161,7 @@
             }
             */
 
-            textDiv.appendChild(paragraph);
+            //textDiv.appendChild(paragraph);
         //}
 
     }
