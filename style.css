@@ -22,3 +22,30 @@ body {
     margin-top: 20px;
     font-weight: bold;
 }
+
+#asterisco {
+    animation: blink 1s infinite;
+  }
+  
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .target-div {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+.notes{
+    display: flex;
+    justify-content: flex-end;
+    }
+

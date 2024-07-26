@@ -11,9 +11,6 @@ class Word {
 
 }
 
-
-
-
 // Create a list of words (sentence)
 const frase = [];
 
@@ -42,6 +39,75 @@ function split_sentence_Into_Words(inputString) {
     // If no matches (no words found), return an empty array
     return [];
   }
+}
+
+
+
+function compile_testo(){
+  console.log(Object.keys(testo).length);
+  let sentences = []
+  const targetElement = document.getElementById('target-div'); //prendo in input il div
+  const textContent = targetElement.textContent; //estrapolo il testo
+  let index = 1
+  if(Object.keys(testo).length===0){
+    console.log("entrato")
+    
+    let currentSentence = ''; // Variable to hold the current sentence being constructed
+
+    // Iterate over the text content character by character
+    for (let i = 0; i < textContent.length; i++) {
+      const currentChar = textContent[i];
+
+      // Append current character to the current sentence
+      currentSentence += currentChar;
+
+      // Check if we've reached the 50-character limit
+      if (currentSentence.length === 100) {
+        // If so, add the current sentence to the sentences array
+        sentences.push(currentSentence);
+
+        // Reset the current sentence variable
+        currentSentence = '';
+      }
+
+    }
+
+    // Add any remaining characters to the last sentence
+    if (currentSentence.length > 0) {
+      sentences.push(currentSentence);
+    }
+
+    sentences.forEach(sentence => {  
+      if(!testo[index]){
+        testo[index] = {}
+      }0
+      let wordIndex = 1
+      split_sentence_Into_Words(sentence).forEach(parola => {
+        testo[index][wordIndex] = parola
+        wordIndex++
+      });
+  
+      //fine aggiornamento struttura dati
+      index++
+    });
+  }
+
+  targetElement.textContent = ''; // Elimino il vecchio testo
+
+  Object.entries(testo).forEach(([key, value]) => {
+    const paragraph = document.createElement('div');
+    const index = String(key)
+    paragraph.id = index + ""; //imposto l'id del div pari quello del indice
+    let text = ""
+    Object.entries(value).forEach(([k, v]) => {
+      text = text + v + " "
+
+    });
+    text = index + " " + text
+    paragraph.innerHTML = text
+    targetElement.appendChild(paragraph);
+  });
+  
 }
 
 //fine strutture dati
@@ -133,6 +199,34 @@ function getIntegersInRange(start, end) {
 /*********************************************************************************************/
 
 
+//PER FUNZIONE "Nx Ny"
+/*********************************************************************************************/
+function checkStringNN(inputString) {
+  // Regular expression pattern for the specified format
+  const regex = /^[nN]\d+ [nN]\d+$/;
+  console.log(`${inputString} match the pattern Nx Ny`);
+  // Check if the input string matches the regex
+  return regex.test(inputString);
+}
+
+function extract_numer_from_StringNN(inputString) {
+ // Regex per estrarre i due interi
+ const regex = /^([nN])(\d+)\s+([nN])(\d+)$/;
+ const match = inputString.match(regex);
+
+ // Se la stringa corrisponde al pattern, estraiamo i numeri
+ if (match) {
+   const intero1 = parseInt(match[2]);
+   const intero2 = parseInt(match[4]);
+   console.log(intero1,intero2);
+   return [intero1, intero2];
+ } else {
+   return null; // La stringa non corrisponde al formato richiesto
+ }
+}
+/*********************************************************************************************/
+
+
 //funzione per aggiungere numeri interi alla fine delle righe
 function addNumberToEndOfWords(row_number, start_index, input_map) {
   if(row_number){
@@ -148,7 +242,7 @@ function addNumberToEndOfWords(row_number, start_index, input_map) {
         map[word_index] = {
           word: String(value),
           row: row_number,
-          pos: key   //Ho cambiato k (era undef.) con key: Luigi
+          pos: key  
         }
         word_index++
       }
@@ -227,68 +321,7 @@ function check_command() {
   //lancia comando add
   if (output_content == 'add' || output_content == 'Add' || output_content == 'ad') {
     add_flag = true;
-    const targetElement = document.getElementById('target-div'); //prendo in input il div
-    const textContent = targetElement.textContent; //estrapolo il testo
-    //const sentences = textContent.split('. '); // divido il testo in una lista di frasi
-
-    //Divido il testo ogni 50 caratteri
-
-    const sentences = []; // Initialize an empty array to store sentences
-    let currentSentence = ''; // Variable to hold the current sentence being constructed
-
-    // Iterate over the text content character by character
-    for (let i = 0; i < textContent.length; i++) {
-      const currentChar = textContent[i];
-
-      // Append current character to the current sentence
-      currentSentence += currentChar;
-
-      // Check if we've reached the 50-character limit
-      if (currentSentence.length === 100) {
-        // If so, add the current sentence to the sentences array
-        sentences.push(currentSentence);
-
-        // Reset the current sentence variable
-        currentSentence = '';
-      }
-
-    }
-
-    // Add any remaining characters to the last sentence
-    if (currentSentence.length > 0) {
-      sentences.push(currentSentence);
-    }
-
-    targetElement.textContent = ''; // Elimino il vecchio testo
-
-    var index = 1;
-
-
-    //creo i nuovi div
-    sentences.forEach(sentence => {
-      const paragraph = document.createElement('div');
-      paragraph.id = index + ""; //imposto l'id del div pari quello del indice
-      paragraph.textContent = index + " " + sentence;
-      targetElement.appendChild(paragraph);
-
-      //Aggiornamento strutura dati: per ogni parola nella frase
-
-      let phrase = {}
-
-      if(!testo[index]){
-        testo[index] = {}
-      }0
-      let wordIndex = 1
-      split_sentence_Into_Words(sentence).forEach(parola => {
-        testo[index][wordIndex] = parola
-        wordIndex++
-      });
-
-      //fine aggiornamento struttura dati
-      index++
-    });
-
-    //console.log(testo); 
+    compile_testo();
     old_command = output_content; //aggiorno old command
   }
 
@@ -297,10 +330,10 @@ function check_command() {
   //controlla se è un comando "Riga" con una regex
   //IL COMANDO R0 è buggato
   if (checkString(output_content) == true) {
+    compile_testo();
     let rows = extract_numer_from_String(output_content); //prendo il numero dalla stringa
     let start_index = 0
     let start_map = {}
-    //rows = [1,2,3]
     for(const r of rows){
       let ret = addNumberToEndOfWords(parseInt(r), start_index, start_map)
       let editedString = ret[0]
@@ -316,6 +349,7 @@ function check_command() {
 
   //Comando "RxRy"
   if (checkStringRR(output_content) == true) {
+    compile_testo();
     let rows = extract_numer_from_StringRR(output_content); //prendo i numeri dalla stringa
     rows=getIntegersInRange(rows[0],rows[1]);               // prendo tutti i numeri nel range
 
@@ -334,9 +368,31 @@ function check_command() {
     old_command = output_content; //aggiorno old command
   }
 
+  // command Nx Ny {aggiunta nota}
+  // Viene eliminata la punteggiatura
+  if (checkStringNN(output_content) == true) {
+    let words_number = extract_numer_from_StringNN(output_content);                   //prendo i numeri dalla stringa
+    words_number=getIntegersInRange(words_number[0],words_number[1]);               // prendo tutti i numeri nel range
+
+    //let backupTesto = { ...testo };
+    let backupTesto = JSON.parse(JSON.stringify(testo));
+
+    words_number.forEach(k => {
+      let word = map[k];
+      backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
+    });
+
+    Object.entries(backupTesto).forEach(([key, value]) => {
+      let finalText = `${key} ${Object.values(value).join(' ')}`;
+      modificaTestoDiv(parseInt(key), finalText);
+    });
+  }
+
+  
 
 
 
+/*
   //Test underline
   function test() {
     let parole = [3, 4, 5];
@@ -352,6 +408,7 @@ function check_command() {
       modificaTestoDiv(parseInt(key), finalText);
     });
   }
+
 // Function to be called when spacebar is pressed
   function onSpacebarPress() {
     test()    // Add your function logic here
@@ -366,8 +423,7 @@ function check_command() {
   if (output_content == 'a') {
     test();
   }
-
-  // command <add note <u> <v>>
+*/
 
   // command <complete note>
 
