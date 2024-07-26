@@ -1,28 +1,29 @@
-body {
-    font-family: sans-serif;
-    text-align: center;
-}
-
-.choices {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.choices button {
-    padding: 10px 20px;
-    margin: 5px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-#result {
-    margin-top: 20px;
-    font-weight: bold;
-}
-
+        /* Center align the heading */
+        h1 {
+            width: 100%;
+            text-align: center;
+        }
+        /* Set the display and alignment for the main and result sections */
+        .pdfwork, .afterupload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 100%;
+        }
+        /* Add margin-top to all elements inside .pdfwork */
+        .pdfwork * {
+            margin-top: 5px;
+        }
+        /* Hide the result section initially */
+        .afterupload {
+            display: none;
+        }
+        /* Hide the "Extract Another PDF" button initially */
+        .another {
+            display: none;
+        }
+        
 #asterisco {
     animation: blink 1s infinite;
   }
@@ -39,13 +40,8 @@ body {
     }
   }
 
-  .target-div {
-    display: flex;
-    justify-content: flex-start;
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 0.5fr; /* Crea due colonne di larghezza uguale */
+    gap: 20px; /* Spazio tra le colonne */
   }
-
-.notes{
-    display: flex;
-    justify-content: flex-end;
-    }
-

@@ -62,8 +62,9 @@ function compile_testo(){
       currentSentence += currentChar;
 
       // Check if we've reached the 50-character limit
-      if (currentSentence.length === 100) {
+      if (currentSentence.length === 89) {
         // If so, add the current sentence to the sentences array
+
         sentences.push(currentSentence);
 
         // Reset the current sentence variable
@@ -104,7 +105,8 @@ function compile_testo(){
 
     });
     text = index + " " + text
-    paragraph.innerHTML = text
+    //aggiungere tag <br>
+    paragraph.innerHTML = text+"<br>"
     targetElement.appendChild(paragraph);
   });
   

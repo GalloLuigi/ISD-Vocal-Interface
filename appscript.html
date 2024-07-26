@@ -12,33 +12,7 @@
     <!-- Include the PDF.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js" integrity="sha512-ml/QKfG3+Yes6TwOzQb7aCNtJF4PUyha6R3w8pSTo/VJSywl7ZreYvvtUso7fKevpsI+pYVVwnu82YO0q3V6eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!-- Add some styling for the web page -->
-    <style>
-        /* Center align the heading */
-        h1 {
-            width: 100%;
-            text-align: center;
-        }
-        /* Set the display and alignment for the main and result sections */
-        .pdfwork, .afterupload {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            width: 100%;
-        }
-        /* Add margin-top to all elements inside .pdfwork */
-        .pdfwork * {
-            margin-top: 5px;
-        }
-        /* Hide the result section initially */
-        .afterupload {
-            display: none;
-        }
-        /* Hide the "Extract Another PDF" button initially */
-        .another {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Display the heading -->
@@ -72,8 +46,10 @@
 
 
     <div id="outputElement"></div>
+    <div class="container">
     <div id="target-div"></div>
     <div id="notes"></div>
+    </div>
 
     <!-- JavaScript code -->
 <script>
@@ -146,11 +122,28 @@
         //Scrivo nelle mie div
         const textDiv = document.getElementById('target-div');
 
-        for (const text of alltext) {
+        //for (const text of alltext) {
             const paragraph = document.createElement('p');
-            paragraph.textContent = text;
+            paragraph.innerHTML= alltext
+            currentSentence=""
+            /*
+            for (let i = 0; i < alltext.length; i++) {
+                const currentChar = alltext[i];
+
+                // Append current character to the current sentence
+                currentSentence += currentChar;
+
+                if(alltext.length%89===0){
+                    textDiv.appendChild(currentSentence);
+                    currentSentence=""
+                }
+
+            }
+            */
+
             textDiv.appendChild(paragraph);
-        }
+        //}
+
     }
 </script>
 
