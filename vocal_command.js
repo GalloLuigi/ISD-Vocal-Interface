@@ -228,6 +228,21 @@ function extract_numer_from_StringNN(inputString) {
  }
 }
 
+function nascondiDiv(idDiv) {
+  const elemento = document.getElementById(idDiv);
+  if (elemento) {
+    //elemento.style.display = 'none';
+    elemento.style.visibility = 'hidden';
+  } else {
+    console.error("Elemento con ID '" + idDiv + "' non trovato.");
+  }
+}
+
+function mostraDiv(idDiv) {
+  const div = document.getElementById(idDiv);
+  div.style.visibility = 'visible';
+}
+
 function init_note_div(){
   const note = document.getElementById("notes");
   let i=1 
@@ -236,6 +251,7 @@ function init_note_div(){
       tmp_div.id = i+"_note"
       tmp_div.textContent=""+i
       note.appendChild(tmp_div);
+      nascondiDiv(i+"_note")
     }
 }
 
@@ -252,14 +268,7 @@ function clear_asterisk(){
     }
 }
 
-function nascondiDiv(idDiv) {
-  const elemento = document.getElementById(idDiv);
-  if (elemento) {
-    elemento.style.display = 'none';
-  } else {
-    console.error("Elemento con ID '" + idDiv + "' non trovato.");
-  }
-}
+
 
 /*********************************************************************************************/
 
@@ -289,26 +298,6 @@ function addNumberToEndOfWords(row_number, start_index, input_map) {
     return [new_string, map, word_index]
   }
 }
-
-//   const words = str.split(' ');
-//   let new_string = "";
-//   /*
-// words.forEach(word=>{
-//   new_string=new_string+" "+word_count+word;
-//   word_count++;
-// });
-// */
-//   testo[row_number].forEach(word => {
-    
-//     // new_string = new_string + " " + word_count + word;
-//     // console.log(word);
-//     // word.integer = word_count;
-//     // word_count++;
-//   });
-//   //console.log(testo[row_number]);
-//   return new_string + " ";
-
-
 
 
 function modificaTestoDiv(idDiv, nuovoTesto) {
@@ -352,7 +341,7 @@ function listen() {
 
   recognition.addEventListener("audioend", () => {
     console.log("Audio capturing ended");
-    if(note_flag==true){
+    if(note_flag==true && buffer_note!="complete"){
     const div_note=document.getElementById(last_row_number+"_note");
     div_note.innerHTML+=" "+buffer_note+" "
     }
@@ -447,6 +436,7 @@ function check_command() {
     });
 
     //Metto puntatore *
+    mostraDiv(last_row_number+"_note");
     const div_note=document.getElementById(last_row_number+"_note");
     div_note.innerHTML+="<span id='asterisco'>*</span>"
 
@@ -460,7 +450,11 @@ function check_command() {
 
   }
 
-  // command <complete note> CN
+  // command <complete note> complete
+  if ( output_content == 'complete') {
+    clear_asterisk();
+    note_flag=false
+  }
 
   //<delete note <id>>
 
