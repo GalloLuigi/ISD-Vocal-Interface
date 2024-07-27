@@ -11,13 +11,14 @@ class Word {
 
 }
 
-// Create a list of words (sentence)
-const frase = [];
 
 // Create a list of sentences (text)
 const testo = {};
 var map = new Map();
 var word_count = 0;
+
+var number_of_rows = 0;
+var last_row_number = 0;
 
 function modifyWordCount(delta) {
   // Update the global variable using the delta value
@@ -64,7 +65,7 @@ function compile_testo(){
       // Check if we've reached the 50-character limit
       if (currentSentence.length === 89) {
         // If so, add the current sentence to the sentences array
-
+        number_of_rows++
         sentences.push(currentSentence);
 
         // Reset the current sentence variable
@@ -226,6 +227,40 @@ function extract_numer_from_StringNN(inputString) {
    return null; // La stringa non corrisponde al formato richiesto
  }
 }
+
+function init_note_div(){
+  const note = document.getElementById("notes");
+  let i=1 
+    for(;i<number_of_rows;i++){
+      tmp_div=document.createElement('div');
+      tmp_div.id = i+"_note"
+      tmp_div.textContent=""+i
+      note.appendChild(tmp_div);
+    }
+}
+
+function rimuoviAsterischi(stringa) {
+  return stringa.replace(/\*/g, '');
+}
+
+function clear_asterisk(){
+  const note = document.getElementById("notes");
+  let i=1
+    for(;i<number_of_rows;i++){
+      tmp_div=document.getElementById(i+"_note")
+      tmp_div.textContent=rimuoviAsterischi(tmp_div.textContent)
+    }
+}
+
+function nascondiDiv(idDiv) {
+  const elemento = document.getElementById(idDiv);
+  if (elemento) {
+    elemento.style.display = 'none';
+  } else {
+    console.error("Elemento con ID '" + idDiv + "' non trovato.");
+  }
+}
+
 /*********************************************************************************************/
 
 
@@ -285,7 +320,11 @@ function modificaTestoDiv(idDiv, nuovoTesto) {
   }
 }
 
+
+var note_flag=false
+
 function listen() {
+  var buffer_note=""
   console.log("Listen...")
   var speech = true;
   window.SpeechRecognition = window.webkitSpeechRecognition;
@@ -301,7 +340,22 @@ function listen() {
 
     output.innerHTML = transcript;
     output_content = output.textContent;        // output_content e' una stringa contente l'ultimo comando lanciato
+
+    //Scrivo la nota...
+    if(note_flag==true){
+      const note_to_write = document.getElementById(last_row_number+"_note");
+      buffer_note = output_content
+    }
+
     console.log(transcript);
+  });
+
+  recognition.addEventListener("audioend", () => {
+    console.log("Audio capturing ended");
+    if(note_flag==true){
+    const div_note=document.getElementById(last_row_number+"_note");
+    div_note.innerHTML+=" "+buffer_note+" "
+    }
   });
 
   if (speech == true) {
@@ -324,6 +378,7 @@ function check_command() {
   if (output_content == 'add' || output_content == 'Add' || output_content == 'ad') {
     add_flag = true;
     compile_testo();
+    init_note_div();
     old_command = output_content; //aggiorno old command
   }
 
@@ -333,7 +388,11 @@ function check_command() {
   //IL COMANDO R0 è buggato
   if (checkString(output_content) == true) {
     compile_testo();
+    clear_asterisk();
     let rows = extract_numer_from_String(output_content); //prendo il numero dalla stringa
+
+    last_row_number = rows[0] //Aggiorno campo contente detta ultima riga
+
     let start_index = 0
     let start_map = {}
     for(const r of rows){
@@ -352,8 +411,11 @@ function check_command() {
   //Comando "RxRy"
   if (checkStringRR(output_content) == true) {
     compile_testo();
+    clear_asterisk();
     let rows = extract_numer_from_StringRR(output_content); //prendo i numeri dalla stringa
     rows=getIntegersInRange(rows[0],rows[1]);               // prendo tutti i numeri nel range
+
+    last_row_number = rows[0] //Aggiorno campo contente detta ultima riga
 
     let start_index = 0
     let start_map = {}
@@ -384,50 +446,21 @@ function check_command() {
       backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
     });
 
-    Object.entries(backupTesto).forEach(([key, value]) => {
-      let finalText = `${key} ${Object.values(value).join(' ')}`;
-      modificaTestoDiv(parseInt(key), finalText);
-    });
-  }
+    //Metto puntatore *
+    const div_note=document.getElementById(last_row_number+"_note");
+    div_note.innerHTML+="<span id='asterisco'>*</span>"
 
-  
-
-
-
-/*
-  //Test underline
-  function test() {
-    let parole = [3, 4, 5];
-    let backupTesto = { ...testo };
-
-    parole.forEach(k => {
-      let word = map[k];
-      backupTesto[word.row][word.pos] = `<u>${word.word}</u>`;
-    });
 
     Object.entries(backupTesto).forEach(([key, value]) => {
       let finalText = `${key} ${Object.values(value).join(' ')}`;
       modificaTestoDiv(parseInt(key), finalText);
     });
+
+    note_flag=true
+
   }
 
-// Function to be called when spacebar is pressed
-  function onSpacebarPress() {
-    test()    // Add your function logic here
-  }
-
-// Add event listener for keydown event
-  document.addEventListener('keydown', function(event) {
-    if (event.code === 'Space') {
-      onSpacebarPress();
-    }
-  });
-  if (output_content == 'a') {
-    test();
-  }
-*/
-
-  // command <complete note>
+  // command <complete note> CN
 
   //<delete note <id>>
 
