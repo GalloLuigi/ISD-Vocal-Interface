@@ -82,7 +82,7 @@ function compile_testo(){
     sentences.forEach(sentence => {  
       if(!testo[index]){
         testo[index] = {}
-      }0
+      }
       let wordIndex = 1
       split_sentence_Into_Words(sentence).forEach(parola => {
         testo[index][wordIndex] = parola
@@ -228,6 +228,33 @@ function extract_numer_from_StringNN(inputString) {
  }
 }
 
+// Cx Cy
+/*************************************************************************************************/
+function checkStringCC(inputString) {
+  // Regular expression pattern for the specified format
+  const regex = /^[cC]\d+ [cC]\d+$/;
+  console.log(`${inputString} match the pattern Nx Ny`);
+  // Check if the input string matches the regex
+  return regex.test(inputString);
+}
+
+function extract_numer_from_StringCC(inputString) {
+ // Regex per estrarre i due interi
+ const regex = /^([cC])(\d+)\s+([cC])(\d+)$/;
+ const match = inputString.match(regex);
+
+ // Se la stringa corrisponde al pattern, estraiamo i numeri
+ if (match) {
+   const intero1 = parseInt(match[2]);
+   const intero2 = parseInt(match[4]);
+   console.log(intero1,intero2);
+   return [intero1, intero2];
+ } else {
+   return null; // La stringa non corrisponde al formato richiesto
+ }
+}
+/*************************************************************************************************/
+
 function nascondiDiv(idDiv) {
   const elemento = document.getElementById(idDiv);
   if (elemento) {
@@ -273,12 +300,35 @@ function clear_asterisk(){
 /*********************************************************************************************/
 
 
+function checkDeleteNote(str) {
+  const regex = /D[0-9]/; // Regular expression pattern
+  const regex_1 = /d[0-9]/;
+
+  const result = regex.test(str); // Apply the regular expression to the string
+  if (result) {
+    console.log(`${str} matches the pattern Rx`);
+    return true
+  } else {
+    const result_1 = regex_1.test(str);
+
+    if (result_1) {
+      console.log(`${str} matches the pattern Rx`);
+      return true
+    } else {
+      console.log(`${str} does not match the pattern Rx`);
+
+      return false
+    }
+  }
+}
+
+
 //funzione per aggiungere numeri interi alla fine delle righe
 function addNumberToEndOfWords(row_number, start_index, input_map) {
   if(row_number){
      map = input_map
     console.log(input_map)
-    let word_index = start_index + 1
+    let word_index = start_index
     let new_string = ""
     let row = testo[row_number]
     let temp = ""
@@ -348,6 +398,7 @@ function listen() {
   });
 
   if (speech == true) {
+    //recognition.lang = "en-US";
     recognition.start();
   }
 }
@@ -427,7 +478,6 @@ function check_command() {
     let words_number = extract_numer_from_StringNN(output_content);                   //prendo i numeri dalla stringa
     words_number=getIntegersInRange(words_number[0],words_number[1]);               // prendo tutti i numeri nel range
 
-    //let backupTesto = { ...testo };
     let backupTesto = JSON.parse(JSON.stringify(testo));
 
     words_number.forEach(k => {
@@ -456,10 +506,19 @@ function check_command() {
     note_flag=false
   }
 
-  //<delete note <id>>
+    //<delete note <id>> Dx
+  if (checkDeleteNote(output_content) == true) {
+      let note_to_delete = extract_numer_from_String(output_content);
+      const div_note=document.getElementById(note_to_delete[0]+"_note");
+      div_note.textContent=note_to_delete[0]+""
+      console.log("Nota da cancellare:"+note_to_delete[0]);
+      div_note.style.visibility = 'hidden';
+  }
 
-  //<correct <u> <v>>
-
+  //<correct <u> <v>> Cx Cy
+  if (checkStringCC(output_content) == true) {
+    let words_number = extract_numer_from_StringCC(output_content);                   //prendo i numeri dalla stringa
+  }
   //<approve correction <id>>
 
 
