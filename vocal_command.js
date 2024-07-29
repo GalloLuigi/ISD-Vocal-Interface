@@ -16,9 +16,10 @@ class Word {
 const testo = {};
 var map = new Map();
 var word_count = 0;
-
+let notes = {}
 var number_of_rows = 0;
 var last_row_number = 0;
+let last_note = 0
 
 function modifyWordCount(delta) {
   // Update the global variable using the delta value
@@ -270,30 +271,30 @@ function mostraDiv(idDiv) {
   div.style.visibility = 'visible';
 }
 
-function init_note_div(){
-  const note = document.getElementById("notes");
-  let i=1 
-    for(;i<number_of_rows;i++){
-      tmp_div=document.createElement('div');
-      tmp_div.id = i+"_note"
-      tmp_div.textContent=""+i
-      note.appendChild(tmp_div);
-      nascondiDiv(i+"_note")
-    }
-}
+// function init_note_div(){
+//   const note = document.getElementById("notes");
+//   let i=1 
+//     for(;i<=1;i++){
+//       tmp_div=document.createElement('div');
+//       tmp_div.id = i+"_note"
+//       tmp_div.textContent=""+i
+//       note.appendChild(tmp_div);
+//       nascondiDiv(i+"_note")
+//     }
+// }
 
 function rimuoviAsterischi(stringa) {
   return stringa.replace(/\*/g, '');
 }
 
-function clear_asterisk(){
-  const note = document.getElementById("notes");
-  let i=1
-    for(;i<number_of_rows;i++){
-      tmp_div=document.getElementById(i+"_note")
-      tmp_div.textContent=rimuoviAsterischi(tmp_div.textContent)
-    }
-}
+// function clear_asterisk(){
+//   const note = document.getElementById("wrapper_notes");
+//   let i=1
+//     for(;i<number_of_rows;i++){
+//       tmp_div=document.getElementById(i+"_note")
+//       tmp_div.textContent=rimuoviAsterischi(tmp_div.textContent)
+//     }
+// }
 
 
 
@@ -301,8 +302,8 @@ function clear_asterisk(){
 
 
 function checkDeleteNote(str) {
-  const regex = /D[0-9]/; // Regular expression pattern
-  const regex_1 = /d[0-9]/;
+  const regex = /Delete\s[0-9]/; // Regular expression pattern
+  const regex_1 = /delete\s[0-9]/;
 
   const result = regex.test(str); // Apply the regular expression to the string
   if (result) {
@@ -359,6 +360,18 @@ function modificaTestoDiv(idDiv, nuovoTesto) {
   }
 }
 
+function recompile_notes(){
+  if(notes){
+    let wrapper = document.getElementById("wrapper_notes")
+    let finalText = ""
+    Object.entries(notes).forEach(([key, value]) => {
+      let noteText = String(value.note)
+      finalText = finalText + String(key) + " " + noteText + "<br>";
+    });
+
+    wrapper.innerHTML = finalText
+  }
+}
 
 var note_flag=false
 
@@ -392,8 +405,10 @@ function listen() {
   recognition.addEventListener("audioend", () => {
     console.log("Audio capturing ended");
     if(note_flag==true && buffer_note!="complete"){
-    const div_note=document.getElementById(last_row_number+"_note");
-    div_note.innerHTML+=" "+buffer_note+" "
+      let txt = notes[last_note].note
+      txt = txt + " "+buffer_note+" "
+      notes[last_note].note = txt
+      recompile_notes()
     }
   });
 
@@ -404,6 +419,145 @@ function listen() {
 }
 listen();
 setInterval(listen, 7000); // 5000 milliseconds = 5 seconds
+
+function add(){
+  add_flag = true;
+  compile_testo();
+  //init_note_div();
+  old_command = output_content; //aggiorno old command
+}
+
+function Rx(){
+  compile_testo();
+  //clear_asterisk();
+  let rows = extract_numer_from_String(output_content); //prendo il numero dalla stringa
+
+  last_row_number = rows[0] //Aggiorno campo contente detta ultima riga
+
+  let start_index = 0
+  let start_map = {}
+  for(const r of rows){
+    let ret = addNumberToEndOfWords(parseInt(r), start_index, start_map)
+    let editedString = ret[0]
+    let end_map = ret[1]
+    let end_index = ret[2] 
+    modificaTestoDiv(parseInt(r), r + " " + editedString)
+    start_index = end_index
+    start_map = end_map
+  }
+  old_command = output_content; //aggiorno old command
+}
+
+function RxRy(){
+  compile_testo();
+  //clear_asterisk();
+  let rows = extract_numer_from_StringRR(output_content); //prendo i numeri dalla stringa
+  rows=getIntegersInRange(rows[0],rows[1]);               // prendo tutti i numeri nel range
+
+  last_row_number = rows[0] //Aggiorno campo contente detta ultima riga
+
+  let start_index = 0
+  let start_map = {}
+  console.log("The rows:"+rows);
+  for(const r of rows){
+    let ret = addNumberToEndOfWords(parseInt(r), start_index, start_map)
+    let editedString = ret[0]
+    let end_map = ret[1]
+    let end_index = ret[2] 
+    modificaTestoDiv(parseInt(r), r + " " + editedString)
+    start_index = end_index
+    start_map = end_map
+  }
+  old_command = output_content; //aggiorno old command
+}
+
+function NxNy(){
+  let words_number = extract_numer_from_StringNN(output_content);                   //prendo i numeri dalla stringa
+  words_number=getIntegersInRange(words_number[0],words_number[1]);               // prendo tutti i numeri nel range
+
+  let backupTesto = JSON.parse(JSON.stringify(testo));
+
+  words_number.forEach(k => {
+    let word = map[k];
+    backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
+  });
+
+  addNote(parseInt(words_number[0]), parseInt(words_number[1]))
+
+  // Metto puntatore *
+  // mostraDiv("wrapper_notes");
+  // const div_note=document.getElementById(last_row_number+"_note");
+  // div_note.innerHTML+="<span id='asterisco'>*</span>"
+
+
+  Object.entries(backupTesto).forEach(([key, value]) => {
+    let finalText = `${key} ${Object.values(value).join(' ')}`;
+    modificaTestoDiv(parseInt(key), finalText);
+  });
+
+  note_flag=true
+
+}
+
+function addNote(stw, enw){
+  let index = Object.keys(notes).length + 1
+  let textNote = "<span id='asterisco'>*</span> "
+  last_note = index
+  notes[index] = {
+    startWord : stw,
+    endWord : enw,
+    note: textNote,
+  }
+  recompile_notes()
+}
+
+function highlightNote(id) {
+  if(notes[id]){
+    compile_testo();
+    const note = notes[id]
+
+    let backupTesto = JSON.parse(JSON.stringify(testo));
+    words_number=getIntegersInRange(note.startWord, note.endWord);    
+
+    words_number.forEach(k => {
+      let word = map[k];
+      backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
+    });
+
+    Object.entries(backupTesto).forEach(([key, value]) => {
+      let finalText = `${key} ${Object.values(value).join(' ')}`;
+      modificaTestoDiv(parseInt(key), finalText);
+    });
+
+    let finalText = ""
+
+    Object.entries(notes).forEach(([key, value]) => {
+      let finalText = finalText + `${key} ${value.note}` + " <br>";
+    });
+  
+    document.getElementById("wrapper_notes").innerHTML = finalText
+  }
+}
+
+function deleteNote(id){
+  let index = 1
+  let maxKeys = Object.keys(notes).length
+
+  let tempObj = {}
+
+  for (const [key, value] of Object.entries(notes)) {
+    if(parseInt(id) == parseInt(key)){
+      
+    } else {
+      tempObj[index] = value
+      index++
+    }
+  }
+
+  notes = JSON.parse(JSON.stringify(tempObj));
+  
+  recompile_notes()
+}
 
 function check_command() {
 
@@ -416,103 +570,45 @@ function check_command() {
 
   //lancia comando add
   if (output_content == 'add' || output_content == 'Add' || output_content == 'ad') {
-    add_flag = true;
-    compile_testo();
-    init_note_div();
-    old_command = output_content; //aggiorno old command
+    add()
   }
-
 
   //Comando "Rx"
   //controlla se è un comando "Riga" con una regex
   //IL COMANDO R0 è buggato
   if (checkString(output_content) == true) {
-    compile_testo();
-    clear_asterisk();
-    let rows = extract_numer_from_String(output_content); //prendo il numero dalla stringa
-
-    last_row_number = rows[0] //Aggiorno campo contente detta ultima riga
-
-    let start_index = 0
-    let start_map = {}
-    for(const r of rows){
-      let ret = addNumberToEndOfWords(parseInt(r), start_index, start_map)
-      let editedString = ret[0]
-      let end_map = ret[1]
-      let end_index = ret[2] 
-      modificaTestoDiv(parseInt(r), r + " " + editedString)
-      start_index = end_index
-      start_map = end_map
-    }
-    old_command = output_content; //aggiorno old command
+      Rx()
   }
-
 
   //Comando "RxRy"
   if (checkStringRR(output_content) == true) {
-    compile_testo();
-    clear_asterisk();
-    let rows = extract_numer_from_StringRR(output_content); //prendo i numeri dalla stringa
-    rows=getIntegersInRange(rows[0],rows[1]);               // prendo tutti i numeri nel range
-
-    last_row_number = rows[0] //Aggiorno campo contente detta ultima riga
-
-    let start_index = 0
-    let start_map = {}
-    console.log("The rows:"+rows);
-    for(const r of rows){
-      let ret = addNumberToEndOfWords(parseInt(r), start_index, start_map)
-      let editedString = ret[0]
-      let end_map = ret[1]
-      let end_index = ret[2] 
-      modificaTestoDiv(parseInt(r), r + " " + editedString)
-      start_index = end_index
-      start_map = end_map
-    }
-    old_command = output_content; //aggiorno old command
+    RxRy()
   }
 
   // command Nx Ny {aggiunta nota}
   // Viene eliminata la punteggiatura
   if (checkStringNN(output_content) == true) {
-    let words_number = extract_numer_from_StringNN(output_content);                   //prendo i numeri dalla stringa
-    words_number=getIntegersInRange(words_number[0],words_number[1]);               // prendo tutti i numeri nel range
-
-    let backupTesto = JSON.parse(JSON.stringify(testo));
-
-    words_number.forEach(k => {
-      let word = map[k];
-      backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
-    });
-
-    //Metto puntatore *
-    mostraDiv(last_row_number+"_note");
-    const div_note=document.getElementById(last_row_number+"_note");
-    div_note.innerHTML+="<span id='asterisco'>*</span>"
-
-
-    Object.entries(backupTesto).forEach(([key, value]) => {
-      let finalText = `${key} ${Object.values(value).join(' ')}`;
-      modificaTestoDiv(parseInt(key), finalText);
-    });
-
-    note_flag=true
-
+    NxNy();
   }
 
   // command <complete note> complete
   if ( output_content == 'complete') {
-    clear_asterisk();
+    //clear_asterisk();
     note_flag=false
+    let txt = notes[last_note].note
+    console.log(txt)
+    txt = txt.replaceAll("<span id='asterisco'>*</span> ", "")
+    console.log(txt)
+    notes[last_note].note = txt
+    recompile_notes()
+    last_note = 0
   }
 
     //<delete note <id>> Dx
   if (checkDeleteNote(output_content) == true) {
       let note_to_delete = extract_numer_from_String(output_content);
-      const div_note=document.getElementById(note_to_delete[0]+"_note");
-      div_note.textContent=note_to_delete[0]+""
       console.log("Nota da cancellare:"+note_to_delete[0]);
-      div_note.style.visibility = 'hidden';
+      deleteNote(note_to_delete[0])
   }
 
   //<correct <u> <v>> Cx Cy
@@ -521,6 +617,17 @@ function check_command() {
   }
   //<approve correction <id>>
 
+
+  document.addEventListener('keydown', function(event) {
+    if (event.code === 'Space') {
+      add();
+      output_content="R1"
+      Rx();
+      //output_content="N1 N3"
+      //NxNy();
+
+    }
+  });
 
 
 
