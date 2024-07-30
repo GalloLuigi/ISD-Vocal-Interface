@@ -1,5 +1,4 @@
 //Definizione strutturura dati - I componenti della struttura dati hanno nomi in italiano
-// Define the 'word' structure
 class Word {
   constructor(integer, string) {
     this.integer = integer;
@@ -20,12 +19,6 @@ let notes = {}
 var number_of_rows = 0;
 var last_row_number = 0;
 let last_note = 0
-
-function modifyWordCount(delta) {
-  // Update the global variable using the delta value
-  word_count = delta;
-}
-
 
 function split_sentence_Into_Words(inputString) {
   // Regular expression pattern to match words
@@ -114,9 +107,6 @@ function compile_testo(){
   
 }
 
-//fine strutture dati
-
-
 //Iniziallizzo campo che conterra' il comando in output
 const output = document.getElementById('outputElement');
 document.getElementById('outputElement').style.display = "none";
@@ -124,30 +114,15 @@ var output_content;
 
 old_command = ''; //ultimo comando lanciato
 
-//PER FUNZIONE "Rx"
-/*********************************************************************************************/
-function checkString(str) {
-  const regex = /R[0-9]/; // Regular expression pattern
-  const regex_1 = /r[0-9]/;
 
-  const result = regex.test(str); // Apply the regular expression to the string
-  if (result) {
-    console.log(`${str} matches the pattern Rx`);
-    return true
-  } else {
-    const result_1 = regex_1.test(str);
-
-    if (result_1) {
-      console.log(`${str} matches the pattern Rx`);
-      return true
-    } else {
-      console.log(`${str} does not match the pattern Rx`);
-
-      return false
-    }
-  }
+function generic_Check_String(str, pattern) {
+  const regex = new RegExp(pattern);
+  return regex.test(str);
 }
 
+
+//PER FUNZIONE "Rx"
+/*********************************************************************************************/
 function extract_numer_from_String(str) {
   const regex = /[-+]?\d+/; // Regular expression pattern for numbers
   let test = []
@@ -161,18 +136,9 @@ function extract_numer_from_String(str) {
     console.log("No numbers found in the string.");
   }
 }
-/*********************************************************************************************/
 
 //PER FUNZIONE "Rx Ry"
 /*********************************************************************************************/
-function checkStringRR(inputString) {
-  // Regular expression pattern for the specified format
-  const regex = /^[rR]\d+ [rR]\d+$/;
-  console.log(`${inputString} match the pattern Rx Ry`);
-  // Check if the input string matches the regex
-  return regex.test(inputString);
-}
-
 function extract_numer_from_StringRR(inputString) {
  // Regex per estrarre i due interi
  const regex = /^([rR])(\d+)\s+([rR])(\d+)$/;
@@ -205,14 +171,6 @@ function getIntegersInRange(start, end) {
 
 //PER FUNZIONE "Nx Ny"
 /*********************************************************************************************/
-function checkStringNN(inputString) {
-  // Regular expression pattern for the specified format
-  const regex = /^[nN]\d+ [nN]\d+$/;
-  console.log(`${inputString} match the pattern Nx Ny`);
-  // Check if the input string matches the regex
-  return regex.test(inputString);
-}
-
 function extract_numer_from_StringNN(inputString) {
  // Regex per estrarre i due interi
  const regex = /^([nN])(\d+)\s+([nN])(\d+)$/;
@@ -229,31 +187,6 @@ function extract_numer_from_StringNN(inputString) {
  }
 }
 
-// Cx Cy
-/*************************************************************************************************/
-function checkStringCC(inputString) {
-  // Regular expression pattern for the specified format
-  const regex = /^[cC]\d+ [cC]\d+$/;
-  console.log(`${inputString} match the pattern Nx Ny`);
-  // Check if the input string matches the regex
-  return regex.test(inputString);
-}
-
-function extract_numer_from_StringCC(inputString) {
- // Regex per estrarre i due interi
- const regex = /^([cC])(\d+)\s+([cC])(\d+)$/;
- const match = inputString.match(regex);
-
- // Se la stringa corrisponde al pattern, estraiamo i numeri
- if (match) {
-   const intero1 = parseInt(match[2]);
-   const intero2 = parseInt(match[4]);
-   console.log(intero1,intero2);
-   return [intero1, intero2];
- } else {
-   return null; // La stringa non corrisponde al formato richiesto
- }
-}
 /*************************************************************************************************/
 
 function nascondiDiv(idDiv) {
@@ -271,58 +204,11 @@ function mostraDiv(idDiv) {
   div.style.visibility = 'visible';
 }
 
-// function init_note_div(){
-//   const note = document.getElementById("notes");
-//   let i=1 
-//     for(;i<=1;i++){
-//       tmp_div=document.createElement('div');
-//       tmp_div.id = i+"_note"
-//       tmp_div.textContent=""+i
-//       note.appendChild(tmp_div);
-//       nascondiDiv(i+"_note")
-//     }
-// }
-
 function rimuoviAsterischi(stringa) {
   return stringa.replace(/\*/g, '');
 }
 
-// function clear_asterisk(){
-//   const note = document.getElementById("wrapper_notes");
-//   let i=1
-//     for(;i<number_of_rows;i++){
-//       tmp_div=document.getElementById(i+"_note")
-//       tmp_div.textContent=rimuoviAsterischi(tmp_div.textContent)
-//     }
-// }
-
-
-
 /*********************************************************************************************/
-
-
-function checkDeleteNote(str) {
-  const regex = /Delete\s[0-9]/; // Regular expression pattern
-  const regex_1 = /delete\s[0-9]/;
-
-  const result = regex.test(str); // Apply the regular expression to the string
-  if (result) {
-    console.log(`${str} matches the pattern Rx`);
-    return true
-  } else {
-    const result_1 = regex_1.test(str);
-
-    if (result_1) {
-      console.log(`${str} matches the pattern Rx`);
-      return true
-    } else {
-      console.log(`${str} does not match the pattern Rx`);
-
-      return false
-    }
-  }
-}
-
 
 //funzione per aggiungere numeri interi alla fine delle righe
 function addNumberToEndOfWords(row_number, start_index, input_map) {
@@ -374,7 +260,7 @@ function recompile_notes(){
 }
 
 var note_flag=false
-
+//generic_Extract_Numbers_From_String
 function listen() {
   var buffer_note=""
   console.log("Listen...")
@@ -423,13 +309,11 @@ setInterval(listen, 7000); // 5000 milliseconds = 5 seconds
 function add(){
   add_flag = true;
   compile_testo();
-  //init_note_div();
   old_command = output_content; //aggiorno old command
 }
 
 function Rx(){
   compile_testo();
-  //clear_asterisk();
   let rows = extract_numer_from_String(output_content); //prendo il numero dalla stringa
 
   last_row_number = rows[0] //Aggiorno campo contente detta ultima riga
@@ -450,8 +334,8 @@ function Rx(){
 
 function RxRy(){
   compile_testo();
-  //clear_asterisk();
   let rows = extract_numer_from_StringRR(output_content); //prendo i numeri dalla stringa
+
   rows=getIntegersInRange(rows[0],rows[1]);               // prendo tutti i numeri nel range
 
   last_row_number = rows[0] //Aggiorno campo contente detta ultima riga
@@ -483,12 +367,6 @@ function NxNy(){
   });
 
   addNote(parseInt(words_number[0]), parseInt(words_number[1]))
-
-  // Metto puntatore *
-  // mostraDiv("wrapper_notes");
-  // const div_note=document.getElementById(last_row_number+"_note");
-  // div_note.innerHTML+="<span id='asterisco'>*</span>"
-
 
   Object.entries(backupTesto).forEach(([key, value]) => {
     let finalText = `${key} ${Object.values(value).join(' ')}`;
@@ -559,11 +437,28 @@ function deleteNote(id){
   recompile_notes()
 }
 
+function complete(){
+  note_flag=false
+  let txt = notes[last_note].note
+  console.log(txt)
+  txt = txt.replaceAll("<span id='asterisco'>*</span> ", "")
+  console.log(txt)
+  notes[last_note].note = txt
+  recompile_notes()
+  last_note = 0
+}
+
+function note_delete(){
+  let note_to_delete = extract_numer_from_String(output_content);
+  console.log("Nota da cancellare:"+note_to_delete[0]);
+  deleteNote(note_to_delete[0])
+}
+
+
 function check_command() {
 
-  //controlla se è stato lanciato un comando
+  //Annulla effetto comando vuoto/ vecchio comando che puo' erroneamente essere letto piu' volte
   if (output_content == '' || output_content == old_command) {
-
     return
   }
 
@@ -575,62 +470,47 @@ function check_command() {
 
   //Comando "Rx"
   //controlla se è un comando "Riga" con una regex
-  //IL COMANDO R0 è buggato
-  if (checkString(output_content) == true) {
+  if (generic_Check_String(output_content,/[Rr][0-9]/) == true) {
       Rx()
   }
 
   //Comando "RxRy"
-  if (checkStringRR(output_content) == true) {
+  if (generic_Check_String(output_content,/^[rR]\d+ [rR]\d+$/) == true) {
     RxRy()
   }
 
   // command Nx Ny {aggiunta nota}
   // Viene eliminata la punteggiatura
-  if (checkStringNN(output_content) == true) {
+  if (generic_Check_String(output_content,/^[nN]\d+ [nN]\d+$/) == true) {
     NxNy();
   }
 
   // command <complete note> complete
   if ( output_content == 'complete') {
-    //clear_asterisk();
-    note_flag=false
-    let txt = notes[last_note].note
-    console.log(txt)
-    txt = txt.replaceAll("<span id='asterisco'>*</span> ", "")
-    console.log(txt)
-    notes[last_note].note = txt
-    recompile_notes()
-    last_note = 0
+    complete();
   }
 
     //<delete note <id>> Dx
-  if (checkDeleteNote(output_content) == true) {
-      let note_to_delete = extract_numer_from_String(output_content);
-      console.log("Nota da cancellare:"+note_to_delete[0]);
-      deleteNote(note_to_delete[0])
+  if (generic_Check_String(output_content,/Delete|delete\s[0-9]/) == true) {
+    note_delete();
   }
 
   //<correct <u> <v>> Cx Cy
-  if (checkStringCC(output_content) == true) {
-    let words_number = extract_numer_from_StringCC(output_content);                   //prendo i numeri dalla stringa
-  }
+
   //<approve correction <id>>
 
-
+  //SOLO PER I TEST
   document.addEventListener('keydown', function(event) {
     if (event.code === 'Space') {
       add();
-      output_content="R1"
-      Rx();
+      //output_content="R1"
+      //Rx();
       //output_content="N1 N3"
       //NxNy();
 
     }
   });
-
-
-
+  
   //"Pulisco" il campo contente il comando
   output_content = '';
   return;
