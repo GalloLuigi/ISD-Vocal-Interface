@@ -155,6 +155,23 @@ function extract_numer_from_StringRR(inputString) {
  }
 }
 
+function extract_numer_from_StringCC(inputString) {
+  // Regex per estrarre i due interi
+  const regex = /^([cC])(\d+)\s+([cC])(\d+)$/;
+  const match = inputString.match(regex);
+ 
+  // Se la stringa corrisponde al pattern, estraiamo i numeri
+  if (match) {
+    const intero1 = parseInt(match[2]);
+    const intero2 = parseInt(match[4]);
+    console.log(intero1,intero2);
+    return [intero1, intero2];
+  } else {
+    return null; // La stringa non corrisponde al formato richiesto
+  }
+ }
+ 
+
 function getIntegersInRange(start, end) {
   if (start > end) {
     return [];
@@ -252,7 +269,13 @@ function recompile_notes(){
     let finalText = ""
     Object.entries(notes).forEach(([key, value]) => {
       let noteText = String(value.note)
-      finalText = finalText + String(key) + " " + noteText + "<br>";
+      if(value.is_note==true){
+        finalText = finalText + String(key) + " " + noteText + "<br>";
+      }
+      else{
+        finalText = finalText + `<span style="color: red;">${key} ${noteText}</span><br>`;  //se è una correzzione la stringa è rossa
+      }
+      
     });
 
     wrapper.innerHTML = finalText
@@ -377,6 +400,29 @@ function NxNy(){
 
 }
 
+function CxCy(){
+  let words_number = extract_numer_from_StringCC(output_content);                   //prendo i numeri dalla stringa
+  words_number=getIntegersInRange(words_number[0],words_number[1]);               // prendo tutti i numeri nel range
+
+  let backupTesto = JSON.parse(JSON.stringify(testo));
+
+  words_number.forEach(k => {
+    let word = map[k];
+    backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
+  });
+
+  addCorrection(parseInt(words_number[0]), parseInt(words_number[1]))
+
+  Object.entries(backupTesto).forEach(([key, value]) => {
+    let finalText = `${key} ${Object.values(value).join(' ')}`;
+    modificaTestoDiv(parseInt(key), finalText);
+  });
+
+  note_flag=true
+
+}
+
+// true nota - false correzione
 function addNote(stw, enw){
   let index = Object.keys(notes).length + 1
   let textNote = "<span id='asterisco'>*</span> "
@@ -385,6 +431,20 @@ function addNote(stw, enw){
     startWord : stw,
     endWord : enw,
     note: textNote,
+    is_note : true,
+  }
+  recompile_notes()
+}
+
+function addCorrection(stw, enw){
+  let index = Object.keys(notes).length + 1
+  let textNote = "<span id='asterisco'>*</span> "
+  last_note = index
+  notes[index] = {
+    startWord : stw,
+    endWord : enw,
+    note: textNote,
+    is_note : false,
   }
   recompile_notes()
 }
@@ -454,6 +514,31 @@ function note_delete(){
   deleteNote(note_to_delete[0])
 }
 
+function approveCorrection(id){
+  console.log(notes[id].note)//tutto il testo della correzione
+
+  //dobbiamo eliminare le parole sottolineate nel testo   //aggiungi parola a testo
+
+  const note = notes[id]
+
+  words_number=getIntegersInRange(note.startWord, note.endWord);    
+
+  words_number.forEach(k => {
+    let word = map[k];
+    testo[word.row][word.pos] = ``;
+    if(k==words_number[note.startWord]){
+      testo[word.row][word.pos] = notes[id].note;
+    }
+  });
+
+
+  //elimina correzzione
+
+  compile_testo();
+  deleteNote(id);
+
+}
+
 
 function check_command() {
 
@@ -503,8 +588,14 @@ function check_command() {
   }
 
   //<correct <u> <v>> Cx Cy
-
+  if (generic_Check_String(output_content,/^[cC]\d+ [cC]\d+$/) == true) {
+    CxCy();
+  }
   //<approve correction <id>>
+  if (generic_Check_String(output_content,/[Aa][0-9]/) == true) {
+    //console.log(extract_numer_from_String(output_content));
+    approveCorrection(extract_numer_from_String(output_content));
+  }
 
   //SOLO PER I TEST
   document.addEventListener('keyup', function(event) {
