@@ -495,20 +495,29 @@ function check_command() {
     note_delete();
   }
 
+  // highlight note <id>
+  if (generic_Check_String(output_content,/[Hh][0-9]/) == true) {
+    extract_numer_from_String(output_content);
+    console.log(extract_numer_from_String(output_content));
+    highlightNote(extract_numer_from_String(output_content));
+  }
+
   //<correct <u> <v>> Cx Cy
 
   //<approve correction <id>>
 
   //SOLO PER I TEST
-  document.addEventListener('keydown', function(event) {
-    if (event.code === 'Space') {
+  document.addEventListener('keyup', function(event) {
+        if (event.code === 'Space') {
       add();
-      //output_content="R1"
-      //Rx();
-      //output_content="N1 N3"
-      //NxNy();
-
+      /*
+      output_content="R1"
+      Rx();
+      output_content="N1 N3"
+      NxNy();
+      */
     }
+
   });
   
   //"Pulisco" il campo contente il comando
