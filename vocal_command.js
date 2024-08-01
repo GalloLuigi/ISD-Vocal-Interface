@@ -1,3 +1,58 @@
+//COMAND CONFIGURATION
+//----------------------------------------------------------------------------------------------//
+//Attuale configurazione dei comandi
+const config ={
+  "Add number to line": "add",
+  "Select line": "R",
+  "Add a note": "N",
+  "Complete Note":"complete",
+  "Delete note": "delete",
+  "Highlight note": "h",
+  "Correct note": "c",
+  "Approve correction": "a"
+};
+
+function modifyConfig() {
+  const selectedKey = document.getElementById('config-keys-dropdown').value;
+  const newValue = document.getElementById('new-value').value;
+
+  if (selectedKey && newValue) {
+      config[selectedKey] = newValue;
+      updateConfigDisplay();
+      document.getElementById('modify-form').reset();
+  } else {
+      alert('Please select a key and enter a new value.');
+  }
+}
+
+function updateConfigDisplay() {
+  document.getElementById('config-content').textContent = JSON.stringify(config, null, 2);
+}
+
+function updateDropdown() {
+  const dropdown = document.getElementById('config-keys-dropdown');
+  dropdown.innerHTML = '';
+
+  for (const key in config) {
+      const option = document.createElement('option');
+      option.value = key;
+      option.textContent = key;
+      dropdown.appendChild(option);
+  }
+}
+
+// Initialize display and dropdown
+updateConfigDisplay();
+updateDropdown();
+
+
+
+
+
+
+
+//  VOCAL INTERFACE
+//----------------------------------------------------------------------------------------------//
 //Definizione strutturura dati - I componenti della struttura dati hanno nomi in italiano
 class Word {
   constructor(integer, string) {

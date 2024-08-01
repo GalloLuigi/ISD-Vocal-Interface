@@ -51,6 +51,20 @@
     <div id="wrapper_notes"></div>
     </div>
 
+    <h1>Modify Configuration:</h1>
+
+    <h2>Select Key to Modify:</h2>
+    <form id="modify-form">
+        <label for="config-keys-dropdown">Key:</label>
+        <select id="config-keys-dropdown" required></select><br><br>
+        <label for="new-value">New Value:</label>
+        <input type="text" id="new-value" name="new-value" required><br><br>
+        <button type="button" onclick="modifyConfig()">Modify</button>
+    </form>
+
+    <h2>Current Configuration:</h2>
+    <pre id="config-content"></pre>
+
     <!-- JavaScript code -->
 <script>
     // Set the worker source for PDF.js library
@@ -168,5 +182,7 @@
 </script>
 
 <script src="vocal_command.js"></script>
+<script src="set_command_name.js"></script>
+
 	</body>
 </html>
