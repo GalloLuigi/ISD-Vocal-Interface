@@ -23,6 +23,9 @@ function modifyConfig() {
   } else {
       alert('Please select a key and enter a new value.');
   }
+
+  gen_regex_from_config()
+
 }
 
 function updateConfigDisplay() {
@@ -45,8 +48,24 @@ function updateDropdown() {
 updateConfigDisplay();
 updateDropdown();
 
+var regex_add = "add";
+var regex_complete= "complete";
+var regex_R=/[Rr][0-9]/;
+var regex_RR=/^[rR]\d+ [rR]\d+$/;
+var regex_NN=/^[nN]\d+ [nN]\d+$/;
+var regex_delete=/Delete|delete\s[0-9]/;
+var regex_H=/[Hh][0-9]/;
+var regex_CC=/^[cC]\d+ [cC]\d+$/;
+var regex_A=/[Aa][0-9]/;
 
 
+function gen_regex_from_config() {
+  //config["Add a note"] = stringToRegex(config["Add a note"]);
+  regex_add= config["Add number to line"];
+  //config["Complete Note"] = stringToRegex(config["Complete Note"]);
+  regex_complete= config["Complete Note"];
+
+}
 
 
 
@@ -604,51 +623,50 @@ function check_command() {
 
 
   //lancia comando add
-  if (output_content == 'add' || output_content == 'Add' || output_content == 'ad') {
+  if (output_content== regex_add ) {
     add()
   }
 
   //Comando "Rx"
   //controlla se è un comando "Riga" con una regex
-  if (generic_Check_String(output_content,/[Rr][0-9]/) == true) {
+  if (generic_Check_String(output_content,regex_R) == true) {
       Rx()
   }
 
   //Comando "RxRy"
-  if (generic_Check_String(output_content,/^[rR]\d+ [rR]\d+$/) == true) {
+  if (generic_Check_String(output_content,regex_RR) == true) {
     RxRy()
   }
 
   // command Nx Ny {aggiunta nota}
   // Viene eliminata la punteggiatura
-  if (generic_Check_String(output_content,/^[nN]\d+ [nN]\d+$/) == true) {
+  if (generic_Check_String(output_content,regex_NN) == true) {
     NxNy();
   }
 
   // command <complete note> complete
-  if ( output_content == 'complete') {
+  if ( output_content == regex_complete) {
     complete();
   }
 
     //<delete note <id>> Dx
-  if (generic_Check_String(output_content,/Delete|delete\s[0-9]/) == true) {
+  if (generic_Check_String(output_content,regex_delete) == true) {
     note_delete();
   }
 
   // highlight note <id>
-  if (generic_Check_String(output_content,/[Hh][0-9]/) == true) {
+  if (generic_Check_String(output_content,regex_H) == true) {
     extract_numer_from_String(output_content);
     console.log(extract_numer_from_String(output_content));
     highlightNote(extract_numer_from_String(output_content));
   }
 
   //<correct <u> <v>> Cx Cy
-  if (generic_Check_String(output_content,/^[cC]\d+ [cC]\d+$/) == true) {
+  if (generic_Check_String(output_content,regex_CC) == true) {
     CxCy();
   }
   //<approve correction <id>>
-  if (generic_Check_String(output_content,/[Aa][0-9]/) == true) {
-    //console.log(extract_numer_from_String(output_content));
+  if (generic_Check_String(output_content,regex_A) == true) {
     approveCorrection(extract_numer_from_String(output_content));
   }
 
@@ -656,12 +674,6 @@ function check_command() {
   document.addEventListener('keyup', function(event) {
         if (event.code === 'Space') {
       add();
-      /*
-      output_content="R1"
-      Rx();
-      output_content="N1 N3"
-      NxNy();
-      */
     }
 
   });
