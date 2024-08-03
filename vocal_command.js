@@ -2,7 +2,7 @@
 //----------------------------------------------------------------------------------------------//
 //Attuale configurazione dei comandi
 const config ={
-  "Add number to line": "add",
+  "Add number to line": "number",
   "Select line": "R",
   "Add a note": "N",
   "Complete Note":"complete",
@@ -48,7 +48,7 @@ function updateDropdown() {
 updateConfigDisplay();
 updateDropdown();
 
-var regex_add = "add";
+var regex_add = "number";
 var regex_complete= "complete";
 var regex_R=/[Rr][0-9]/;
 var regex_RR=/^[rR]\d+ [rR]\d+$/;
@@ -59,10 +59,21 @@ var regex_CC=/^[cC]\d+ [cC]\d+$/;
 var regex_A=/[Aa][0-9]/;
 
 
+//NON FUNZIONANTE AL MOMENTO
+function sostituisciRegex(regex, valoreDaSostituire, nuovoValore) {
+  regex_string=regex.toString()
+
+  regex_string=regex_string.slice(1);
+  regex_string=regex_string.slice(0, -1);
+
+  new_regex=regex_string.replace(valoreDaSostituire,nuovoValore)
+  return new RegExp(new_regex);
+}
+
 function gen_regex_from_config() {
-  //config["Add a note"] = stringToRegex(config["Add a note"]);
   regex_add= config["Add number to line"];
-  //config["Complete Note"] = stringToRegex(config["Complete Note"]);
+  //regex_R=sostituisciRegex(regex_R,"Rr",config["Select line"]);
+  
   regex_complete= config["Complete Note"];
 
 }
@@ -374,7 +385,8 @@ function listen() {
       .join('')
 
     output.innerHTML = transcript;
-    output_content = output.textContent;        // output_content e' una stringa contente l'ultimo comando lanciato
+    //Aggunto il tolowercase
+    output_content = output.textContent.toLowerCase();;        // output_content e' una stringa contente l'ultimo comando lanciato
 
     //Scrivo la nota...
     if(note_flag==true){
@@ -396,6 +408,7 @@ function listen() {
   });
 
   if (speech == true) {
+    recognition.interimResults = false;
     //recognition.lang = "en-US";
     recognition.start();
   }
