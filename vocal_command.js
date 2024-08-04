@@ -50,13 +50,13 @@ updateDropdown();
 
 var regex_add = "number";
 var regex_complete= "complete";
-var regex_R=/[Rr][0-9]/;
-var regex_RR=/^[rR]\d+ [rR]\d+$/;
-var regex_NN=/^[nN]\d+ [nN]\d+$/;
-var regex_delete=/Delete|delete\s[0-9]/;
-var regex_H=/[Hh][0-9]/;
-var regex_CC=/^[cC]\d+ [cC]\d+$/;
-var regex_A=/[Aa][0-9]/;
+var regex_R=/[r][0-9]/;
+var regex_RR=/r[0-9]r[0-9]/;
+var regex_NN=/n[0-9]n[0-9]/;
+var regex_delete=/delete[0-9]/;
+var regex_H=/[h][0-9]/;
+var regex_CC=/c[0-9]c[0-9]/;
+var regex_A=/[a][0-9]/;
 
 
 //NON FUNZIONANTE AL MOMENTO
@@ -225,36 +225,22 @@ function extract_numer_from_String(str) {
 //PER FUNZIONE "Rx Ry"
 /*********************************************************************************************/
 function extract_numer_from_StringRR(inputString) {
- // Regex per estrarre i due interi
- const regex = /^([rR])(\d+)\s+([rR])(\d+)$/;
- const match = inputString.match(regex);
+  var regex_RR = /\b\w+(\d)\w+(\d)\b/g;
 
- // Se la stringa corrisponde al pattern, estraiamo i numeri
- if (match) {
-   const intero1 = parseInt(match[2]);
-   const intero2 = parseInt(match[4]);
-   console.log(intero1,intero2);
-   return [intero1, intero2];
- } else {
-   return null; // La stringa non corrisponde al formato richiesto
- }
+  let matches;
+  let integers = [];
+
+  // Usa la regex per trovare tutte le corrispondenze nel testo
+  while ((matches = regex_RR.exec(inputString)) !== null) {
+      // Aggiungi i numeri trovati alla lista degli interi
+      integers.push(parseInt(matches[1]));
+      integers.push(parseInt(matches[2]));
+  }
+
+  return integers;
+   
 }
 
-function extract_numer_from_StringCC(inputString) {
-  // Regex per estrarre i due interi
-  const regex = /^([cC])(\d+)\s+([cC])(\d+)$/;
-  const match = inputString.match(regex);
- 
-  // Se la stringa corrisponde al pattern, estraiamo i numeri
-  if (match) {
-    const intero1 = parseInt(match[2]);
-    const intero2 = parseInt(match[4]);
-    console.log(intero1,intero2);
-    return [intero1, intero2];
-  } else {
-    return null; // La stringa non corrisponde al formato richiesto
-  }
- }
  
 
 function getIntegersInRange(start, end) {
@@ -268,26 +254,7 @@ function getIntegersInRange(start, end) {
   }
   return result;
 }
-/*********************************************************************************************/
 
-
-//PER FUNZIONE "Nx Ny"
-/*********************************************************************************************/
-function extract_numer_from_StringNN(inputString) {
- // Regex per estrarre i due interi
- const regex = /^([nN])(\d+)\s+([nN])(\d+)$/;
- const match = inputString.match(regex);
-
- // Se la stringa corrisponde al pattern, estraiamo i numeri
- if (match) {
-   const intero1 = parseInt(match[2]);
-   const intero2 = parseInt(match[4]);
-   console.log(intero1,intero2);
-   return [intero1, intero2];
- } else {
-   return null; // La stringa non corrisponde al formato richiesto
- }
-}
 
 /*************************************************************************************************/
 
@@ -370,6 +337,8 @@ function recompile_notes(){
 var note_flag=false
 //generic_Extract_Numbers_From_String
 function listen() {
+
+
   var buffer_note=""
   console.log("Listen...")
   var speech = true;
@@ -386,12 +355,21 @@ function listen() {
 
     output.innerHTML = transcript;
     //Aggunto il tolowercase
-    output_content = output.textContent.toLowerCase();;        // output_content e' una stringa contente l'ultimo comando lanciato
 
-    //Scrivo la nota...
+    output_content = output.textContent;
+    
     if(note_flag==true){
+
       const note_to_write = document.getElementById(last_row_number+"_note");
       buffer_note = output_content
+
+    }
+    else{
+
+      output_content = output_content.toLowerCase();;        // output_content e' una stringa contente l'ultimo comando lanciato
+      output_content = output_content.split(' ').join('');
+      console.log("The command is:"+output_content);
+
     }
 
     console.log(transcript);
@@ -444,7 +422,7 @@ function Rx(){
 
 function RxRy(){
   compile_testo();
-  let rows = extract_numer_from_StringRR(output_content); //prendo i numeri dalla stringa
+  let rows = extract_numer_from_StringRR(output_content,regex_RR); //prendo i numeri dalla stringa
 
   rows=getIntegersInRange(rows[0],rows[1]);               // prendo tutti i numeri nel range
 
@@ -466,7 +444,7 @@ function RxRy(){
 }
 
 function NxNy(){
-  let words_number = extract_numer_from_StringNN(output_content);                   //prendo i numeri dalla stringa
+  let words_number = extract_numer_from_StringRR(output_content);                   //prendo i numeri dalla stringa
   words_number=getIntegersInRange(words_number[0],words_number[1]);               // prendo tutti i numeri nel range
 
   let backupTesto = JSON.parse(JSON.stringify(testo));
@@ -476,7 +454,7 @@ function NxNy(){
     backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
   });
 
-  addNote(parseInt(words_number[0]), parseInt(words_number[1]))
+  addNote(words_number[0], words_number[1])
 
   Object.entries(backupTesto).forEach(([key, value]) => {
     let finalText = `${key} ${Object.values(value).join(' ')}`;
@@ -488,7 +466,7 @@ function NxNy(){
 }
 
 function CxCy(){
-  let words_number = extract_numer_from_StringCC(output_content);                   //prendo i numeri dalla stringa
+  let words_number = extract_numer_from_StringRR(output_content);                   //prendo i numeri dalla stringa
   words_number=getIntegersInRange(words_number[0],words_number[1]);               // prendo tutti i numeri nel range
 
   let backupTesto = JSON.parse(JSON.stringify(testo));
@@ -536,6 +514,7 @@ function addCorrection(stw, enw){
   recompile_notes()
 }
 
+//da rifare
 function highlightNote(id) {
   if(notes[id]){
     compile_testo();
@@ -549,6 +528,7 @@ function highlightNote(id) {
       backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
     });
 
+
     Object.entries(backupTesto).forEach(([key, value]) => {
       let finalText = `${key} ${Object.values(value).join(' ')}`;
       modificaTestoDiv(parseInt(key), finalText);
@@ -557,7 +537,7 @@ function highlightNote(id) {
     let finalText = ""
 
     Object.entries(notes).forEach(([key, value]) => {
-      let finalText = finalText + `${key} ${value.note}` + " <br>";
+      finalText = finalText + `${key} ${value.note}` + " <br>";
     });
   
     document.getElementById("wrapper_notes").innerHTML = finalText
