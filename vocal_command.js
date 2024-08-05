@@ -12,15 +12,26 @@ const config ={
   "Approve correction": "a"
 };
 
+const old_config ={
+  "Add number to line": "number",
+  "Select line": "select",
+  "Add a note": "note",
+  "Complete Note":"complete",
+  "Delete note": "delete",
+  "Highlight note": "search",
+  "Correct note": "c",
+  "Approve correction": "a"
+};
+
 var regex_add = "number";
 var regex_complete= "complete";
-var regex_R=/select[0-9]/;
-var regex_RR=/r[0-9]r[0-9]/;
-var regex_NN=/note[0-9]note[0-9]/;
-var regex_delete=/delete[0-9]/;
-var regex_H=/[search][0-9]/;
-var regex_CC=/c[0-9]c[0-9]/;
-var regex_A=/[a][0-9]/;
+var regex_R=/select[0-9]+/;
+var regex_RR=/select[0-9]+select[0-9]+/;
+var regex_NN=/note[0-9]+note[0-9]+/;
+var regex_delete=/delete[0-9]+/;
+var regex_H=/search[0-9]+/;
+var regex_CC=/c[0-9]+c[0-9]+/;
+var regex_A=/a[0-9]+/;
 
 function modifyConfig() {
   const selectedKey = document.getElementById('config-keys-dropdown').value;
@@ -102,24 +113,36 @@ updateDropdown();
 
 
 
-
-//NON FUNZIONANTE AL MOMENTO
 function sostituisciRegex(regex, valoreDaSostituire, nuovoValore) {
   regex_string=regex.toString()
-
   regex_string=regex_string.slice(1);
   regex_string=regex_string.slice(0, -1);
-
   new_regex=regex_string.replace(valoreDaSostituire,nuovoValore)
   return new RegExp(new_regex);
 }
 
 function gen_regex_from_config() {
+/*
   regex_add= config["Add number to line"];
-  //regex_R=sostituisciRegex(regex_R,"Rr",config["Select line"]);
   
-  regex_complete= config["Complete Note"];
+  regex_R=sostituisciRegex(regex_R,old_config["Select line"],config["Select line"]);
+  regex_RR=sostituisciRegex(regex_RR,old_config["Select line"],config["Select line"]);
+  old_config["Select line"]=config["Select line"];
 
+  regex_CC=sostituisciRegex(regex_CC,old_config["Correct note"],config["Correct note"]);
+  old_config["Correct note"]=config["Correct note"];
+
+  regex_NN=sostituisciRegex(regex_NN,old_config["Add a note"],config["Select line"]);
+  old_config["Add a note"]=config["Add a note"];
+
+  regex_delete=sostituisciRegex(regex_delete,old_config["Delete note"],config["Delete note"]);
+  old_config["Delete note"]=config["Delete note"];
+
+  regex_A=sostituisciRegex(regex_A,old_config["Approve correction"],config["Approve correction"]);
+  old_config["Approve correction"]=config["Approve correction"];
+
+  regex_complete= config["Complete Note"];
+*/
 }
 
 
@@ -398,12 +421,12 @@ function listen() {
 
     console.log("The command is:"+output_content);
     
-    if(note_flag==true && buffer_note!="complete"){
+    if(note_flag==true){
       buffer_note = output_content
-      let txt = notes[last_note].note
-      txt = txt + " "+buffer_note+" "
-      notes[last_note].note = txt
-      recompile_notes()
+      //let txt = notes[last_note].note
+      //txt = txt + " "+buffer_note+" "
+      //notes[last_note].note = txt
+      //recompile_notes()
     }
     else{
 
@@ -416,16 +439,16 @@ function listen() {
     console.log(transcript);
   });
 
-  // recognition.addEventListener("audioend", () => {
-  //   console.log("Audio capturing ended");
-  //   console.log("buffer note finale: " + buffer_note)
-  //   if(note_flag==true && buffer_note!="complete"){
-  //     let txt = notes[last_note].note
-  //     txt = txt + " "+buffer_note+" "
-  //     notes[last_note].note = txt
-  //     recompile_notes()
-  //   }
-  // });
+   recognition.addEventListener("audioend", () => {
+     console.log("Audio capturing ended");
+     console.log("buffer note finale: " + buffer_note)
+     if(note_flag==true && buffer_note!="complete"){
+       let txt = notes[last_note].note
+    txt = txt + " "+buffer_note+" "
+       notes[last_note].note = txt
+       recompile_notes()
+     }
+  });
 
   if (speech == true) {
     recognition.interimResults = false;
@@ -493,7 +516,7 @@ function NxNy(){
     backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
   });
 
-  addNote(words_number[0], words_number[1])
+  addNote(words_number[0], words_number[1],last_row_number)
   Object.entries(backupTesto).forEach(([key, value]) => {
     let finalText = `${key} ${Object.values(value).join(' ')}`;
     modificaTestoDiv(parseInt(key), finalText);
@@ -526,7 +549,7 @@ function CxCy(){
 }
 
 // true nota - false correzione
-function addNote(stw, enw){
+function addNote(stw, enw, last_rowNumber){
   let index = Object.keys(notes).length + 1
   let textNote = "<span id='asterisco'>*</span> "
   last_note = index
@@ -534,6 +557,7 @@ function addNote(stw, enw){
     startWord : stw,
     endWord : enw,
     note: textNote,
+    startWord_number:last_rowNumber,
     is_note : true,
   }
   recompile_notes()
@@ -554,50 +578,25 @@ function addCorrection(stw, enw){
 
 //da rifare
 function highlightNote(id) {
+  /*
   if(notes[id]){
     compile_testo();
-
+   
     words_number=getIntegersInRange(notes[id].startWord, notes[id].endWord);    
-    
-    let backupTesto = JSON.parse(JSON.stringify(testo));
 
+    let backupTesto = JSON.parse(JSON.stringify(testo));
     words_number.forEach(k => {
       let word = map[k];
       backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
-    });
-
-    Object.entries(backupTesto).forEach(([key, value]) => {
-      let finalText = `${key} ${Object.values(value).join(' ')}`;
-      modificaTestoDiv(parseInt(key), finalText);
-    });
-
-    /*
-    compile_testo();
-    const note = notes[id]
-
-    let backupTesto = JSON.parse(JSON.stringify(testo));
-    words_number=getIntegersInRange(note.startWord, note.endWord);    
-
-    words_number.forEach(k => {
-      let word = map[k];
-      backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
-    });
-
-
-    Object.entries(backupTesto).forEach(([key, value]) => {
-      let finalText = `${key} ${Object.values(value).join(' ')}`;
-      modificaTestoDiv(parseInt(key), finalText);
-    });
-
-    let finalText = ""
-
-    Object.entries(notes).forEach(([key, value]) => {
-      finalText = finalText + `${key} ${value.note}` + " <br>";
     });
   
-    document.getElementById("wrapper_notes").innerHTML = finalText
-        */
+    Object.entries(backupTesto).forEach(([key, value]) => {
+      let finalText = `${key} ${Object.values(value).join(' ')}`;
+      modificaTestoDiv(parseInt(key), finalText);
+    })
+  
   }
+    */
 }
 
 function deleteNote(id){
@@ -636,10 +635,10 @@ function note_delete(){
 }
 
 function approveCorrection(id){
-  console.log(notes[id].note)//tutto il testo della correzione
+  //console.log(notes[id].note)//tutto il testo della correzione
 
   //dobbiamo eliminare le parole sottolineate nel testo   //aggiungi parola a testo
-
+  /*
   const note = notes[id]
 
   words_number=getIntegersInRange(note.startWord, note.endWord);    
@@ -653,11 +652,11 @@ function approveCorrection(id){
   });
 
 
-  //elimina correzzione
+  //elimina correzione
 
   compile_testo();
   deleteNote(id);
-
+  */
 }
 
 
