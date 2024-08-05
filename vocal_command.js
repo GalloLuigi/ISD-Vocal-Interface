@@ -3,14 +3,24 @@
 //Attuale configurazione dei comandi
 const config ={
   "Add number to line": "number",
-  "Select line": "R",
+  "Select line": "select",
   "Add a note": "note",
   "Complete Note":"complete",
   "Delete note": "delete",
-  "Highlight note": "h",
+  "Highlight note": "search",
   "Correct note": "c",
   "Approve correction": "a"
 };
+
+var regex_add = "number";
+var regex_complete= "complete";
+var regex_R=/select[0-9]/;
+var regex_RR=/r[0-9]r[0-9]/;
+var regex_NN=/note[0-9]note[0-9]/;
+var regex_delete=/delete[0-9]/;
+var regex_H=/[search][0-9]/;
+var regex_CC=/c[0-9]c[0-9]/;
+var regex_A=/[a][0-9]/;
 
 function modifyConfig() {
   const selectedKey = document.getElementById('config-keys-dropdown').value;
@@ -90,15 +100,7 @@ function updateDropdown() {
 updateConfigDisplay();
 updateDropdown();
 
-var regex_add = "number";
-var regex_complete= "complete";
-var regex_R=/[r][0-9]/;
-var regex_RR=/r[0-9]r[0-9]/;
-var regex_NN=/note[0-9]note[0-9]/;
-var regex_delete=/delete[0-9]/;
-var regex_H=/[h][0-9]/;
-var regex_CC=/c[0-9]c[0-9]/;
-var regex_A=/[a][0-9]/;
+
 
 
 //NON FUNZIONANTE AL MOMENTO
@@ -144,7 +146,7 @@ var map = new Map();
 var word_count = 0;
 let notes = {}
 var number_of_rows = 0;
-var last_row_number = 0;
+var last_row_number = [];
 let last_note = 0
 
 function split_sentence_Into_Words(inputString) {
@@ -166,13 +168,11 @@ function split_sentence_Into_Words(inputString) {
 
 
 function compile_testo(){
-  console.log(Object.keys(testo).length);
   let sentences = []
   const targetElement = document.getElementById('target-div'); //prendo in input il div
   const textContent = targetElement.textContent; //estrapolo il testo
   let index = 1
   if(Object.keys(testo).length===0){
-    console.log("entrato")
     
     let currentSentence = ''; // Variable to hold the current sentence being constructed
 
@@ -267,7 +267,7 @@ function extract_numer_from_String(str) {
 //PER FUNZIONE "Rx Ry"
 /*********************************************************************************************/
 function extract_numer_from_StringRR(inputString) {
-  var regex_RR = /\b\w+(\d)\w+(\d)\b/g;
+  var regex_RR = /\b[a-zA-Z]+(\d+)[a-zA-Z]+(\d+)\b/g;
 
   let matches;
   let integers = [];
@@ -324,8 +324,7 @@ function rimuoviAsterischi(stringa) {
 //funzione per aggiungere numeri interi alla fine delle righe
 function addNumberToEndOfWords(row_number, start_index, input_map) {
   if(row_number){
-     map = input_map
-    console.log(input_map)
+    map = input_map
     let word_index = start_index
     let new_string = ""
     let row = testo[row_number]
@@ -342,7 +341,6 @@ function addNumberToEndOfWords(row_number, start_index, input_map) {
       }
       new_string = new_string + temp
     } 
-    console.log(new_string, map, word_index)
     return [new_string, map, word_index]
   }
 }
@@ -377,11 +375,9 @@ function recompile_notes(){
 }
 
 var note_flag=false
+let buffer_note=""
 //generic_Extract_Numbers_From_String
 function listen() {
-
-
-  var buffer_note=""
   console.log("Listen...")
   var speech = true;
   window.SpeechRecognition = window.webkitSpeechRecognition;
@@ -402,11 +398,12 @@ function listen() {
 
     console.log("The command is:"+output_content);
     
-    if(note_flag==true){
-
-      const note_to_write = document.getElementById(last_row_number+"_note");
+    if(note_flag==true && buffer_note!="complete"){
       buffer_note = output_content
-
+      let txt = notes[last_note].note
+      txt = txt + " "+buffer_note+" "
+      notes[last_note].note = txt
+      recompile_notes()
     }
     else{
 
@@ -419,15 +416,16 @@ function listen() {
     console.log(transcript);
   });
 
-  recognition.addEventListener("audioend", () => {
-    console.log("Audio capturing ended");
-    if(note_flag==true && buffer_note!="complete"){
-      let txt = notes[last_note].note
-      txt = txt + " "+buffer_note+" "
-      notes[last_note].note = txt
-      recompile_notes()
-    }
-  });
+  // recognition.addEventListener("audioend", () => {
+  //   console.log("Audio capturing ended");
+  //   console.log("buffer note finale: " + buffer_note)
+  //   if(note_flag==true && buffer_note!="complete"){
+  //     let txt = notes[last_note].note
+  //     txt = txt + " "+buffer_note+" "
+  //     notes[last_note].note = txt
+  //     recompile_notes()
+  //   }
+  // });
 
   if (speech == true) {
     recognition.interimResults = false;
@@ -436,7 +434,7 @@ function listen() {
   }
 }
 listen();
-setInterval(listen, 7000); // 5000 milliseconds = 5 seconds
+setInterval(listen, 8000); // 5000 milliseconds = 5 seconds
 
 function add(){
   add_flag = true;
@@ -448,7 +446,7 @@ function Rx(){
   compile_testo();
   let rows = extract_numer_from_String(output_content); //prendo il numero dalla stringa
 
-  last_row_number = rows[0] //Aggiorno campo contente detta ultima riga
+  last_row_number = rows //Aggiorno campo contente detta ultima riga
 
   let start_index = 0
   let start_map = {}
@@ -470,11 +468,10 @@ function RxRy(){
 
   rows=getIntegersInRange(rows[0],rows[1]);               // prendo tutti i numeri nel range
 
-  last_row_number = rows[0] //Aggiorno campo contente detta ultima riga
+  last_row_number = rows //Aggiorno campo contente detta ultima riga
 
   let start_index = 0
   let start_map = {}
-  console.log("The rows:"+rows);
   for(const r of rows){
     let ret = addNumberToEndOfWords(parseInt(r), start_index, start_map)
     let editedString = ret[0]
@@ -488,18 +485,15 @@ function RxRy(){
 }
 
 function NxNy(){
-  let words_number = extract_numer_from_StringRR(output_content);                   //prendo i numeri dalla stringa
-  words_number=getIntegersInRange(words_number[0],words_number[1]);               // prendo tutti i numeri nel range
-
+  let wrds = extract_numer_from_StringRR(output_content);                   //prendo i numeri dalla stringa
+  words_number=getIntegersInRange(wrds[0],wrds[1]);               // prendo tutti i numeri nel range
   let backupTesto = JSON.parse(JSON.stringify(testo));
-
   words_number.forEach(k => {
     let word = map[k];
     backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
   });
 
   addNote(words_number[0], words_number[1])
-
   Object.entries(backupTesto).forEach(([key, value]) => {
     let finalText = `${key} ${Object.values(value).join(' ')}`;
     modificaTestoDiv(parseInt(key), finalText);
@@ -629,9 +623,7 @@ function deleteNote(id){
 function complete(){
   note_flag=false
   let txt = notes[last_note].note
-  console.log(txt)
   txt = txt.replaceAll("<span id='asterisco'>*</span> ", "")
-  console.log(txt)
   notes[last_note].note = txt
   recompile_notes()
   last_note = 0
@@ -685,6 +677,7 @@ function check_command() {
   //Comando "Rx"
   //controlla se è un comando "Riga" con una regex
   if (generic_Check_String(output_content,regex_R) == true) {
+
       Rx()
   }
 
@@ -712,7 +705,6 @@ function check_command() {
   // highlight note <id>
   if (generic_Check_String(output_content,regex_H) == true) {
     extract_numer_from_String(output_content);
-    console.log(extract_numer_from_String(output_content));
     highlightNote(extract_numer_from_String(output_content));
   }
 
