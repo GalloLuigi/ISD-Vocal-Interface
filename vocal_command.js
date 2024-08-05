@@ -4,7 +4,7 @@
 const config ={
   "Add number to line": "number",
   "Select line": "R",
-  "Add a note": "N",
+  "Add a note": "note",
   "Complete Note":"complete",
   "Delete note": "delete",
   "Highlight note": "h",
@@ -26,6 +26,48 @@ function modifyConfig() {
 
   gen_regex_from_config()
 
+}
+
+function convertNumbersToDigits(str) {
+  // Array contenente i numeri da uno a diciannove
+  const units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+                'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen',   
+ 'nineteen'];
+  // Array  contenente le decine (escluse le unità)
+  const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+  // Funzione ausiliaria per convertire un singolo numero in lettere in un numero intero
+  function convertNumber(numStr) {
+    numStr = numStr.toLowerCase();
+    let result = 0;
+
+    // Gestisce numeri da uno a diciannove
+    if (units.includes(numStr)) {
+      return units.indexOf(numStr);
+    }
+
+    // Gestisce decine e unità
+    for (let i = tens.length - 1; i >= 0; i--) {
+      if (numStr.startsWith(tens[i])) {
+        result += i * 10;
+        numStr = numStr.slice(tens[i].length);
+        break;
+      }
+    }
+
+    // Aggiunge le unità rimanenti
+    result += units.indexOf(numStr);
+    return result;
+  }
+
+  // Espressione regolare per individuare i numeri scritti in lettere
+  const numberRegex = /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand)\b/gi;   
+
+
+  // Sostituisce ogni occorrenza di un numero in lettere con il corrispondente numero intero
+  return str.replace(numberRegex, (match) => {
+    return convertNumber(match);
+  });
 }
 
 function updateConfigDisplay() {
@@ -52,7 +94,7 @@ var regex_add = "number";
 var regex_complete= "complete";
 var regex_R=/[r][0-9]/;
 var regex_RR=/r[0-9]r[0-9]/;
-var regex_NN=/n[0-9]n[0-9]/;
+var regex_NN=/note[0-9]note[0-9]/;
 var regex_delete=/delete[0-9]/;
 var regex_H=/[h][0-9]/;
 var regex_CC=/c[0-9]c[0-9]/;
@@ -354,9 +396,11 @@ function listen() {
       .join('')
 
     output.innerHTML = transcript;
-    //Aggunto il tolowercase
 
     output_content = output.textContent;
+    output_content =convertNumbersToDigits(output_content);
+
+    console.log("The command is:"+output_content);
     
     if(note_flag==true){
 
@@ -387,7 +431,7 @@ function listen() {
 
   if (speech == true) {
     recognition.interimResults = false;
-    //recognition.lang = "en-US";
+    recognition.lang = "en-US";
     recognition.start();
   }
 }
@@ -518,6 +562,23 @@ function addCorrection(stw, enw){
 function highlightNote(id) {
   if(notes[id]){
     compile_testo();
+
+    words_number=getIntegersInRange(notes[id].startWord, notes[id].endWord);    
+    
+    let backupTesto = JSON.parse(JSON.stringify(testo));
+
+    words_number.forEach(k => {
+      let word = map[k];
+      backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
+    });
+
+    Object.entries(backupTesto).forEach(([key, value]) => {
+      let finalText = `${key} ${Object.values(value).join(' ')}`;
+      modificaTestoDiv(parseInt(key), finalText);
+    });
+
+    /*
+    compile_testo();
     const note = notes[id]
 
     let backupTesto = JSON.parse(JSON.stringify(testo));
@@ -541,6 +602,7 @@ function highlightNote(id) {
     });
   
     document.getElementById("wrapper_notes").innerHTML = finalText
+        */
   }
 }
 
