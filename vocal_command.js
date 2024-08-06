@@ -638,7 +638,7 @@ function approveCorrection(id){
   //console.log(notes[id].note)//tutto il testo della correzione
 
   //dobbiamo eliminare le parole sottolineate nel testo   //aggiungi parola a testo
-  /*
+  //
   const note = notes[id]
 
   words_number=getIntegersInRange(note.startWord, note.endWord);    
@@ -656,7 +656,7 @@ function approveCorrection(id){
 
   compile_testo();
   deleteNote(id);
-  */
+  //
 }
 
 
