@@ -117,12 +117,12 @@ function sostituisciRegex(regex, valoreDaSostituire, nuovoValore) {
   regex_string=regex.toString()
   regex_string=regex_string.slice(1);
   regex_string=regex_string.slice(0, -1);
-  new_regex=regex_string.replace(valoreDaSostituire,nuovoValore)
+  new_regex=regex_string.replaceAll(valoreDaSostituire,nuovoValore)
   return new RegExp(new_regex);
 }
 
 function gen_regex_from_config() {
-/*
+//
   regex_add= config["Add number to line"];
   
   regex_R=sostituisciRegex(regex_R,old_config["Select line"],config["Select line"]);
@@ -132,7 +132,7 @@ function gen_regex_from_config() {
   regex_CC=sostituisciRegex(regex_CC,old_config["Correct note"],config["Correct note"]);
   old_config["Correct note"]=config["Correct note"];
 
-  regex_NN=sostituisciRegex(regex_NN,old_config["Add a note"],config["Select line"]);
+  regex_NN=sostituisciRegex(regex_NN,old_config["Add a note"],config["Add a note"]);
   old_config["Add a note"]=config["Add a note"];
 
   regex_delete=sostituisciRegex(regex_delete,old_config["Delete note"],config["Delete note"]);
@@ -142,7 +142,7 @@ function gen_regex_from_config() {
   old_config["Approve correction"]=config["Approve correction"];
 
   regex_complete= config["Complete Note"];
-*/
+//
 }
 
 
