@@ -141,6 +141,9 @@ function gen_regex_from_config() {
   regex_A=sostituisciRegex(regex_A,old_config["Approve correction"],config["Approve correction"]);
   old_config["Approve correction"]=config["Approve correction"];
 
+  regex_H=sostituisciRegex(regex_H,old_config["Highlight note"],config["Highlight note"]);
+  old_config["Highlight note"]=config["Highlight note"];
+
   regex_complete= config["Complete Note"];
 //
 }
@@ -516,7 +519,9 @@ function NxNy(){
     backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
   });
 
-  addNote(words_number[0], words_number[1],last_row_number)
+  words_number_lenght=words_number.length;
+
+  addNote(words_number[0], words_number[words_number_lenght-1],last_row_number)
   Object.entries(backupTesto).forEach(([key, value]) => {
     let finalText = `${key} ${Object.values(value).join(' ')}`;
     modificaTestoDiv(parseInt(key), finalText);
@@ -576,27 +581,43 @@ function addCorrection(stw, enw){
   recompile_notes()
 }
 
-//da rifare
 function highlightNote(id) {
-  /*
-  if(notes[id]){
-    compile_testo();
-   
-    words_number=getIntegersInRange(notes[id].startWord, notes[id].endWord);    
+      // Verifica se la nota esiste
+      if (!notes[id]) {
+        console.error(`Nota con ID ${id} non trovata.`);
+        return;
+    }
 
-    let backupTesto = JSON.parse(JSON.stringify(testo));
-    words_number.forEach(k => {
-      let word = map[k];
-      backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
+    if(notes[id].startWord_number.length>1){
+      let lunghezzaArray = notes[id].startWord_number.length
+      output_content = config["Select line"]+notes[id].startWord_number[0]+config["Select line"]+notes[id].startWord_number[lunghezzaArray-1];
+      console.log("New Output content:"+output_content)
+      RxRy()
+    }
+    else{
+      output_content = config["Select line"]+notes[id].startWord_number[0];
+      console.log("New Output content:"+output_content)
+      Rx()
+    }
+
+    // Ottieni i numeri delle parole da evidenziare
+    const note = notes[id];
+    const wordsToHighlight = getIntegersInRange(note.startWord, note.endWord);
+
+    // Crea una copia del testo per evitare modifiche indesiderate
+    const backupTesto = JSON.parse(JSON.stringify(testo));
+
+    // Evidenzia le parole nel backup
+    wordsToHighlight.forEach(k => {
+        const word = map[k];
+        backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
     });
-  
+
+    // Aggiorna l'interfaccia grafica con il testo evidenziato
     Object.entries(backupTesto).forEach(([key, value]) => {
-      let finalText = `${key} ${Object.values(value).join(' ')}`;
-      modificaTestoDiv(parseInt(key), finalText);
-    })
-  
-  }
-    */
+        const finalText = `${key} ${Object.values(value).join(' ')}`;
+        modificaTestoDiv(parseInt(key), finalText);
+    });
 }
 
 function deleteNote(id){
