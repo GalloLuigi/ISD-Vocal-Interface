@@ -8,8 +8,8 @@ const config ={
   "Complete Note":"complete",
   "Delete note": "delete",
   "Highlight note": "search",
-  "Correct note": "c",
-  "Approve correction": "a"
+  "Correct note": "correct",
+  "Approve correction": "approve"
 };
 
 const old_config ={
@@ -19,8 +19,8 @@ const old_config ={
   "Complete Note":"complete",
   "Delete note": "delete",
   "Highlight note": "search",
-  "Correct note": "c",
-  "Approve correction": "a"
+  "Correct note": "correct",
+  "Approve correction": "approve"
 };
 
 var regex_add = "number";
@@ -30,8 +30,8 @@ var regex_RR=/select[0-9]+select[0-9]+/;
 var regex_NN=/note[0-9]+note[0-9]+/;
 var regex_delete=/delete[0-9]+/;
 var regex_H=/search[0-9]+/;
-var regex_CC=/c[0-9]+c[0-9]+/;
-var regex_A=/a[0-9]+/;
+var regex_CC=/correct[0-9]+correct[0-9]+/;
+var regex_A=/approve[0-9]+/;
 
 function modifyConfig() {
   const selectedKey = document.getElementById('config-keys-dropdown').value;
@@ -198,7 +198,10 @@ function compile_testo(){
   const targetElement = document.getElementById('target-div'); //prendo in input il div
   const textContent = targetElement.textContent; //estrapolo il testo
   let index = 1
+  last_row_number = []
   if(Object.keys(testo).length===0){
+
+    console.log("ripreso testo")
     
     let currentSentence = ''; // Variable to hold the current sentence being constructed
 
@@ -674,58 +677,101 @@ function estraiChiaviDaIndice(oggetto, indiceInizio) {
 
 function approveCorrection(id){
 
-//elimino parole da x a y dalla mappa
-//aggiungo le mie
-//faccio lo shift di quelle a y+1
-
+  //elimino parole da x a y dalla mappa
+  //aggiungo le mie
+  //faccio lo shift di quelle a y+1
+  
   const note = notes[id]
-  const note_text=notes[id].note
+  const note_text=(notes[id].note).trim()
+  const splitted_note_text = note_text.split(" ")
+  words_number=getIntegersInRange(note.startWord, note.endWord);
 
-  words_number=getIntegersInRange(note.startWord, note.endWord);    
+  let splitted_length = splitted_note_text.length
+  let splitted_index = 0
+
+  let foreachindex = 0
 
   words_number.forEach(k => {
     let word = map[k];
-    testo[word.row][word.pos] = ``;
-    //
-    if(k==words_number[note.startWord]){
-      testo[word.row][word.pos] = note_text;
+    let rowIndex = word.row
+    let posIndex = word.pos - 1
 
-    }
-    //TO DO: elimina elemeto k da map 
-    delete map[k];
-  });
-
-  //aggiorno la mappa
-  let new_words = split_sentence_Into_Words(note_text)
-  let word_index = 0
-
-  let index=note.startWord
-
-  new_words.forEach(word => {
-    new_pos = index + 1;
-    map[index] = {
-      word: new_words[word_index],
-      row:  parseInt(note.startWord_number[0]),
-      pos: ''+new_pos
+    let textArrayElement = []
+    
+    for (const [key, value] of Object.entries(testo[rowIndex])) {
+      textArrayElement.push(value)
     }
     
-    index=index+1;
-    word_index=word_index+1
+    textArrayElement.splice(posIndex, 1)
+    if (splitted_note_text[splitted_index]) {
+      let word_to_change = splitted_note_text[splitted_index]
+      textArrayElement.splice(posIndex, 0, word_to_change)
+      splitted_index ++
+    }   
 
-  })
+    let objCopy = {}
 
-  //shift elementi
-  let post_word_list=estraiChiaviDaIndice(map,word_index+1)
-
-  post_word_list.forEach(k => {
-    new_pos=index+1
-    map[k]={
-      word: map[k].word,
-      row: map[k].row,
-      pos: ''+new_pos
+    if (foreachindex === words_number.length - 1){ 
+      if (splitted_note_text[splitted_index]) {
+        for (let i = splitted_length; i >= splitted_index; i--) {
+          const word_to_change = splitted_note_text[i]
+          textArrayElement.splice(posIndex, 0, word_to_change)
+        }
+      }   
     }
-    index=index+1;
-  });
+
+    for(let i = 0; i < textArrayElement.length; i++){
+      objCopy[i] = textArrayElement[i]
+    }
+
+    testo[rowIndex] = objCopy
+
+    foreachindex ++
+  });  
+
+  // words_number.forEach(k => {
+  //   let word = map[k];
+  //   testo[word.row][word.pos] = ``;
+  //   //
+  //   if(k==words_number[note.startWord]){
+  //     testo[word.row][word.pos] = note_text;
+
+  //   }
+  //   //TO DO: elimina elemeto k da map 
+  //   delete map[k];
+  // });
+
+  //aggiorno la mappa
+  // let new_words = split_sentence_Into_Words(note_text)
+  // let word_index = 0
+
+  // let index=note.startWord
+
+  // new_words.forEach(word => {
+  //   new_pos = index + 1;
+  //   map[index] = {
+  //     word: new_words[word_index],
+  //     row:  parseInt(note.startWord_number[0]),
+  //     pos: ''+new_pos
+  //   }
+    
+  //   index=index+1;
+  //   word_index=word_index+1
+
+  // })
+
+  // //shift elementi
+  // let post_word_list=estraiChiaviDaIndice(map,word_index+1)
+
+  // post_word_list.forEach(k => {
+  //   new_pos=index+1
+  //   map[k]={
+  //     word: map[k].word,
+  //     row: map[k].row,
+  //     pos: ''+new_pos
+  //   }
+  //   index=index+1;
+  // });
 
 
 
@@ -740,7 +786,8 @@ function approveCorrection(id){
 function check_command() {
 
   //Annulla effetto comando vuoto/ vecchio comando che puo' erroneamente essere letto piu' volte
-  if (output_content == '' || output_content == old_command) {
+  if (output_content == ''){
+    // || output_content == old_command) {
     return
   }
 
