@@ -426,10 +426,6 @@ function listen() {
     
     if(note_flag==true){
       buffer_note = output_content
-      //let txt = notes[last_note].note
-      //txt = txt + " "+buffer_note+" "
-      //notes[last_note].note = txt
-      //recompile_notes()
     }
     else{
 
@@ -444,11 +440,13 @@ function listen() {
 
    recognition.addEventListener("audioend", () => {
      console.log("Audio capturing ended");
-     console.log("buffer note finale: " + buffer_note)
      if(note_flag==true && buffer_note!="complete"){
+      recompile_notes()
+      console.log("buffer note finale: " + buffer_note)
        let txt = notes[last_note].note
-    txt = txt + " "+buffer_note+" "
+       txt = txt + " "+buffer_note+" "
        notes[last_note].note = txt
+       buffer_note = ""
        recompile_notes()
      }
   });
@@ -542,7 +540,8 @@ function CxCy(){
     backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
   });
 
-  addCorrection(parseInt(words_number[0]), parseInt(words_number[1]))
+  words_number_lenght=words_number.length;
+  addCorrection(parseInt(words_number[0]), parseInt(words_number[words_number_lenght-1]),last_row_number)
 
   Object.entries(backupTesto).forEach(([key, value]) => {
     let finalText = `${key} ${Object.values(value).join(' ')}`;
@@ -568,7 +567,7 @@ function addNote(stw, enw, last_rowNumber){
   recompile_notes()
 }
 
-function addCorrection(stw, enw){
+function addCorrection(stw, enw, last_rowNumber){
   let index = Object.keys(notes).length + 1
   let textNote = "<span id='asterisco'>*</span> "
   last_note = index
@@ -576,6 +575,7 @@ function addCorrection(stw, enw){
     startWord : stw,
     endWord : enw,
     note: textNote,
+    startWord_number:last_rowNumber,
     is_note : false,
   }
   recompile_notes()
@@ -655,22 +655,78 @@ function note_delete(){
   deleteNote(note_to_delete[0])
 }
 
-function approveCorrection(id){
-  //console.log(notes[id].note)//tutto il testo della correzione
+function estraiChiaviDaIndice(oggetto, indiceInizio) {
+  // Controlliamo se l'oggetto è valido e se l'indice è valido
+  if (typeof oggetto !== 'object' || oggetto === null) {
+    throw new Error('Il primo argomento deve essere un oggetto');
+  }
+  if (indiceInizio < 0 || indiceInizio >= Object.keys(oggetto).length) {
+    throw new Error('L\'indice iniziale è fuori dai limiti');
+  }
 
-  //dobbiamo eliminare le parole sottolineate nel testo   //aggiungi parola a testo
-  //
+  // Otteniamo un array di chiavi
+  const chiavi = Object.keys(oggetto);
+
+  // Estraiamo le chiavi a partire dall'indice specificato
+  return chiavi.slice(indiceInizio);
+}
+
+
+function approveCorrection(id){
+
+//elimino parole da x a y dalla mappa
+//aggiungo le mie
+//faccio lo shift di quelle a y+1
+
   const note = notes[id]
+  const note_text=notes[id].note
 
   words_number=getIntegersInRange(note.startWord, note.endWord);    
 
   words_number.forEach(k => {
     let word = map[k];
     testo[word.row][word.pos] = ``;
+    //
     if(k==words_number[note.startWord]){
-      testo[word.row][word.pos] = notes[id].note;
+      testo[word.row][word.pos] = note_text;
+
     }
+    //TO DO: elimina elemeto k da map 
+    delete map[k];
   });
+
+  //aggiorno la mappa
+  let new_words = split_sentence_Into_Words(note_text)
+  let word_index = 0
+
+  let index=note.startWord
+
+  new_words.forEach(word => {
+    new_pos = index + 1;
+    map[index] = {
+      word: new_words[word_index],
+      row:  parseInt(note.startWord_number[0]),
+      pos: ''+new_pos
+    }
+    
+    index=index+1;
+    word_index=word_index+1
+
+  })
+
+  //shift elementi
+  let post_word_list=estraiChiaviDaIndice(map,word_index+1)
+
+  post_word_list.forEach(k => {
+    new_pos=index+1
+    map[k]={
+      word: map[k].word,
+      row: map[k].row,
+      pos: ''+new_pos
+    }
+    index=index+1;
+  });
+
 
 
   //elimina correzione
