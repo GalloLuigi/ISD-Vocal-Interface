@@ -461,7 +461,7 @@ function listen() {
   }
 }
 listen();
-setInterval(listen, 8000); // 5000 milliseconds = 5 seconds
+setInterval(listen, 5000); // 5000 milliseconds = 5 seconds
 
 function add(){
   add_flag = true;
