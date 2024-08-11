@@ -204,6 +204,12 @@ function insertImageAfterDiv(divId, imageSrc) {
   const newImage = createImage(imageSrc);
   div.parentNode.insertBefore(newImage, div.nextSibling);
 }
+// Funzione per inserire un'immagine sopra un div specifico
+function insertImageAboveDiv(divId, imageSrc) {
+  const div = document.getElementById(divId);
+  const newImage = createImage(imageSrc);
+  div.parentNode.insertBefore(newImage, div);
+}
 
 function compile_testo(){
   let sentences = []
@@ -273,11 +279,14 @@ function compile_testo(){
     targetElement.appendChild(paragraph);
   });
   
+  insertImageAboveDiv('1', 'img/h2/h2_1.png');
+  insertImageAfterDiv('22', 'img/h2/h2_2.png');
+  insertImageAboveDiv('107', 'img/h2/h2_3.png');
+  insertImageAboveDiv('121', 'img/1.png'); // Inserisce un'immagine dopo il div con ID 1
+  insertImageAfterDiv('128', 'img/h2/h2_4.png'); 
+  insertImageAfterDiv('221', 'img/2.png'); 
 
-  insertImageAfterDiv('20', 'img/1.png'); // Inserisce un'immagine dopo il div con ID 1
-
-
-  insertImageAfterDiv('100', 'img/2.png'); 
+  /*
 
   insertImageAfterDiv('137', 'img/3.png'); 
   insertImageAfterDiv('205', 'img/4.png'); 
@@ -291,7 +300,7 @@ function compile_testo(){
   insertImageAfterDiv('377', 'img/10.png'); 
   insertImageAfterDiv('381', 'img/11.png'); 
   insertImageAfterDiv('390', 'img/12.png'); 
-
+  */
 
 }
 
