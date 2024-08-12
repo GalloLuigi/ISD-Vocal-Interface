@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dividi Testo in Blocchi</title>
+    <style>
+        /* Stile per i div creati */
+        .text-block {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="output"></div>
+
+    <script>
+        function divideTextIntoDivs(text, chunkSize) {
+            const outputDiv = document.getElementById('output');
+            let start = 0;
+
+            while (start < text.length) {
+                // Crea un blocco di testo di lunghezza chunkSize
+                let chunk = text.slice(start, start + chunkSize);
+                
+                // Crea un nuovo elemento div
+                let div = document.createElement('div');
+                //div.className = 'text-block';
+                
+                // Inserisci il testo nel div
+                div.textContent = chunk;
+                
+                // Aggiungi il div all'elemento output
+                outputDiv.appendChild(div);
+                
+                // Avanza all'iterazione successiva
+                start += chunkSize;
+            }
+        }
+
+        // Esempio di utilizzo
+        const text = `Iprojects, think-pair-share, peer-learning, debates, just-in-time Teaching, and short class discussions. It provides two easy ways to promote active learning. Fig. 2 shows the proposed system of 3-layer architecture for the higher education system. Deep learning is an artificial intelligence (AI) function that imitates the human brain’s data processing process and creates decision-making patterns. Deep learning is an artificial intelligence subset of machine learning with unstructured networks that learn from unattended data, called deep neural education or deep neural network. Deep learning is a sub-branch of AI and ML that follows the human brain’s workings for processing the datasets and making efficient decision-making. Explore your sentiments more closely on this topic. A chance to explore various activities The student was invited to examine the issue in depth. Collective learning can share information that people’s ideas can be stored in community memory and accumulate over generations. The complex concept of collaborative learning is different. It’s generally conceived as a dynamic, cumulative, and knowledge-building process. This knowledge’s institutionalization consisted of structures, rules, routines, norms, discourse, and policies that guide future actions. A collective learning example can be seen when a lioness teaches her students to chase. Human beings are species capable of learning together. The sixth threshold of increased complexity should not be defined as collective learning. If the student learns with this method, the Deep Enforcements Learning Process reflects personal factors and changes their behaviour. Behaviour change is acquired actions that permit students to access and interact constructively with others in the community. The social nature of zooming lessons appealed to some students, while others preferred the convenience of online learning. There was a mistake on their part.`;
+
+
+
+
+
+divideTextIntoDivs(text, 89);
+    </script>
+    
+</body>
+</html>
