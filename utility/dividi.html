@@ -26,24 +26,39 @@
             while (start < text.length) {
                 // Crea un blocco di testo di lunghezza chunkSize
                 let chunk = text.slice(start, start + chunkSize);
-                
+
                 // Crea un nuovo elemento div
                 let div = document.createElement('div');
                 //div.className = 'text-block';
-                
+
                 // Inserisci il testo nel div
                 div.textContent = chunk;
-                
+
                 // Aggiungi il div all'elemento output
                 outputDiv.appendChild(div);
-                
+
                 // Avanza all'iterazione successiva
                 start += chunkSize;
             }
         }
 
         // Esempio di utilizzo
-        const text = `Iprojects, think-pair-share, peer-learning, debates, just-in-time Teaching, and short class discussions. It provides two easy ways to promote active learning. Fig. 2 shows the proposed system of 3-layer architecture for the higher education system. Deep learning is an artificial intelligence (AI) function that imitates the human brain’s data processing process and creates decision-making patterns. Deep learning is an artificial intelligence subset of machine learning with unstructured networks that learn from unattended data, called deep neural education or deep neural network. Deep learning is a sub-branch of AI and ML that follows the human brain’s workings for processing the datasets and making efficient decision-making. Explore your sentiments more closely on this topic. A chance to explore various activities The student was invited to examine the issue in depth. Collective learning can share information that people’s ideas can be stored in community memory and accumulate over generations. The complex concept of collaborative learning is different. It’s generally conceived as a dynamic, cumulative, and knowledge-building process. This knowledge’s institutionalization consisted of structures, rules, routines, norms, discourse, and policies that guide future actions. A collective learning example can be seen when a lioness teaches her students to chase. Human beings are species capable of learning together. The sixth threshold of increased complexity should not be defined as collective learning. If the student learns with this method, the Deep Enforcements Learning Process reflects personal factors and changes their behaviour. Behaviour change is acquired actions that permit students to access and interact constructively with others in the community. The social nature of zooming lessons appealed to some students, while others preferred the convenience of online learning. There was a mistake on their part.`;
+        const text = `We have presented new voice-based assistive technology
+for continuous control tasks and have demonstrated an initial system implementation of
+this concept. An initial user study using a group
+of individuals from the non-target population confirmed
+the feasibility of this technology. We plan
+next to further improve our system by evaluating a
+number of novel pattern classification techniques to
+increase accuracy and user-independence, and to introduce
+additional vocal characteristics (possibilities
+include vibrato, degree of nasality, rate of change
+of any of the above as an independent parameter)
+to increase the available simultaneous degrees of
+freedom controllable via the voice. Moreover, we
+plan to develop algorithms to decouple unintended
+user correlations of these parameters, and to further
+advance both our adaptation and acceleration algorithms.`;
 
 
 
