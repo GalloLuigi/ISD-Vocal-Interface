@@ -285,22 +285,20 @@ function compile_testo(){
   insertImageAboveDiv('121', 'img/1.png'); // Inserisce un'immagine dopo il div con ID 1
   insertImageAfterDiv('128', 'img/h2/h2_4.png'); 
   insertImageAfterDiv('221', 'img/2.png'); 
+  insertImageAfterDiv('251', 'img/3.png'); 
+  insertImageAfterDiv('282', 'img/4.png'); 
+  insertImageAboveDiv('282', 'img/5.png');
+  insertImageAfterDiv('338', 'img/h2/h2_5.png');
+  insertImageAfterDiv('362', 'img/6.png');
+  insertImageAfterDiv('362', 'img/7.png');
+  insertImageAfterDiv('362', 'img/8.png');
+  insertImageAfterDiv('379', 'img/9.png');
+  insertImageAfterDiv('379', 'img/10.png');
+  insertImageAfterDiv('379', 'img/11.png');
+  insertImageAfterDiv('379', 'img/12.png');
+  insertImageAboveDiv('382', 'img/h2/h2_6.png');
+  
 
-  /*
-
-  insertImageAfterDiv('137', 'img/3.png'); 
-  insertImageAfterDiv('205', 'img/4.png'); 
-  insertImageAfterDiv('210', 'img/5.png'); 
-
-  insertImageAfterDiv('280', 'img/6.png'); 
-  insertImageAfterDiv('310', 'img/7.png'); 
-  insertImageAfterDiv('330', 'img/8.png'); 
-
-  insertImageAfterDiv('360', 'img/9.png'); 
-  insertImageAfterDiv('377', 'img/10.png'); 
-  insertImageAfterDiv('381', 'img/11.png'); 
-  insertImageAfterDiv('390', 'img/12.png'); 
-  */
 
 }
 
