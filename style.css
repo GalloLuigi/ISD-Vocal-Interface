@@ -45,3 +45,28 @@
     grid-template-columns: 1fr 0.5fr; /* Crea due colonne di larghezza uguale */
     gap: 20px; /* Spazio tra le colonne */
   }
+
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    padding: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 999; /* Assicura che la navbar sia sempre visibile sopra gli altri elementi */
+  }
+  
+  .listen {
+    /* Stile del pulsante */
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }

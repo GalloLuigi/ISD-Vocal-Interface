@@ -1,8 +1,18 @@
 //COMAND CONFIGURATION
 //----------------------------------------------------------------------------------------------//
+
+
+const listenButton = document.querySelector('.listen');
+
+listenButton.addEventListener('click', () => {
+  listen();
+  
+});
+
 //Attuale configurazione dei comandi
+/*
 const config ={
-  "Add number to line": "number",
+  "Add numbers to lines": "number",
   "Select line": "select",
   "Add a note": "note",
   "Complete Note":"complete",
@@ -13,7 +23,7 @@ const config ={
 };
 
 const old_config ={
-  "Add number to line": "number",
+  "Add numbers to lines": "number",
   "Select line": "select",
   "Add a note": "note",
   "Complete Note":"complete",
@@ -22,16 +32,39 @@ const old_config ={
   "Correct note": "correct",
   "Approve correction": "approve"
 };
+*/
 
-var regex_add = "number";
-var regex_complete= "complete";
-var regex_R=/select[0-9]+/;
-var regex_RR=/select[0-9]+select[0-9]+/;
-var regex_NN=/note[0-9]+note[0-9]+/;
-var regex_delete=/delete[0-9]+/;
-var regex_H=/search[0-9]+/;
-var regex_CC=/correct[0-9]+correct[0-9]+/;
-var regex_A=/approve[0-9]+/;
+const config ={
+  "Add numbers to lines": "numberi",
+  "Select line": "seleziona",
+  "Add a note": "nota",
+  "Complete Note":"completa",
+  "Delete note": "cancella",
+  "Highlight note": "cerca",
+  "Correct note": "correggi",
+  "Approve correction": "approva"
+};
+
+const old_config ={
+  "Add numbers to lines": "numeri",
+  "Select line": "seleziona",
+  "Add a note": "nota",
+  "Complete Note":"completa",
+  "Delete note": "cancella",
+  "Highlight note": "cerca",
+  "Correct note": "correggi",
+  "Approve correction": "approva"
+};
+
+var regex_add = "numeri";
+var regex_complete= "completa";
+var regex_R=/seleziona[0-9]+/;
+var regex_RR=/seleziona[0-9]+seleziona[0-9]+/;
+var regex_NN=/nota[0-9]+nota[0-9]+/;
+var regex_delete=/cancella[0-9]+/;
+var regex_H=/cerca[0-9]+/;
+var regex_CC=/correggi[0-9]+correggi[0-9]+/;
+var regex_A=/approva[0-9]+/;
 
 function modifyConfig() {
   const selectedKey = document.getElementById('config-keys-dropdown').value;
@@ -49,13 +82,14 @@ function modifyConfig() {
 
 }
 
+
 function convertNumbersToDigits(str) {
-  // Array contenente i numeri da uno a diciannove
-  const units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
-                'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen',   
- 'nineteen'];
-  // Array  contenente le decine (escluse le unità)
-  const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  // Array contenente i numeri da uno a diciannove in italiano
+  const units = ['', 'uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove', 'dieci',
+    'undici', 'dodici', 'tredici', 'quattordici', 'quindici', 'sedici', 'diciassette', 'diciotto', 'diciannove'];   
+
+  // Array contenente le decine (escluse le unità) in italiano
+  const tens = ['', '', 'venti', 'trenta', 'quaranta', 'cinquanta', 'sessanta', 'settanta', 'ottanta', 'novanta'];
 
   // Funzione ausiliaria per convertire un singolo numero in lettere in un numero intero
   function convertNumber(numStr) {
@@ -81,8 +115,9 @@ function convertNumbersToDigits(str) {
     return result;
   }
 
-  // Espressione regolare per individuare i numeri scritti in lettere
-  const numberRegex = /\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand)\b/gi;   
+  // Espressione regolare per individuare i numeri scritti in lettere in italiano
+  const numberRegex = /\b(uno|due|tre|quattro|cinque|sei|sette|otto|nove|dieci|undici|dodici|tredici|quattordici|quindici|sedici|diciassette|diciotto|diciannove|venti|trenta|quaranta|cinquanta|sessanta|settanta|ottanta|novanta|cento|mille)\b/gi;   
+  
 
 
   // Sostituisce ogni occorrenza di un numero in lettere con il corrispondente numero intero
@@ -123,7 +158,7 @@ function sostituisciRegex(regex, valoreDaSostituire, nuovoValore) {
 
 function gen_regex_from_config() {
 //
-  regex_add= config["Add number to line"];
+  regex_add= config["Add numbers to lines"];
   
   regex_R=sostituisciRegex(regex_R,old_config["Select line"],config["Select line"]);
   regex_RR=sostituisciRegex(regex_RR,old_config["Select line"],config["Select line"]);
@@ -443,7 +478,7 @@ function listen() {
 
    recognition.addEventListener("audioend", () => {
      console.log("Audio capturing ended");
-     if(note_flag==true && buffer_note!="complete"){
+     if(note_flag==true && buffer_note!=config["Complete Note"]){
       recompile_notes()
       console.log("buffer note finale: " + buffer_note)
        let txt = notes[last_note].note
@@ -452,16 +487,23 @@ function listen() {
        buffer_note = ""
        recompile_notes()
      }
+     else {
+      check_command();
+     }
+
   });
 
   if (speech == true) {
     recognition.interimResults = false;
-    recognition.lang = "en-US";
+    //recognition.lang = "en-US";
+    recognition.lang = "it-IT";
+
     recognition.start();
   }
+
 }
-listen();
-setInterval(listen, 5000); // 5000 milliseconds = 5 seconds
+//listen();
+//setInterval(listen, 5000); // 5000 milliseconds = 5 seconds
 
 function add(){
   add_flag = true;
@@ -840,13 +882,6 @@ function check_command() {
     approveCorrection(extract_numer_from_String(output_content));
   }
 
-  //SOLO PER I TEST
-  document.addEventListener('keyup', function(event) {
-        if (event.code === 'Space') {
-      add();
-    }
-
-  });
   
   //"Pulisco" il campo contente il comando
   output_content = '';
@@ -854,4 +889,4 @@ function check_command() {
 
 }
 
-setInterval(check_command, 2000);
+//setInterval(check_command, 2000);
