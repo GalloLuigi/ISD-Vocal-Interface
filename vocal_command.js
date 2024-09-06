@@ -1,13 +1,14 @@
 //COMAND CONFIGURATION
 //----------------------------------------------------------------------------------------------//
 
-
+/*
 const listenButton = document.querySelector('.listen');
 
 listenButton.addEventListener('click', () => {
   listen();
   
 });
+*/
 
 //Attuale configurazione dei comandi
 /*
@@ -476,7 +477,8 @@ function listen() {
     console.log(transcript);
   });
 
-   recognition.addEventListener("audioend", () => {
+   //recognition.addEventListener("audioend", () => {
+    recognition.addEventListener("soundend", () => {
      console.log("Audio capturing ended");
      if(note_flag==true && buffer_note!=config["Complete Note"]){
       recompile_notes()
@@ -486,9 +488,12 @@ function listen() {
        notes[last_note].note = txt
        buffer_note = ""
        recompile_notes()
+       listen();
+
      }
      else {
       check_command();
+      listen();
      }
 
   });
@@ -502,7 +507,7 @@ function listen() {
   }
 
 }
-//listen();
+listen();
 //setInterval(listen, 5000); // 5000 milliseconds = 5 seconds
 
 function add(){
