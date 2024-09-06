@@ -71,3 +71,8 @@
     margin: 4px 2px;
     cursor: pointer;
   }
+
+  .text-box {
+    background-color: green;
+    /* Altri stili opzionali, come padding, margin, ecc. */
+  }

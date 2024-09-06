@@ -1,39 +1,8 @@
 //COMAND CONFIGURATION
 //----------------------------------------------------------------------------------------------//
 
-/*
-const listenButton = document.querySelector('.listen');
-
-listenButton.addEventListener('click', () => {
-  listen();
-  
-});
-*/
 
 //Attuale configurazione dei comandi
-/*
-const config ={
-  "Add numbers to lines": "number",
-  "Select line": "select",
-  "Add a note": "note",
-  "Complete Note":"complete",
-  "Delete note": "delete",
-  "Highlight note": "search",
-  "Correct note": "correct",
-  "Approve correction": "approve"
-};
-
-const old_config ={
-  "Add numbers to lines": "number",
-  "Select line": "select",
-  "Add a note": "note",
-  "Complete Note":"complete",
-  "Delete note": "delete",
-  "Highlight note": "search",
-  "Correct note": "correct",
-  "Approve correction": "approve"
-};
-*/
 
 const config ={
   "Add numbers to lines": "numberi",
@@ -831,10 +800,13 @@ function approveCorrection(id){
   //
 }
 
+var write_output_command="";
 
 function check_command() {
 
   console.log("Check command...")
+
+  writeInDiv("Current comand:"+write_output_command);
 
   //Annulla effetto comando vuoto/ vecchio comando che puo' erroneamente essere letto piu' volte
   if (output_content == ''){
@@ -845,49 +817,57 @@ function check_command() {
 
   //lancia comando add
   if (output_content== regex_add ) {
+    write_output_command = output_content
     add()
   }
 
   //Comando "Rx"
   //controlla se è un comando "Riga" con una regex
   if (generic_Check_String(output_content,regex_R) == true) {
-
+    write_output_command = output_content
       Rx()
   }
 
   //Comando "RxRy"
   if (generic_Check_String(output_content,regex_RR) == true) {
+    write_output_command = output_content
     RxRy()
   }
 
   // command Nx Ny {aggiunta nota}
   // Viene eliminata la punteggiatura
   if (generic_Check_String(output_content,regex_NN) == true) {
+    write_output_command = output_content
     NxNy();
   }
 
   // command <complete note> complete
   if ( output_content == regex_complete) {
+    write_output_command = output_content
     complete();
   }
 
     //<delete note <id>> Dx
   if (generic_Check_String(output_content,regex_delete) == true) {
+    write_output_command = output_content
     note_delete();
   }
 
   // highlight note <id>
   if (generic_Check_String(output_content,regex_H) == true) {
+    write_output_command = output_content
     extract_numer_from_String(output_content);
     highlightNote(extract_numer_from_String(output_content));
   }
 
   //<correct <u> <v>> Cx Cy
   if (generic_Check_String(output_content,regex_CC) == true) {
+    write_output_command = output_content
     CxCy();
   }
   //<approve correction <id>>
   if (generic_Check_String(output_content,regex_A) == true) {
+    write_output_command = output_content
     approveCorrection(extract_numer_from_String(output_content));
   }
 
@@ -899,3 +879,9 @@ function check_command() {
 }
 
 setInterval(check_command, 2000);
+
+function writeInDiv(text) {
+  const div = document.getElementById("copy_of_command");
+  div.textContent = text;
+}
+
