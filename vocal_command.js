@@ -60,7 +60,7 @@ const old_config ={
 var regex_add = "numeri";
 var regex_complete= "completa";
 var regex_R=/seleziona[0-9]+/;
-var regex_RR=/seleziona[0-9]+seleziona[0-9]+/;
+var regex_RR=/seleziona[0-9]+a[0-9]+/;
 var regex_NN=/nota[0-9]+nota[0-9]+/;
 var regex_delete=/cancella[0-9]+/;
 var regex_H=/cerca[0-9]+/;
@@ -498,6 +498,8 @@ function listen() {
 
   });
 
+
+
   if (speech == true) {
     recognition.interimResults = false;
     //recognition.lang = "en-US";
@@ -505,7 +507,7 @@ function listen() {
 
     recognition.start();
   }
-
+  check_command()
 }
 listen();
 //setInterval(listen, 5000); // 5000 milliseconds = 5 seconds
@@ -832,6 +834,8 @@ function approveCorrection(id){
 
 function check_command() {
 
+  console.log("Check command...")
+
   //Annulla effetto comando vuoto/ vecchio comando che puo' erroneamente essere letto piu' volte
   if (output_content == ''){
     // || output_content == old_command) {
@@ -894,4 +898,4 @@ function check_command() {
 
 }
 
-//setInterval(check_command, 2000);
+setInterval(check_command, 2000);
