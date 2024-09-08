@@ -253,9 +253,21 @@ function compile_testo(){
 
   Object.entries(testo).forEach(([key, value]) => {
     const paragraph = document.createElement('div');
+
     const index = String(key)
     paragraph.id = index + ""; //imposto l'id del div pari quello del indice
     let text = ""
+
+    //note
+    //creo per ogni riga un div note con il medesimo id
+    const note = document.createElement('div');
+    nuovo_div_note = document.getElementById('wrapper_notes').appendChild(note);
+    nuovo_div_note.id=index+"note";
+    nuovo_div_note.innerHTML = "&nbsp;"
+    mostraDiv(index+"note");//rendo il div "fisico" 
+
+    //
+
     Object.entries(value).forEach(([k, v]) => {
       text = text + v + " "
 
@@ -264,6 +276,8 @@ function compile_testo(){
     //aggiungere tag <br>
     paragraph.innerHTML = text+"<br>"
     targetElement.appendChild(paragraph);
+
+
   });
   
 }
@@ -393,18 +407,27 @@ function recompile_notes(){
   if(notes){
     let wrapper = document.getElementById("wrapper_notes")
     let finalText = ""
+
     Object.entries(notes).forEach(([key, value]) => {
       let noteText = String(value.note)
       if(value.is_note==true){
-        finalText = finalText + String(key) + " " + noteText + "<br>";
+        //finalText = finalText + String(key) + " " + noteText + "<br>";
+
+        //note
+        finalText = String(key) + " " + noteText + "<br>";
+
+        document.getElementById(value.startWord_number+"note").innerHTML = finalText 
+        //
+
       }
       else{
         finalText = finalText + `<span style="color: red;">${key} ${noteText}</span><br>`;  //se è una correzzione la stringa è rossa
       }
+
       
     });
-
-    wrapper.innerHTML = finalText
+    //note
+    //wrapper.innerHTML = finalText
   }
 }
 
