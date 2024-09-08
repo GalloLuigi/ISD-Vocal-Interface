@@ -1,8 +1,22 @@
 //COMAND CONFIGURATION
 //----------------------------------------------------------------------------------------------//
-
-
-//Attuale configurazione dei comandi
+// let actualStep = 1
+// eval_command = Esperimento[actualStep].comando
+// let loggerText = ""
+// function Logger(step){
+//   "Step "
+// }
+// if comandoDettoAdesso == eval_command {
+//  Logger(actualStep)
+//  UpdateTextBox()
+//   actualStep++
+// }
+// const Esperimento = {
+//   [1] : {
+//     comando : "riga 1 riga 3",
+//     textlabel : "Prendi una nota dalla riga 1 alla riga 3 dicendo "riga 1 riga 3""
+//   }
+// }
 
 const config ={
   "Add numbers to lines": "numberi",
@@ -251,6 +265,8 @@ function compile_testo(){
 
   targetElement.textContent = ''; // Elimino il vecchio testo
 
+  document.getElementById('wrapper_notes').innerHTML = ""
+
   Object.entries(testo).forEach(([key, value]) => {
     const paragraph = document.createElement('div');
 
@@ -264,7 +280,7 @@ function compile_testo(){
     nuovo_div_note = document.getElementById('wrapper_notes').appendChild(note);
     nuovo_div_note.id=index+"note";
     nuovo_div_note.innerHTML = "&nbsp;"
-    mostraDiv(index+"note");//rendo il div "fisico" 
+    //mostraDiv(index+"note");//rendo il div "fisico" 
 
     //
 
@@ -279,7 +295,7 @@ function compile_testo(){
 
 
   });
-  
+  recompile_notes();
 }
 
 //Iniziallizzo campo che conterra' il comando in output
@@ -405,26 +421,27 @@ function modificaTestoDiv(idDiv, nuovoTesto) {
 
 function recompile_notes(){
   if(notes){
+    console.log("recompiling notes")
     let wrapper = document.getElementById("wrapper_notes")
     let finalText = ""
-
+    let notes_dict = {}
     Object.entries(notes).forEach(([key, value]) => {
       let noteText = String(value.note)
       if(value.is_note==true){
-        //finalText = finalText + String(key) + " " + noteText + "<br>";
-
-        //note
         finalText = String(key) + " " + noteText + "<br>";
-
-        document.getElementById(value.startWord_number+"note").innerHTML = finalText 
-        //
-
+      } else {
+        finalText = String(key) + `<span style="color: red;">` + noteText + "</span><br>";
       }
-      else{
-        finalText = finalText + `<span style="color: red;">${key} ${noteText}</span><br>`;  //se è una correzzione la stringa è rossa
+      const note_index = parseInt(value.startWord_number[0])
+      let num_divs = document.getElementById("wrapper_notes").children.length;
+      for (i = note_index; i<num_divs;i++){
+          const note_id = i+"note"
+          if(!notes_dict[note_id]){
+            document.getElementById(note_id).innerHTML = finalText 
+            notes_dict[note_id] = true
+            break
+        }
       }
-
-      
     });
     //note
     //wrapper.innerHTML = finalText
@@ -770,56 +787,10 @@ function approveCorrection(id){
     foreachindex ++
   });  
 
-  // words_number.forEach(k => {
-  //   let word = map[k];
-  //   testo[word.row][word.pos] = ``;
-  //   //
-  //   if(k==words_number[note.startWord]){
-  //     testo[word.row][word.pos] = note_text;
-
-  //   }
-  //   //TO DO: elimina elemeto k da map 
-  //   delete map[k];
-  // });
-
-  //aggiorno la mappa
-  // let new_words = split_sentence_Into_Words(note_text)
-  // let word_index = 0
-
-  // let index=note.startWord
-
-  // new_words.forEach(word => {
-  //   new_pos = index + 1;
-  //   map[index] = {
-  //     word: new_words[word_index],
-  //     row:  parseInt(note.startWord_number[0]),
-  //     pos: ''+new_pos
-  //   }
-    
-  //   index=index+1;
-  //   word_index=word_index+1
-
-  // })
-
-  // //shift elementi
-  // let post_word_list=estraiChiaviDaIndice(map,word_index+1)
-
-  // post_word_list.forEach(k => {
-  //   new_pos=index+1
-  //   map[k]={
-  //     word: map[k].word,
-  //     row: map[k].row,
-  //     pos: ''+new_pos
-  //   }
-  //   index=index+1;
-  // });
-
-
-
   //elimina correzione
-
-  compile_testo();
   deleteNote(id);
+  compile_testo();
+
   //
 }
 
