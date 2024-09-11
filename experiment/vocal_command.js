@@ -22,7 +22,7 @@ const config ={
   "Add numbers to lines": "numeri",
   "Select line": "seleziona",
   "Add a note": "nota",
-  "Complete Note":"completa",
+  "Complete Note":"completa nota",
   "Delete note": "cancella",
   "Highlight note": "cerca",
   "Correct note": "correggi",
@@ -33,7 +33,7 @@ const old_config ={
   "Add numbers to lines": "numeri",
   "Select line": "seleziona",
   "Add a note": "nota",
-  "Complete Note":"completa",
+  "Complete Note":"completa nota",
   "Delete note": "cancella",
   "Highlight note": "cerca",
   "Correct note": "correggi",
@@ -50,7 +50,7 @@ const experiment_1={
 }
 
 var regex_add = "numeri";
-var regex_complete= "completa";
+var regex_complete= "completa nota";
 var regex_R=/seleziona[0-9]+/;
 var regex_RR=/seleziona[0-9]+a[0-9]+/;
 var regex_NN=/nota[0-9]+nota[0-9]+/;
@@ -58,6 +58,8 @@ var regex_delete=/cancella[0-9]+/;
 var regex_H=/cerca[0-9]+/;
 var regex_CC=/correggi[0-9]+correggi[0-9]+/;
 var regex_A=/approva[0-9]+/;
+
+var write_output_command="";
 
 var exp_command_num=1;
 var errors=0;
@@ -302,7 +304,7 @@ function compile_testo(){
       text = text + v + " "
 
     });
-    text = index + " " + text
+    text = "<b>"+index+"</b>" + " " + text
     //aggiungere tag <br>
     paragraph.innerHTML = text+"<br>"
     targetElement.appendChild(paragraph);
@@ -409,7 +411,7 @@ function addNumberToEndOfWords(row_number, start_index, input_map) {
     let temp = ""
     if(row){
       for (const [key, value] of Object.entries(row)) {
-        temp = temp + String(word_index) + " " +  String(value) + " "
+        temp = temp +"<span style='color: blue;'>"+String(word_index)+"</span>" + " " +  String(value) + " "
         map[word_index] = {
           word: String(value),
           row: row_number,
@@ -462,6 +464,30 @@ function recompile_notes(){
   }
 }
 
+function coloraTestoInRosso() {
+  // Seleziona l'elemento con l'ID "copy_of_command"
+  const elemento = document.getElementById("copy_of_command");
+
+  // Se l'elemento è stato trovato, cambia il colore del testo
+  if (elemento) {
+    elemento.style.backgroundColor  = "red";
+  } else {
+    console.error("Elemento con ID 'copy_of_command' non trovato.");
+  }
+}
+
+function coloraTestoInVerde() {
+  // Seleziona l'elemento con l'ID "copy_of_command"
+  const elemento = document.getElementById("copy_of_command");
+
+  // Se l'elemento è stato trovato, cambia il colore del testo
+  if (elemento) {
+    elemento.style.backgroundColor  = "green";
+  } else {
+    console.error("Elemento con ID 'copy_of_command' non trovato.");
+  }
+}
+
 var note_flag=false
 let buffer_note=""
 //generic_Extract_Numbers_From_String
@@ -489,10 +515,15 @@ function listen() {
     }else {
       errors++;
       console.log("Error in command:"+errors);
+      console.log("Error: The command is:"+output_content);
+      write_output_command = output_content
+      coloraTestoInRosso();
+      writeInDiv("Current comand: "+output_content);
     }
     console.log("The command is:"+output_content);
     
     if(note_flag==true){
+      coloraTestoInVerde();
       buffer_note = output_content
     }
     else{
@@ -560,7 +591,7 @@ function Rx(){
     let editedString = ret[0]
     let end_map = ret[1]
     let end_index = ret[2] 
-    modificaTestoDiv(parseInt(r), r + " " + editedString)
+    modificaTestoDiv(parseInt(r), "<b>"+r + "</b>" + editedString)
     start_index = end_index
     start_map = end_map
   }
@@ -582,7 +613,7 @@ function RxRy(){
     let editedString = ret[0]
     let end_map = ret[1]
     let end_index = ret[2] 
-    modificaTestoDiv(parseInt(r), r + " " + editedString)
+    modificaTestoDiv(parseInt(r), "<b>"+r + "</b>"+ editedString)
     start_index = end_index
     start_map = end_map
   }
@@ -595,14 +626,14 @@ function NxNy(){
   let backupTesto = JSON.parse(JSON.stringify(testo));
   words_number.forEach(k => {
     let word = map[k];
-    backupTesto[word.row][word.pos] = `<u>${k} ${word.word}</u>`;
+    backupTesto[word.row][word.pos] = `<u>${"<span style='color: blue;'>"+k+"</span>"} ${word.word}</u>`;
   });
 
   words_number_lenght=words_number.length;
 
   addNote(words_number[0], words_number[words_number_lenght-1],last_row_number)
   Object.entries(backupTesto).forEach(([key, value]) => {
-    let finalText = `${key} ${Object.values(value).join(' ')}`;
+    let finalText = `${"<b>"+key+"</b>"} ${Object.values(value).join(' ')}`;
     modificaTestoDiv(parseInt(key), finalText);
   });
 
@@ -625,7 +656,7 @@ function CxCy(){
   addCorrection(parseInt(words_number[0]), parseInt(words_number[words_number_lenght-1]),last_row_number)
 
   Object.entries(backupTesto).forEach(([key, value]) => {
-    let finalText = `${key} ${Object.values(value).join(' ')}`;
+    let finalText = `${"<b>"+key+"</b>"} ${Object.values(value).join(' ')}`;
     modificaTestoDiv(parseInt(key), finalText);
   });
 
@@ -814,7 +845,7 @@ function approveCorrection(id){
   //
 }
 
-var write_output_command="";
+//var write_output_command="";
 
 function check_command() {
 
@@ -831,6 +862,7 @@ function check_command() {
 
   //lancia comando add
   if (output_content== regex_add ) {
+    coloraTestoInVerde()
     write_output_command = output_content
     add()
   }
@@ -839,12 +871,14 @@ function check_command() {
   //controlla se è un comando "Riga" con una regex
   if (generic_Check_String(output_content,regex_R) == true) {
     write_output_command = output_content
+    coloraTestoInVerde()
       Rx()
   }
 
   //Comando "RxRy"
   if (generic_Check_String(output_content,regex_RR) == true) {
     write_output_command = output_content
+    coloraTestoInVerde()
     RxRy()
   }
 
@@ -852,24 +886,28 @@ function check_command() {
   // Viene eliminata la punteggiatura
   if (generic_Check_String(output_content,regex_NN) == true) {
     write_output_command = output_content
+    coloraTestoInVerde()
     NxNy();
   }
 
   // command <complete note> complete
   if ( output_content == regex_complete) {
     write_output_command = output_content
+    coloraTestoInVerde()
     complete();
   }
 
     //<delete note <id>> Dx
   if (generic_Check_String(output_content,regex_delete) == true) {
     write_output_command = output_content
+    coloraTestoInVerde()
     note_delete();
   }
 
   // highlight note <id>
   if (generic_Check_String(output_content,regex_H) == true) {
     write_output_command = output_content
+    coloraTestoInVerde()
     extract_numer_from_String(output_content);
     highlightNote(extract_numer_from_String(output_content));
   }
@@ -877,11 +915,13 @@ function check_command() {
   //<correct <u> <v>> Cx Cy
   if (generic_Check_String(output_content,regex_CC) == true) {
     write_output_command = output_content
+    coloraTestoInVerde()
     CxCy();
   }
   //<approve correction <id>>
   if (generic_Check_String(output_content,regex_A) == true) {
     write_output_command = output_content
+    coloraTestoInVerde()
     approveCorrection(extract_numer_from_String(output_content));
   }
 

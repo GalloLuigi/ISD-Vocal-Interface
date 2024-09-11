@@ -53,10 +53,11 @@
     <div id="wrapper_notes"></div>
     </div>
 
-    <h1>Modify Configuration:</h1>
+   
+    <h1 style="display: none;" >Modify Configuration:</h1>
 
-    <h2>Select Key to Modify:</h2>
-    <form id="modify-form">
+    <h2 style="display: none;">Select Key to Modify:</h2>
+    <form style="display: none;"id="modify-form">
         <label for="config-keys-dropdown">Key:</label>
         <select id="config-keys-dropdown" required></select><br><br>
         <label for="new-value">New Value:</label>
@@ -64,9 +65,9 @@
         <button type="button" onclick="modifyConfig()">Modify</button>
     </form>
 
-    <h2>Current Configuration:</h2>
-    <pre id="config-content"></pre>
-
+    <h2 style="display: none;">Current Configuration:</h2>
+    <pre style="display: none;" id="config-content"></pre>
+    
    <h1> <button id="next">Next</button> </h1>
 
 
