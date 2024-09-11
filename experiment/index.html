@@ -20,40 +20,225 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <nav>
         <div class="text-box" id="copy_of_command">
             <p>Current comand:</p>
           </div>
     </nav>
-
-
+    <div id="instructions"></div>
+    <!--
     <div id="instructions" style="background-color: #f0f0f0; border: 2px solid #000000; margin-top: 60px; margin-bottom: 40px;">
-        </div>
+    </div>
+-->
 
     <!-- Textarea to display the extracted text -->
     <textarea style="display: none;" class="pdftext"></textarea>
 
+   
     <div id="outputElement"></div>
-    <div class="container">
-    <div id="target-div">
-        <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
-        <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
-        <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
-        <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
-        <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
-        <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
-        <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
-        <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
-        <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
-        <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
-        <div>met auctor ex Proin volutpat ornare cursus</div>
-        
-    </div>
-    <div id="wrapper_notes"></div>
+
+    <div class="container" style=" margin-top: 60px;">
+        <div id="target-div">
+            <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+            <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+            <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+            <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+            <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+            <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+            <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+            <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+            <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+            <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+            <div>met auctor ex Proin volutpat ornare cursus</div>
+            <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+            <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+            <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+            <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+            <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+            <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+            <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+            <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+            <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+            <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+            <div>met auctor ex Proin volutpat ornare cursus</div>                
+            <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+            <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+            <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+            <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+            <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+            <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+            <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+            <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+            <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+            <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+            <div>met auctor ex Proin volutpat ornare cursus</div>
+            <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+            <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+            <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+            <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+            <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+            <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+            <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+            <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+            <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+            <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+            <div>met auctor ex Proin volutpat ornare cursus</div>
+            <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+            <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+            <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+            <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+            <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+            <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+            <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+            <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+            <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+            <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+            <div>met auctor ex Proin volutpat ornare cursus</div>
+            <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+            <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+            <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+            <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+            <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+            <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+            <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+            <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+            <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+            <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+            <div>met auctor ex Proin volutpat ornare cursus</div>
+            <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+            <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+            <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+            <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+            <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+            <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+            <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+            <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+            <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+            <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+            <div>met auctor ex Proin volutpat ornare cursus</div>
+            <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+            <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+            <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+            <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+            <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+            <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+            <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+            <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+            <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+            <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+            <div>met auctor ex Proin volutpat ornare cursus</div>
+        </div>
+        <div id="wrapper_notes"></div>
+
     </div>
 
-   
+<!--
+<div class="container" style=" margin-top: 60px;">
+    <table style="width: 170%;">
+        <tr>
+          <td style="width: 33%;">
+            <div id="target-div">
+                <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+                <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+                <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+                <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+                <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+                <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+                <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+                <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+                <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+                <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+                <div>met auctor ex Proin volutpat ornare cursus</div>
+                <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+                <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+                <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+                <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+                <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+                <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+                <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+                <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+                <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+                <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+                <div>met auctor ex Proin volutpat ornare cursus</div>                
+                <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+                <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+                <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+                <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+                <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+                <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+                <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+                <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+                <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+                <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+                <div>met auctor ex Proin volutpat ornare cursus</div>
+                <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+                <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+                <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+                <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+                <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+                <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+                <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+                <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+                <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+                <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+                <div>met auctor ex Proin volutpat ornare cursus</div>
+                <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+                <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+                <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+                <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+                <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+                <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+                <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+                <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+                <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+                <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+                <div>met auctor ex Proin volutpat ornare cursus</div>
+                <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+                <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+                <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+                <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+                <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+                <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+                <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+                <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+                <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+                <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+                <div>met auctor ex Proin volutpat ornare cursus</div>
+                <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+                <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+                <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+                <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+                <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+                <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+                <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+                <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+                <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+                <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+                <div>met auctor ex Proin volutpat ornare cursus</div>
+                <div>Lorem ipsum dolor sit amet consectetur adipiscing elit Suspendisse pretium mi</div> 
+                <div>id dui facilisis ac malesuada nibh dictum Suspendisse tempor nunc nec egestas</div>
+                <div>ultricies Maecenas vitae dapibus lectus ac imperdiet leo Mauris lobortis neq</div>
+                <div>ue ac molestie fringilla dui dolor tristique tellus a congue diam diam vel sap</div>
+                <div>ien Pellentesque finibus massa purus vel aliquam dolor pulvinar ac In quis ni</div>
+                <div>sl sit amet urna rutrum commodo sit amet non ligula Curabitur ac dolor ac enim</div>
+                <div>porttitor dictum Suspendisse ornare viverra arcu sed viverra Vestibulum dui me</div>
+                <div>tus accumsan vel libero at condimentum congue sapien Proin tristique tellus u</div>
+                <div>t scelerisque dapibus Nullam vitae egestas dolor quis elementum odio Suspendi</div>
+                <div>sse bibendum tempus interdum Suspendisse eget sem vehicula blandit risus sit a</div>
+                <div>met auctor ex Proin volutpat ornare cursus</div>
+            </div>
+                  </td>
+          <td style="width: 33%;">
+            <div id="wrapper_notes"></div>
+        </td>
+          <td class="cella-fissa" style="width: 33%;">
+            <div id="instructions" style="background-color: #f0f0f0; border: 2px solid #000000;  width: 200px; position: sticky;"></div>
+        </td>
+        </tr>
+      </table>
+</div>
+-->
+
     <h1 style="display: none;" >Modify Configuration:</h1>
 
     <h2 style="display: none;">Select Key to Modify:</h2>

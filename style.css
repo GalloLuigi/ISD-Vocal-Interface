@@ -40,11 +40,7 @@
     }
   }
 
-  .container {
-    display: grid;
-    grid-template-columns: 1fr 0.5fr; /* Crea due colonne di larghezza uguale */
-    gap: 20px; /* Spazio tra le colonne */
-  }
+
 
 
   nav {
@@ -76,4 +72,31 @@
     background-color: green;
     /* Altri stili opzionali, come padding, margin, ecc. */
   }
+
+
+  table {
+    width: 100%;
+  }
+
+  td {
+    border: 1px solid black;
+    text-align: center; /* Allinea il contenuto al centro di default */
+  }
+
+  .left {
+    text-align: left;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  .wrapper_notes{
+    min-width: 600px;
+  }
+
 

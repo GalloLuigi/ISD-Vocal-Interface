@@ -18,6 +18,8 @@
 //   }
 // }
 
+import { writeFileSync } from 'fs';
+
 const config ={
   "Add numbers to lines": "numeri",
   "Select line": "seleziona",
@@ -40,13 +42,17 @@ const old_config ={
   "Approve correction": "approva"
 };
 
-const experiment_1={
-  "Command 1": config["Add numbers to lines"],
-    "Command 2": config["Select line"]+" 6",
-    "Command 3": config["Add a note"]+" 3 "+ config["Add a note"]+" 7",
-    "Command 4":"Molto interessante",
-  "Command 5": config["Complete Note"],
-    "Command 6": config["Delete note"]+" 1"
+let exp_index = 1
+
+const Experiments = {
+  [1] : {
+    "Command 1": config["Add numbers to lines"],
+      "Command 2": config["Select line"]+" 6",
+      "Command 3": config["Add a note"]+" 3 "+ config["Add a note"]+" 7",
+      "Command 4":"Molto interessante",
+    "Command 5": config["Complete Note"],
+      "Command 6": config["Delete note"]+" 1"
+  }
 }
 
 var regex_add = "numeri";
@@ -64,7 +70,7 @@ var write_output_command="";
 var exp_command_num=1;
 var errors=0;
 
-generate_experiment(experiment_1);
+generate_experiment(Experiments[exp_index]);
 
 function modifyConfig() {
   const selectedKey = document.getElementById('config-keys-dropdown').value;
@@ -80,6 +86,64 @@ function modifyConfig() {
 
   gen_regex_from_config()
 
+}
+
+let user = 0
+let exp_try = 0
+let report_experiment = {}
+function Logger(command, passed){
+
+  fetch('report_experiment.json')
+    .then((response) => response.json())
+    .then((jsonfile) => report_experiment = JSON.parse(jsonfile));
+
+  if(user == 0){
+    for (i=1;i<100000;i++){
+      if (!report_experiment[i]){
+        user = i
+        break
+      }
+    }
+
+    if (exp_try == 0) {
+      exp_try = 1
+    }
+  }
+
+
+  if (command == "next" ){
+    // Si pusha report_experiment
+    exp_try++
+  } else {
+
+    if (!report_experiment[user]){
+      report_experiment[user] = {}
+    }
+
+    if (!report_experiment[user][exp_try]){
+      report_experiment[user][exp_try] = {}
+    }
+
+    if (!report_experiment[user][exp_try][command]){
+      report_experiment[user][exp_try][command] = {}
+    }
+  
+    let result_exp = ""
+    if( passed){
+      result_exp = "Passato"
+    } else {
+      result_exp = "Fallito"
+    }
+    const item = {
+      result: result_exp,
+      timestamp: Date.now()
+    }
+  
+    report_experiment[user][exp_try][command].push(item)
+
+    const JSONToFile = (obj, filename) =>
+      writeFileSync(`report_experiment.json`, JSON.stringify(report_experiment, null, 2));
+  }
 }
 
 
@@ -509,11 +573,13 @@ function listen() {
 
     output_content = output.textContent;
     output_content =convertNumbersToDigits(output_content);
-    if(output_content.toLowerCase()===experiment_1["Command "+exp_command_num].toLowerCase()){
+    if(output_content.toLowerCase()===Experiments[exp_index]["Command "+exp_command_num].toLowerCase()){
       document.getElementById("Command "+exp_command_num).classList.add("completed")
+      Logger(exp_command_num, true)
       console.log("exp_command_num:"+exp_command_num++);
     }else {
       errors++;
+      Logger(exp_command_num, false)
       console.log("Error in command:"+errors);
       console.log("Error: The command is:"+output_content);
       write_output_command = output_content

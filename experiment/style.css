@@ -77,10 +77,15 @@
     /* Altri stili opzionali, come padding, margin, ecc. */
   }
 
-  #instruction {
+  #instructions {
+    position: sticky;
+    top: 60px;
+    float: right;
     color: grey;
     border: 2px solid black; /* Adatta lo spessore e il colore del bordo a tuo piacimento */
     padding: 10px; /* Aggiunge un po' di spazio interno */
+    background-color: #f0f0f0; 
+    width: 200px; 
   }
 
 
