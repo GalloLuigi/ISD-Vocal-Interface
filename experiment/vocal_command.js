@@ -1,59 +1,13 @@
 //COMAND CONFIGURATION
-//----------------------------------------------------------------------------------------------//
-// let actualStep = 1
-// eval_command = Esperimento[actualStep].comando
-// let loggerText = ""
-// function Logger(step){
-//   "Step "
-// }
-// if comandoDettoAdesso == eval_command {
-//  Logger(actualStep)
-//  UpdateTextBox()
-//   actualStep++
-// }
-// const Esperimento = {
-//   [1] : {
-//     comando : "riga 1 riga 3",
-//     textlabel : "Prendi una nota dalla riga 1 alla riga 3 dicendo "riga 1 riga 3""
-//   }
-// }
+import {ExtConfig} from "./config.js";
 
-//import { writeFileSync } from 'fs';
-
-const config ={
-  "Add numbers to lines": "numeri",
-  "Select line": "seleziona",
-  "Add a note": "nota",
-  "Complete Note":"completa nota",
-  "Delete note": "cancella",
-  "Highlight note": "cerca",
-  "Correct note": "correggi",
-  "Approve correction": "approva"
-};
-
-const old_config ={
-  "Add numbers to lines": "numeri",
-  "Select line": "seleziona",
-  "Add a note": "nota",
-  "Complete Note":"completa nota",
-  "Delete note": "cancella",
-  "Highlight note": "cerca",
-  "Correct note": "correggi",
-  "Approve correction": "approva"
-};
+let old_command = ''; //ultimo comando lanciato
+let add_flag
+let words_number
+let words_number_lenght
+let nuovo_div_note
 
 let exp_index = 1
-
-const Experiments = {
-  [1] : {
-    "Command 1": config["Add numbers to lines"],
-      "Command 2": config["Select line"]+" 6",
-      "Command 3": config["Add a note"]+" 3 "+ config["Add a note"]+" 7",
-      "Command 4":"Molto interessante",
-    "Command 5": config["Complete Note"],
-      "Command 6": config["Delete note"]+" 1"
-  }
-}
 
 var regex_add = "numeri";
 var regex_complete= "completa nota";
@@ -69,6 +23,21 @@ var write_output_command="";
 
 var exp_command_num=1;
 var errors=0;
+
+const Experiments = ExtConfig.Experiments
+const Papers = ExtConfig.Papers
+const config = ExtConfig.Config
+
+const old_config ={
+  "Add numbers to lines": "numeri",
+  "Select line": "seleziona",
+  "Add a note": "nota",
+  "Complete Note":"completa nota",
+  "Delete note": "cancella",
+  "Highlight note": "cerca",
+  "Correct note": "correggi",
+  "Approve correction": "approva"
+};
 
 generate_experiment(Experiments[exp_index]);
 
@@ -142,8 +111,6 @@ function Logger(command, passed){
   
     report_experiment[user][exp_try][command].push(item)
 
-    const JSONToFile = (obj, filename) =>
-      writeFileSync(`report_experiment.json`, JSON.stringify(report_experiment, null, 2));
   }
 }
 */
@@ -291,8 +258,6 @@ function split_sentence_Into_Words(inputString) {
   }
 }
 
-
-
 function compile_testo(){
   let sentences = []
   const targetElement = document.getElementById('target-div'); //prendo in input il div
@@ -384,7 +349,7 @@ const output = document.getElementById('outputElement');
 document.getElementById('outputElement').style.display = "none";
 var output_content;
 
-old_command = ''; //ultimo comando lanciato
+
 
 
 function generic_Check_String(str, pattern) {
@@ -515,7 +480,7 @@ function recompile_notes(){
       }
       const note_index = parseInt(value.startWord_number[0])
       let num_divs = document.getElementById("wrapper_notes").children.length;
-      for (i = note_index; i<num_divs;i++){
+      for (let i = note_index; i<num_divs;i++){
           const note_id = i+"note"
           if(!notes_dict[note_id]){
             document.getElementById(note_id).innerHTML = finalText 
@@ -574,10 +539,12 @@ function listen() {
 
     output_content = output.textContent;
     output_content =convertNumbersToDigits(output_content);
+    console.log("NUMERO COMANDO: " + exp_command_num)
     if(output_content.toLowerCase()===Experiments[exp_index]["Command "+exp_command_num].toLowerCase()){
       document.getElementById("Command "+exp_command_num).classList.add("completed")
-      Logger(exp_command_num, true)
-      console.log("exp_command_num:"+exp_command_num++);
+      // Logger(exp_command_num, true)
+      exp_command_num++
+      console.log("exp_command_num:"+exp_command_num);
     }else {
       errors++;
       //Logger(exp_command_num, false)
@@ -1007,8 +974,9 @@ function writeInDiv(text) {
 }
 
 function generate_experiment(commands){
-  instructions_div=document.getElementById("instructions")
-  for(command in commands){
+  let instructions_div=document.getElementById("instructions")
+  instructions_div.innerHTML = ""
+  for(let command in commands){
     let p = document.createElement("p");
     p.id=command;
     p.innerHTML = commands[command];
@@ -1016,17 +984,26 @@ function generate_experiment(commands){
   }
 }
 
-
-const paper_list = ["<div>Abstract. This paper, firstly, introduces the application trend of the integration of mul</div><div>ti-channel interactions in automotive HMI (Human Machine Interface) from complex informat</div><div>ion models faced by existing automotive HMI and describes various interaction modes. By c</div><div>omparing voice interaction and touch screen, gestures and other interaction modes, the po</div><div>tential and feasibility of voice interaction in automotive HMI experience design are conc</div><div>luded. Then, the related theories of voice interaction, identification technologies, huma</div><div>n beings’ cognitive models of voices and voice design methods are further explored. And t</div><div>he research priority of this paper is proposed, i.e. how to design voice interaction to c</div><div>reate more humane task-oriented dialogue scenarios to enhance interactive experiences of </div><div>automotive HMI. The specific scenarios in driving behaviors suitable for the use of voice</div><div> interaction are studied and classified, and the usability principles and key elements fo</div><div>r automotive HMI voice design are proposed according to the scenario features. Then, thro</div><div>ugh the user participatory usability testing experiment, the dialogue processes of voice </div><div>interaction in automotive HMI are defined. The logics and grammars in voice interaction a</div><div>re classified according to the experimental results, and the mental models in the interac</div><div>tion processes are analyzed. At last, the voice interaction design method to create the h</div><div>umane task-oriented dialogue scenarios in the driving environment is proposed. Keywords: </div><div>voice interaction; Automotive Human Machine Interface; driving experience; task-oriented </div><div>dialogue scenario. </div><div>Automotive intelligent interconnection and automatic driving are creating new interaction</div><div>s and experiences between drivers and cars, and people are looking forward to making ever</div><div>y trip a wonderful memory. Functions provided by high-quality experience HMI will no long</div><div>er be simple piling up of isolated and unrelated functional modules. The future HMI desig</div><div>n should be more based on user scenarios to establish the mutual linkage and intercommuni</div><div>cations between functions inside cars and provide the reasonable function jumping, and al</div><div>so based on scenario needs, choose and employ appropriate technologies and interaction mo</div><div>des, minimize the degree of distraction of drivers and maximize the information efficienc</div><div>y of the input and output data, allowing users to complete operational tasks efficiently,</div><div> easily and pleasantly. And voice interaction, as the most competitive entry in the Inter</div><div>net of Things era, creates brand new companion scenarios. In the driving environment, ful</div><div>ly grasping the feature that it’s inconvenient for people to use hands and eyes, voice in</div><div>teraction will not distract drivers and will not require too many efforts either to achie</div><div>ve simple operations, accurate operations and safe driving. At present, more and more aut</div><div>omotive manufacturers are actively researching and developing their own intelligent voice</div><div> products to provide more options for voice interaction in driving experiences. But only </div><div>a few high-end cars integrate voice interaction technologies into their vehicle-mounted s</div><div>ystems. Therefore, researches on the application of voice interaction in automotive HMI e</div><div>xperience design are the important direction for the future automotive HMI development.</div><div>Human machine interaction in HMI, in some sense, can be interpreted as driving tasks exec</div><div>ution. In various driving behaviors, keeping a normal driving and monitoring road hazards</div><div> are the main tasks. Other tasks that require visual resources, such as radio operation o</div><div>r telephone dialing can be seen as secondary driving tasks in a car. The major difference</div><div> between different driving tasks lies in the visual operation and manual operation demand</div><div> degree in the interactive process. From driving safety and operational accessibility per</div><div>spective, pure manual operation or manual operation dominated task is the most popular on</div><div>e, which can make the driver concentrates on finishing first level driving task in a mini</div><div>mum range of visual distraction. However, the development of information entertainment sy</div><div>stem leads to a large increase of visual oriented operational tasks. The information mode</div><div>l inside the car (Fig 1) has been gradually developed from a single automobile condition </div><div>information model into a complex information system, including car information, Car2Car i</div><div>nformation, Car2X interactive information. Under such a complex information system, the c</div><div>hallenge facing automotive HMI experience design is how to provide the driver with a bett</div><div>er interactive experience in the process of human machine interaction in addition to ensu</div><div>ring driving safety.</div><div>The essence of human machine interaction in automotive HMI design is information transmis</div><div>sion and processing. In the future, automotive HMI design will be based on scenario task,</div><div> considering the application and cooperation of different interactive channels. In the pr</div><div>ocess of task control, a certain interactive channel can be used as a main channel, combi</div><div>ning with another interactive channel, such as voice+gesture or voice+button, to give ful</div><div>l play of the interactive advantages of both channels, and smoothly complete the discrete</div><div> control tasks and the continuous control tasks. Multichannel interactive interface integ</div><div>rates voice interaction, touch screen interaction, space somatosensory interaction, eye m</div><div>ovement interaction and other various interactive modes. It brings feedback to the users </div><div>through multiple sensory channels, so as to provide more intuitive and natural interactio</div><div>n experience. It reduces the burden of excessive visual and auditory information processi</div><div>ng during driving, and balance the information into all sensory organs. </div><div>With the development of technology and society, the voice interaction has created a brand</div><div>-new syndrome scenario, and has become the most competitive entrance to the age of the in</div><div>ternet of things. It helps people to communicate with machines in a natural mode of “chat</div><div>”, without using complex physical controls or reading tedious rules, enables the machine </div><div>to listen, speak, understand and think. Comparing the performance of touch, touch screen </div><div>and voice interaction in three perspectives of driving performance, cognitive load and vi</div><div>sual attention, we can summarize as follow (Fig 2 Non-quantitative description): it is th</div><div>e commanding height of the development of big data and cognitive computing era in the fut</div><div>ure. It has a broad market prospect and applicable significance. </div><div>Nowadays, automotive voice interaction is increasingly popular in major brands. For insta</div><div>nce, SAIC has launched the first intelligent voice cloud driving system iVoka in 2011.The</div><div>y upgrade the system in 2012, that is the second generation iVoka system. It has been app</div><div>lied to Roewe 350 and MG5, and put into market. The second generation iVoka system uses v</div><div>oice command to replace traditional keystroke, it uses voice control system to dial or ha</div><div>ng off the phone, receive or send short messages, navigate, inquire information, listen t</div><div>o music and broadcast. Ford has released SYNC vehicle information entertainment system as</div><div> early as 2007, and displayed the SYNC 3 system in International Consumer Electronics Exh</div><div>ibition in 2015. SYNC 3 system supports the powerful voice control functions, try to avoi</div><div>d driver distraction during system operation. After the connection of IPhone, SYNC 3 can </div><div>be seamlessly connected with Siri, the driver only needs to press the button of speak, th</div><div>en he can talk with Siri for help. At the same time, APP Link also supports voice control</div><div>, it can search for applications compatible with the vehicle system and establish connect</div><div>ions in the mobile phone, so as to realize the control of compatible applications through</div><div> voice. SAIC and Ali launched the “zebra system” in 2017 on Roewe i6, although it did not</div><div> make great progress like AlphaGo, it gave the driver a quite big change. Meanwhile, in M</div><div>MC2016 (International Car Networking and Intelligent Transportation Exhibition), a forum </div><div>themed as “Car Voice Control and Voice Life”, some well-known voice interaction solution </div><div>providers delivered speech and made discussion, through which we can see that the applica</div><div>tion of voice control technology in vehicle system has become an important part of the ve</div><div>hicle network, voice interaction is gradually replacing traditional manual control, and b</div><div>ecoming one of the significant features of intelligent driving. This paper introduces the</div><div> features of intelligent voice control in driving scenarios, and summarizes the potential</div><div> usability problems. Through user participation usability testing experiment, it classifi</div><div>es user tasks during driving process, analyzes the usability principles and design method</div><div>s of intelligent voice interaction in driving scenarios, proposes the task-oriented dialo</div><div>gue mode, the voice control process of voice interaction, and the mental models in voice </div><div>interaction. It provides the systematic voice interaction design for automotive HMI. </div>",
-                    "stringa3"];
-
-
 //Button Next
+
+let paperIndexes = 1
+
 const targetElement = document.getElementById('target-div'); //prendo in input il div
+targetElement.innerHTML= Papers[paperIndexes];
 const button_next = document.getElementById('next');
 button_next.addEventListener('click', () => {
-  
+  paperIndexes++
+  exp_index++
+  exp_command_num = 1
 
+  if (!Papers[paperIndexes]) {
+    paperIndexes = 1
+  }
+  targetElement.innerHTML= Papers[paperIndexes];
 
-  targetElement.innerHTML= paper_list[0];
+  if(!Experiments[exp_index]){
+    exp_index = 1
+  }
+  generate_experiment(Experiments[exp_index]);
+
 });
