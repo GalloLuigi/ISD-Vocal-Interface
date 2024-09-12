@@ -1,6 +1,35 @@
 //COMAND CONFIGURATION
 import {ExtConfig} from "./config.js";
 
+
+async function inviaDatiAlServer() {
+  const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
+
+  const data = {
+      stringhe: ['valore1', 'valore2'],       // Un array di stringhe
+      timestampInizio: Date.now(),            // Timestamp di inizio
+      timestampFine: Date.now() + 3600000,    // Timestamp di fine (es. un'ora dopo)
+      completato: false                       // Stato di completamento
+  };
+  
+  fetch(url, {
+      method: 'POST',                         // Metodo POST
+      headers: {
+          'Content-Type': 'application/json', // Indica che i dati sono in formato JSON
+      },
+      body: JSON.stringify(data)              // Converti l'oggetto data in stringa JSON
+  })
+  .then(response => response.json())          // Converti la risposta JSON
+  .then(data => {
+      console.log('Risposta dal server:', data); // Visualizza la risposta
+  })
+  .catch((error) => {
+      console.error('Errore durante la richiesta:', error);
+  });
+}
+
+
+
 let old_command = ''; //ultimo comando lanciato
 let add_flag
 let words_number
@@ -992,6 +1021,7 @@ const targetElement = document.getElementById('target-div'); //prendo in input i
 targetElement.innerHTML= Papers[paperIndexes];
 const button_next = document.getElementById('next');
 button_next.addEventListener('click', () => {
+  inviaDatiAlServer()
   paperIndexes++
   exp_index++
   exp_command_num = 1

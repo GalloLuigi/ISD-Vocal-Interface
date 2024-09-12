@@ -18,6 +18,36 @@
 //   }
 // }
 
+/*
+async function inviaDatiAlServer() {
+  const dati = {
+      stringhe: ['stringa1', 'stringa2'],
+      timestampInizio: new Date().getTime(),
+      timestampFine: new Date().getTime() + 3600000, // Un'ora dopo
+      completato: false
+  };
+
+  try {
+      const response = await fetch('/creaJson', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dati)
+      });
+
+      if (!response.ok) {
+          throw new Error("Errore durante l'invio dei dati");
+      }
+
+      const data = await response.json();
+      console.log('Risposta dal server:', data);
+  } catch (error) {
+      console.error('Errore:', error);
+  }
+}
+*/
+
 const config ={
   "Add numbers to lines": "numberi",
   "Select line": "seleziona",
