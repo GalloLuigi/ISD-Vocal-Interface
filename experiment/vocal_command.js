@@ -2,14 +2,17 @@
 import {ExtConfig} from "./config.js";
 
 
-async function inviaDatiAlServer() {
+async function inviaDatiAlServer(comand_list,start_experiment,press_next,experiment_complete) {
+
+  console.log("Invio i dati al server...");
+
   const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
 
   const data = {
-      stringhe: ['valore1', 'valore2'],       // Un array di stringhe
-      timestampInizio: Date.now(),            // Timestamp di inizio
-      timestampFine: Date.now() + 3600000,    // Timestamp di fine (es. un'ora dopo)
-      completato: false                       // Stato di completamento
+      stringhe: comand_list,       
+      timestampInizio: start_experiment,            
+      timestampFine: press_next,   
+      completato: experiment_complete                      
   };
   
   fetch(url, {
@@ -28,6 +31,10 @@ async function inviaDatiAlServer() {
   });
 }
 
+//tutti i comandi detti dall'utente
+var all_command=[]
+
+var start_experiment=Date.now();
 
 
 let old_command = ''; //ultimo comando lanciato
@@ -47,6 +54,9 @@ var regex_delete=/cancella[0-9]+/;
 var regex_H=/cerca[0-9]+/;
 var regex_CC=/correggi[0-9]+correggi[0-9]+/;
 var regex_A=/approva[0-9]+/;
+
+var regex_su="navigasu";
+var regex_giu="navigagiù";
 
 var write_output_command="";
 
@@ -549,7 +559,9 @@ function coloraTestoInVerde() {
 
 var note_flag=false
 let buffer_note=""
-//generic_Extract_Numbers_From_String
+
+var experiment_complete=false;
+
 function listen() {
   console.log("Listen...")
   var speech = true;
@@ -567,12 +579,29 @@ function listen() {
     output.innerHTML = transcript;
 
     output_content = output.textContent;
+
+    //aggiunta a all_command
+
+    let comando = {
+      timestamp: Date.now(),
+      stringa: output_content 
+      };
+
+
+    all_command.push(comando);
+
     output_content =convertNumbersToDigits(output_content);
     console.log("NUMERO COMANDO: " + exp_command_num)
     if(output_content.toLowerCase()===Experiments[exp_index]["Command "+exp_command_num].toLowerCase()){
       document.getElementById("Command "+exp_command_num).classList.add("completed")
       // Logger(exp_command_num, true)
       exp_command_num++
+
+
+      if(exp_command_num== Object.keys(Experiments[exp_index]).length){
+        experiment_complete=true;
+      }
+
       console.log("exp_command_num:"+exp_command_num);
     }else {
       errors++;
@@ -909,6 +938,29 @@ function approveCorrection(id){
 }
 
 //var write_output_command="";
+const windowHeight = window.innerHeight;
+
+function scrollUp() {
+  // Ottiene l'elemento che rappresenta la finestra del browser
+  //const windowHeight = window.innerHeight;
+
+  // Scorri la pagina verso l'alto di una quantità pari all'altezza della finestra
+  window.scrollTo({
+    top: window.scrollY - windowHeight,
+    behavior: 'smooth'
+  });
+}
+
+function scrollDown() {
+  // Ottiene l'altezza totale della pagina
+  //const windowHeight = document.documentElement.scrollHeight;
+
+  // Scorri la pagina verso il basso di una quantità pari all'altezza della finestra
+  window.scrollTo({
+    top: window.scrollY + windowHeight,
+    behavior: 'smooth'
+  });
+}
 
 function check_command() {
 
@@ -989,6 +1041,19 @@ function check_command() {
   }
 
   
+  if(generic_Check_String(output_content,regex_su)==true){
+    write_output_command = output_content
+    coloraTestoInVerde()
+    scrollUp();
+
+  }
+
+  if(generic_Check_String(output_content,regex_giu)==true){
+    write_output_command = output_content
+    coloraTestoInVerde()
+    scrollDown();
+  }
+
   //"Pulisco" il campo contente il comando
   output_content = '';
   return;
@@ -1021,7 +1086,14 @@ const targetElement = document.getElementById('target-div'); //prendo in input i
 targetElement.innerHTML= Papers[paperIndexes];
 const button_next = document.getElementById('next');
 button_next.addEventListener('click', () => {
-  inviaDatiAlServer()
+  
+  let press_next=Date.now();
+  
+  inviaDatiAlServer(all_command,start_experiment,press_next,experiment_complete)
+  
+  //svuoto buffer comandi pronunciati
+  all_command=[]
+  
   paperIndexes++
   exp_index++
   exp_command_num = 1
