@@ -1,0 +1,126 @@
+{
+  "Peppe": {
+    "1": []
+  },
+  "Michele": {
+    "1": []
+  },
+  "Sessopazzo": {
+    "1": [
+      {
+        "stringhe": [
+          {
+            "timestamp": "2024-09-13 22:12:09",
+            "stringa": "e non quando fai il Next loro Resetta tutta la pagina"
+          }
+        ],
+        "timestampInizio": "2024-09-13 22:11:55",
+        "timestampFine": "2024-09-13 22:12:13",
+        "completato": false
+      }
+    ]
+  },
+  "Ses": {
+    "1": [
+      {
+        "stringhe": [
+          {
+            "timestamp": "2024-09-13 22:13:48",
+            "stringa": "numeri"
+          },
+          {
+            "timestamp": "2024-09-13 22:13:52",
+            "stringa": "ok"
+          }
+        ],
+        "timestampInizio": "2024-09-13 22:13:44",
+        "timestampFine": "2024-09-13 22:13:59",
+        "completato": false
+      }
+    ]
+  },
+  "asdf": {
+    "1": [
+      {
+        "stringhe": [
+          {
+            "timestamp": "2024-09-13 22:14:26",
+            "stringa": "è questo prima di tutto"
+          }
+        ],
+        "timestampInizio": "2024-09-13 22:14:24",
+        "timestampFine": "2024-09-13 22:14:29",
+        "completato": false
+      }
+    ]
+  },
+  "fff": {
+    "1": [
+      {
+        "stringhe": [
+          {
+            "timestamp": "2024-09-13 22:15:28",
+            "stringa": "non sai qualcosa di questo"
+          }
+        ],
+        "timestampInizio": "2024-09-13 22:15:26",
+        "timestampFine": "2024-09-13 22:15:29",
+        "completato": false
+      },
+      {
+        "stringhe": [],
+        "timestampInizio": "2024-09-13 22:18:59",
+        "timestampFine": "2024-09-13 22:19:01",
+        "completato": false
+      }
+    ]
+  },
+  "": {
+    "1": [
+      {
+        "stringhe": [],
+        "timestampInizio": "2024-09-13 22:15:29",
+        "timestampFine": "2024-09-13 22:15:32",
+        "completato": false
+      },
+      {
+        "stringhe": [],
+        "timestampInizio": "2024-09-13 22:19:42",
+        "timestampFine": "2024-09-13 22:21:17",
+        "completato": false
+      }
+    ]
+  },
+  "ff": {
+    "1": [
+      {
+        "stringhe": [],
+        "timestampInizio": "2024-09-13 22:16:16",
+        "timestampFine": "2024-09-13 22:16:20",
+        "completato": false
+      },
+      {
+        "stringhe": [],
+        "timestampInizio": "2024-09-13 22:16:34",
+        "timestampFine": "2024-09-13 22:16:39",
+        "completato": false
+      },
+      {
+        "stringhe": [],
+        "timestampInizio": "2024-09-13 22:19:37",
+        "timestampFine": "2024-09-13 22:19:42",
+        "completato": false
+      }
+    ]
+  },
+  "ffaa": {
+    "1": [
+      {
+        "stringhe": [],
+        "timestampInizio": "2024-09-13 22:16:59",
+        "timestampFine": "2024-09-13 22:17:04",
+        "completato": false
+      }
+    ]
+  }
+}

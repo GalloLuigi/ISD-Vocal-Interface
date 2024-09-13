@@ -30,8 +30,7 @@ const path = require('path');
 
 app.post('/creaJson', (req, res) => {
     console.log("Enter in creaJson");
-    const { stringhe, timestampInizio, timestampFine, completato } = req.body;
-
+    const { stringhe, timestampInizio, timestampFine, completato, username, task } = req.body;
     // Dati da salvare nel file
     const newData = {
         stringhe,
@@ -52,7 +51,7 @@ app.post('/creaJson', (req, res) => {
 
     // Leggi il file esistente e aggiungi i nuovi dati
     fs.readFile(filePath, 'utf8', (err, data) => {
-        let jsonArray = [];
+        let jsonArray = {};
 
         if (!err && data) {
             try {
@@ -63,8 +62,17 @@ app.post('/creaJson', (req, res) => {
         }
 
         // Aggiungi i nuovi dati
-        jsonArray.push(newData);
+        // jsonArray.push(newData);
+        console.log(username, task)
+        if(!jsonArray[username]){
+            jsonArray[username] = {}
+        }
 
+        if(!jsonArray[username][task]){
+            jsonArray[username][task] = []
+        }
+
+        jsonArray[username][task].push(newData)
         // Scrivi di nuovo il file con i nuovi dati
         fs.writeFile(filePath, JSON.stringify(jsonArray, null, 2), 'utf8', (err) => {
             if (err) {

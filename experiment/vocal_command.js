@@ -1,36 +1,6 @@
 //COMAND CONFIGURATION
 import {ExtConfig} from "./config.js";
 
-
-async function inviaDatiAlServer(comand_list,start_experiment,press_next,experiment_complete) {
-
-  console.log("Invio i dati al server...");
-
-  const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
-
-  const data = {
-      stringhe: comand_list,       
-      timestampInizio: start_experiment,            
-      timestampFine: press_next,   
-      completato: experiment_complete                      
-  };
-  
-  fetch(url, {
-      method: 'POST',                         // Metodo POST
-      headers: {
-          'Content-Type': 'application/json', // Indica che i dati sono in formato JSON
-      },
-      body: JSON.stringify(data)              // Converti l'oggetto data in stringa JSON
-  })
-  .then(response => response.json())          // Converti la risposta JSON
-  .then(data => {
-      console.log('Risposta dal server:', data); // Visualizza la risposta
-  })
-  .catch((error) => {
-      console.error('Errore durante la richiesta:', error);
-  });
-}
-
 //tutti i comandi detti dall'utente
 var all_command=[]
 
@@ -96,63 +66,37 @@ function modifyConfig() {
 
 }
 
-/*
-let user = 0
-let exp_try = 0
-let report_experiment = {}
-function Logger(command, passed){
 
-  fetch('report_experiment.json')
-    .then((response) => response.json())
-    .then((jsonfile) => report_experiment = JSON.parse(jsonfile));
+async function inviaDatiAlServer(comand_list,start_experiment,press_next,experiment_complete) {
 
-  if(user == 0){
-    for (i=1;i<100000;i++){
-      if (!report_experiment[i]){
-        user = i
-        break
-      }
-    }
+  console.log("Invio i dati al server...");
 
-    if (exp_try == 0) {
-      exp_try = 1
-    }
-  }
-
-
-  if (command == "next" ){
-    // Si pusha report_experiment
-    exp_try++
-  } else {
-
-    if (!report_experiment[user]){
-      report_experiment[user] = {}
-    }
-
-    if (!report_experiment[user][exp_try]){
-      report_experiment[user][exp_try] = {}
-    }
-
-    if (!report_experiment[user][exp_try][command]){
-      report_experiment[user][exp_try][command] = {}
-    }
+  const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
+  const usern = document.getElementById("nav_username").value
+  const data = {
+      stringhe: comand_list,       
+      timestampInizio: start_experiment,            
+      timestampFine: press_next,   
+      completato: experiment_complete,     
+      username: usern,
+      task: exp_index        
+  };
   
-    let result_exp = ""
-    if( passed){
-      result_exp = "Passato"
-    } else {
-      result_exp = "Fallito"
-    }
-    const item = {
-      result: result_exp,
-      timestamp: Date.now()
-    }
-  
-    report_experiment[user][exp_try][command].push(item)
-
-  }
+  fetch(url, {
+      method: 'POST',                         // Metodo POST
+      headers: {
+          'Content-Type': 'application/json', // Indica che i dati sono in formato JSON
+      },
+      body: JSON.stringify(data)              // Converti l'oggetto data in stringa JSON
+  })
+  .then(response => response.json())          // Converti la risposta JSON
+  .then(data => {
+      console.log('Risposta dal server:', data); // Visualizza la risposta
+  })
+  .catch((error) => {
+      console.error('Errore durante la richiesta:', error);
+  });
 }
-*/
 
 function convertNumbersToDigits(str) {
   // Array contenente i numeri da uno a diciannove in italiano
@@ -1085,7 +1029,7 @@ let paperIndexes = 1
 const targetElement = document.getElementById('target-div'); //prendo in input il div
 targetElement.innerHTML= Papers[paperIndexes];
 const button_next = document.getElementById('next');
-button_next.addEventListener('click', () => {
+button_next.addEventListener('click', async function(butpres) {
   
   let press_next=Date.now();
   
