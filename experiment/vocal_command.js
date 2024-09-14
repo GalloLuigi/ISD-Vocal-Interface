@@ -908,6 +908,11 @@ function scrollDown() {
 
 function check_command() {
 
+
+  if(exp_index!=5){
+    document.getElementById("next").textContent="Next"
+  }
+
   console.log("Check command...")
 
   writeInDiv("Current comand:"+write_output_command);
@@ -1051,5 +1056,14 @@ button_next.addEventListener('click', async function(butpres) {
     exp_index = 1
   }
   generate_experiment(Experiments[exp_index]);
+
+  if(document.getElementById("next").textContent=="Fine"){
+    document.getElementById('nav_username').value="Inserisci nuovo nome utente"
+  }
+
+  if(exp_index==5){
+    document.getElementById("next").textContent="Fine"
+  }
+
 
 });
