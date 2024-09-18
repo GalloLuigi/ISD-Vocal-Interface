@@ -910,6 +910,12 @@ function scrollDown() {
 
 function check_command() {
 
+  if(exp_index!=1){
+    nascondiDiv("username_form")
+    }
+  else{
+    mostraDiv("username_form");
+  }
 
   if(exp_index!=5){
     document.getElementById("next").textContent="Next"

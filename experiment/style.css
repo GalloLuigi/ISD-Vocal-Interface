@@ -105,3 +105,10 @@
   .completed{
       color: #4CAF50;
   }
+
+.navbar-container{
+  display: grid; /* Utilizza CSS Grid */
+  grid-template-columns: 1fr 1fr 1fr; /* Tre colonne di larghezza uguale */
+  align-items: center; /* Allinea verticalmente gli elementi al centro */
+  gap: 20px; /* Spazio tra le colonne */
+}
