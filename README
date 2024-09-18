@@ -1,0 +1,30 @@
+Istruzioni per l'Avvio dell'Applicazione
+Per avviare correttamente l'applicazione, segui i seguenti passaggi:
+
+1. Avvio del Server HTTP
+Il primo passo è hostare un server HTTP nella directory /experiment utilizzando Python. Questo può essere fatto tramite il comando:
+
+python3 -m http.server
+
+Questo comando avvierà un server locale sulla porta predefinita (solitamente la 8000) che renderà accessibili i file della directory corrente via HTTP.
+
+2. Avvio del Server Node.js
+Successivamente, è necessario avviare un server Node.js. Per farlo, spostati nella directory /experiment/server_node/ e lancia il server eseguendo il file server.js con il seguente comando:
+
+node ./server.js
+
+Questo comando eseguirà il server Node.js che gestirà le operazioni lato backend dell'applicazione.
+
+Manuale dei Comandi Usabili
+Ecco una lista dei comandi disponibili nell'applicazione:
+
+Comando: "numeri"
+Comando: "seleziona"
+Comando: "nota"
+Comando: "completa nota"
+Comando: "cancella"
+Comando: "correggi"
+Comando: "approva"
+Comando: "naviga su"
+Comando: "naviga giù"
+
