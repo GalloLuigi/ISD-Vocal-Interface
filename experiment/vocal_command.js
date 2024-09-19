@@ -526,11 +526,28 @@ function listen() {
 
     output_content = output.textContent;
 
-    //aggiunta a all_command
 
+    let experimentContent = ExtConfig.Experiments[exp_index];
+    let is_correct;
+
+// Funzione per verificare se una stringa è contenuta nei valori dell'oggetto
+function containsStringInObject(obj, str) {
+  return Object.values(obj).some(value => 
+      typeof value === 'string' && value.toLocaleLowerCase().includes(convertNumbersToDigits(str.toLocaleLowerCase()))
+  );
+}
+
+if (containsStringInObject(experimentContent, output_content)) {
+  is_correct=true;
+} else {
+is_correct=false;
+}
+
+    //aggiunta a all_command
     let comando = {
       timestamp: Date.now(),
-      stringa: output_content 
+      stringa: output_content,
+      is_correct: is_correct
       };
 
 
