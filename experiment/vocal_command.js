@@ -6,6 +6,7 @@ var all_command=[]
 
 var start_experiment=Date.now();
 
+var is_select_bool=false;
 
 let old_command = ''; //ultimo comando lanciato
 let add_flag
@@ -264,6 +265,13 @@ function compile_testo(){
 
       // Check if we've reached the 50-character limit
       if (currentSentence.length === 89) {
+
+        // Se l'ultimo carattere è parte di una parola (non uno spazio), aggiungere un trattino
+        /*
+        if (textContent[i + 1] && textContent[i + 1] !== ' ') {
+          currentSentence += '-'; // Aggiungi il trattino alla fine
+        }
+        */
         // If so, add the current sentence to the sentences array
         number_of_rows++
         sentences.push(currentSentence);
@@ -525,7 +533,6 @@ function listen() {
     output.innerHTML = transcript;
 
     output_content = output.textContent;
-
 
     let experimentContent = ExtConfig.Experiments[exp_index];
     let is_correct;
@@ -959,6 +966,7 @@ function check_command() {
   //Comando "Rx"
   //controlla se è un comando "Riga" con una regex
   if (generic_Check_String(output_content,regex_R) == true) {
+    is_select_bool=true;
     write_output_command = output_content
     coloraTestoInVerde()
       Rx()
@@ -966,6 +974,7 @@ function check_command() {
 
   //Comando "RxRy"
   if (generic_Check_String(output_content,regex_RR) == true) {
+    is_select_bool=true;
     write_output_command = output_content
     coloraTestoInVerde()
     RxRy()
@@ -974,9 +983,15 @@ function check_command() {
   // command Nx Ny {aggiunta nota}
   // Viene eliminata la punteggiatura
   if (generic_Check_String(output_content,regex_NN) == true) {
-    write_output_command = output_content
-    coloraTestoInVerde()
-    NxNy();
+    if(is_select_bool==true){
+      write_output_command = output_content
+      coloraTestoInVerde()
+      NxNy();
+      is_select_bool=false;
+    }
+    else{
+      
+    }
   }
 
   // command <complete note> complete
@@ -1003,9 +1018,16 @@ function check_command() {
 
   //<correct <u> <v>> Cx Cy
   if (generic_Check_String(output_content,regex_CC) == true) {
-    write_output_command = output_content
-    coloraTestoInVerde()
-    CxCy();
+    if(is_select_bool==true){
+      write_output_command = output_content
+      coloraTestoInVerde()
+      CxCy();
+      is_select_bool=false;
+    }
+    else{
+
+    }
+
   }
   //<approve correction <id>>
   if (generic_Check_String(output_content,regex_A) == true) {
@@ -1038,7 +1060,13 @@ setInterval(check_command, 2000);
 
 function writeInDiv(text) {
   const div = document.getElementById("copy_of_command");
-  div.textContent = text;
+  // Espressione regolare per trovare i numeri nella stringa
+  const modifiedText = text.replace(/(\d+)/g, ' $1 ');
+
+  // Rimuovere eventuali doppi spazi creati dalla sostituzione
+  const finalText = modifiedText.replace(/\s+/g, ' ');
+
+  div.textContent = finalText.trim(); // Rimuove eventuali spazi all'inizio e alla fine
 }
 
 function generate_experiment(commands){
