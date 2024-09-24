@@ -230,11 +230,11 @@ let last_note = 0
 
 function split_sentence_Into_Words(inputString) {
   // Regular expression pattern to match words
-  const regex = /\w+/g;
+  const regex = /[\w-]+/g;
 
   // Split the input string into an array using the regex
   const words = inputString.match(regex);
-
+  // const words = inputString.split(" ");
   // If there are matches (words found), return the array
   if (words) {
     return words;
@@ -242,6 +242,14 @@ function split_sentence_Into_Words(inputString) {
     // If no matches (no words found), return an empty array
     return [];
   }
+}
+
+function isAlpha (ch){
+  return /^[A-Z]$/i.test(ch);
+}
+
+function isDigit(str){
+  return /^\d+$/.test(str);
 }
 
 function compile_testo(){
@@ -264,14 +272,21 @@ function compile_testo(){
       currentSentence += currentChar;
 
       // Check if we've reached the 50-character limit
-      if (currentSentence.length === 89) {
 
+      if (currentSentence.length == 89) {
         // Se l'ultimo carattere è parte di una parola (non uno spazio), aggiungere un trattino
-        /*
-        if (textContent[i + 1] && textContent[i + 1] !== ' ') {
+        //
+
+        // console.log("[" + textContent[i] + "]")
+        // console.log("[" + textContent[i + 1] + "]")
+        if ((isAlpha(currentChar) || isDigit(currentChar)) && textContent[i + 1] && (isAlpha(textContent[i + 1]) || isDigit(textContent[i + 1]))) {
           currentSentence += '-'; // Aggiungi il trattino alla fine
         }
-        */
+        if(textContent.charCodeAt(i) === textContent.charCodeAt(i+1) && textContent.charCodeAt(i) === 32){
+          currentSentence = currentSentence.substring(0, currentSentence.length - 11); 
+          currentSentence += '-';
+        }
+        
         // If so, add the current sentence to the sentences array
         number_of_rows++
         sentences.push(currentSentence);
@@ -460,7 +475,6 @@ function modificaTestoDiv(idDiv, nuovoTesto) {
 
 function recompile_notes(){
   if(notes){
-    console.log("recompiling notes")
     let wrapper = document.getElementById("wrapper_notes")
     let finalText = ""
     let notes_dict = {}
