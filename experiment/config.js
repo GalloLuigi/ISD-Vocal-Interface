@@ -3,8 +3,8 @@ const Cfg = {
     "Add numbers to lines": "numeri",
     "Select line": "seleziona",
     "Add a note": "nota",
-    "Complete Note":"completa nota",
-    "Delete note": "cancella",
+    "Complete Note":"Chiudi nota",
+    "Delete note": "cancella nota",
     "Highlight note": "cerca",
     "Correct note": "correggi",
     "Approve correction": "approva"

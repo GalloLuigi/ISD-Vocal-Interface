@@ -17,17 +17,17 @@ let nuovo_div_note
 let exp_index = 1
 
 var regex_add = "numeri";
-var regex_complete= "completa nota";
+var regex_complete= "Chiudi nota";
 var regex_R=/seleziona[0-9]+/;
 var regex_RR=/seleziona[0-9]+a[0-9]+/;
 var regex_NN=/nota[0-9]+nota[0-9]+/;
-var regex_delete=/cancella[0-9]+/;
+var regex_delete=/cancellanota[0-9]+/;
 var regex_H=/cerca[0-9]+/;
 var regex_CC=/correggi[0-9]+correggi[0-9]+/;
 var regex_A=/approva[0-9]+/;
 
-var regex_su="navigasu";
-var regex_giu="navigagiù";
+var regex_su="paginasu";
+var regex_giu="paginagiù";
 
 var write_output_command="";
 
@@ -42,8 +42,8 @@ const old_config ={
   "Add numbers to lines": "numeri",
   "Select line": "seleziona",
   "Add a note": "nota",
-  "Complete Note":"completa nota",
-  "Delete note": "cancella",
+  "Complete Note":"Chiudi nota",
+  "Delete note": "cancella nota",
   "Highlight note": "cerca",
   "Correct note": "correggi",
   "Approve correction": "approva"
@@ -1045,6 +1045,9 @@ function check_command() {
   }
   //<approve correction <id>>
   if (generic_Check_String(output_content,regex_A) == true) {
+    if(is_note==true){
+      return
+    }
     write_output_command = output_content
     coloraTestoInVerde()
     approveCorrection(extract_numer_from_String(output_content));
