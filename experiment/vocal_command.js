@@ -18,12 +18,12 @@ let exp_index = 1
 
 var regex_add = "numeri";
 var regex_complete= "Chiudi nota";
-var regex_R=/seleziona[0-9]+/;
-var regex_RR=/seleziona[0-9]+a[0-9]+/;
-var regex_NN=/nota[0-9]+nota[0-9]+/;
+var regex_R=/riga[0-9]+/;
+var regex_RR=/dariga[0-9]+a[0-9]+/;
+var regex_NN=/aggiunginotada[0-9]+a[0-9]+/;
 var regex_delete=/cancellanota[0-9]+/;
 var regex_H=/cerca[0-9]+/;
-var regex_CC=/correggi[0-9]+correggi[0-9]+/;
+var regex_CC=/sostituiscida[0-9]+a[0-9]+/;
 var regex_A=/approva[0-9]+/;
 
 var regex_su="paginasu";
@@ -40,12 +40,12 @@ const config = ExtConfig.Config
 
 const old_config ={
   "Add numbers to lines": "numeri",
-  "Select line": "seleziona",
-  "Add a note": "nota",
+  "Select line": "riga",
+  "Add a note": "aggiungi nota da",
   "Complete Note":"Chiudi nota",
   "Delete note": "cancella nota",
   "Highlight note": "cerca",
-  "Correct note": "correggi",
+  "Correct note": "sostituisci da",
   "Approve correction": "approva"
 };
 
@@ -483,7 +483,9 @@ function recompile_notes(){
       if(value.is_note==true){
         finalText = String(key) + " " + noteText + "<br>";
       } else {
-        finalText = String(key) + `<span style="color: red;">` + noteText + "</span><br>";
+       // finalText = String(key) + `<span style="color: red;">` + noteText + "</span><br>";
+       finalText = String(key) + `<span>`+' Sostituisci con: ' + noteText + "</span><br>";
+
       }
       const note_index = parseInt(value.startWord_number[0])
       let num_divs = document.getElementById("wrapper_notes").children.length;
@@ -867,6 +869,11 @@ function approveCorrection(id){
   //faccio lo shift di quelle a y+1
   
   const note = notes[id]
+
+  if(note.is_note==true){
+    return;
+  }
+
   const note_text=(notes[id].note).trim()
   const splitted_note_text = note_text.split(" ")
   words_number=getIntegersInRange(note.startWord, note.endWord);
@@ -1045,9 +1052,6 @@ function check_command() {
   }
   //<approve correction <id>>
   if (generic_Check_String(output_content,regex_A) == true) {
-    if(is_note==true){
-      return
-    }
     write_output_command = output_content
     coloraTestoInVerde()
     approveCorrection(extract_numer_from_String(output_content));
