@@ -24,6 +24,10 @@ var regex_NN=/aggiunginotada[0-9]+a[0-9]+/;
 var regex_delete=/cancellanota[0-9]+/;
 var regex_H=/cerca[0-9]+/;
 var regex_CC=/sostituiscida[0-9]+a[0-9]+/;
+
+var regex_AD=/aggiungida[0-9]+a[0-9]+/;
+var regex_CD=/cancellada[0-9]+a[0-9]+/;
+
 var regex_A=/approva[0-9]+/;
 
 var regex_su="paginasu";
@@ -719,6 +723,49 @@ function NxNy(){
 
 }
 
+
+function ADxNy(){
+  let wrds = extract_numer_from_StringRR(output_content);                   //prendo i numeri dalla stringa
+  words_number=getIntegersInRange(wrds[0],wrds[1]);               // prendo tutti i numeri nel range
+  let backupTesto = JSON.parse(JSON.stringify(testo));
+  words_number.forEach(k => {
+    let word = map[k];
+    backupTesto[word.row][word.pos] = `<u>${"<span style='color: blue;'>"+k+"</span>"} ${word.word}</u>`;
+  });
+
+  words_number_lenght=words_number.length;
+
+  addAD(words_number[0], words_number[words_number_lenght-1],last_row_number)
+  Object.entries(backupTesto).forEach(([key, value]) => {
+    let finalText = `${"<b>"+key+"</b>"} ${Object.values(value).join(' ')}`;
+    modificaTestoDiv(parseInt(key), finalText);
+  });
+  complete();
+  note_flag=false
+
+}
+
+function aggiungi_nota_te(){
+  let wrds = extract_numer_from_StringRR(output_content);                   //prendo i numeri dalla stringa
+  words_number=getIntegersInRange(wrds[0],wrds[1]);               // prendo tutti i numeri nel range
+  let backupTesto = JSON.parse(JSON.stringify(testo));
+  words_number.forEach(k => {
+    let word = map[k];
+    backupTesto[word.row][word.pos] = `<u>${"<span style='color: blue;'>"+k+"</span>"} ${word.word}</u>`;
+  });
+
+  words_number_lenght=words_number.length;
+
+  addNoteTE(words_number[0], words_number[words_number_lenght-1],last_row_number)
+  Object.entries(backupTesto).forEach(([key, value]) => {
+    let finalText = `${"<b>"+key+"</b>"} ${Object.values(value).join(' ')}`;
+    modificaTestoDiv(parseInt(key), finalText);
+  });
+
+  note_flag=true
+
+}
+
 function CxCy(){
   let words_number = extract_numer_from_StringRR(output_content);                   //prendo i numeri dalla stringa
   words_number=getIntegersInRange(words_number[0],words_number[1]);               // prendo tutti i numeri nel range
@@ -746,6 +793,34 @@ function CxCy(){
 function addNote(stw, enw, last_rowNumber){
   let index = Object.keys(notes).length + 1
   let textNote = "<span id='asterisco'>*</span> "
+  last_note = index
+  notes[index] = {
+    startWord : stw,
+    endWord : enw,
+    note: textNote,
+    startWord_number:last_rowNumber,
+    is_note : true,
+  }
+  recompile_notes()
+}
+
+function addAD(stw, enw, last_rowNumber){
+  let index = Object.keys(notes).length + 1
+  let textNote = "<span>Cancella</span> "
+  last_note = index
+  notes[index] = {
+    startWord : stw,
+    endWord : enw,
+    note: textNote,
+    startWord_number:last_rowNumber,
+    is_note : true,
+  }
+  recompile_notes()
+}
+
+function addNoteTE(stw, enw, last_rowNumber){
+  let index = Object.keys(notes).length + 1
+  let textNote = "<span id='asterisco'>*</span> aggiungi:  "
   last_note = index
   notes[index] = {
     startWord : stw,
@@ -1070,6 +1145,34 @@ function check_command() {
     coloraTestoInVerde()
     scrollDown();
   }
+
+
+  // command CANCELLA
+  if (generic_Check_String(output_content,regex_CD) == true) {
+    if(is_select_bool==true){
+      write_output_command = output_content
+      coloraTestoInVerde()
+      ADxNy();
+      is_select_bool=false;
+    }
+    else{
+      
+    }
+  }
+
+    // command AGGIUNGI
+    if (generic_Check_String(output_content,regex_AD) == true) {
+      if(is_select_bool==true){
+        write_output_command = output_content
+        coloraTestoInVerde()
+        aggiungi_nota_te();
+        is_select_bool=false;
+      }
+      else{
+        
+      }
+    }
+
 
   //"Pulisco" il campo contente il comando
   output_content = '';
