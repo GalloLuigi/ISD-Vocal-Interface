@@ -112,3 +112,21 @@
   align-items: center; /* Allinea verticalmente gli elementi al centro */
   gap: 20px; /* Spazio tra le colonne */
 }
+
+#target-div {
+  font-size: 12px !important; /* Imposta una dimensione del testo fissa */
+}
+
+#target-div * {
+  font-size: inherit !important; /* Eredita la dimensione del testo */
+}
+
+#wrapper_notes {
+  font-size: 12px !important; /* Imposta una dimensione del testo fissa */
+}
+
+#wrapper_notes * {
+  font-size: inherit !important; /* Eredita la dimensione del testo */
+}
+
+

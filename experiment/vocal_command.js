@@ -1,4 +1,3 @@
-
 //COMAND CONFIGURATION
 import {ExtConfig} from "./config.js";
 
@@ -77,8 +76,8 @@ async function inviaDatiAlServer(comand_list,start_experiment,press_next,experim
 
   console.log("Invio i dati al server...");
 
-  const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
-  //const url = '  https://node-js-vocal-interface-server.onrender.com/creaJson'; 
+  //const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
+  const url = '  https://node-js-vocal-interface-server.onrender.com/creaJson'; 
 
   const usern = document.getElementById("nav_username").value
   const data = {
@@ -1245,3 +1244,15 @@ button_next.addEventListener('click', async function(butpres) {
 
 
 });
+
+
+const listenButton = document.getElementById('listen');
+
+function startListening() {
+    console.log("Il pulsante è stato premuto! Funzione avviata.");
+    listen();
+
+}
+
+// Aggiungi un event listener per il clic sul pulsante
+listenButton.addEventListener('click', startListening);
