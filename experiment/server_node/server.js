@@ -11,11 +11,6 @@ const cors = require('cors');
 
 app.use(cors());
 app.use(express.json());
-
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-    console.log("Hello World!")
-  })
   
 /*
 app.post('/creaJson', (req, res) => {
@@ -157,6 +152,11 @@ app.post('/creaJson', (req, res) => {
     handleCSV(newData, username);
     
 });
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+  console.log("Hello World!")
+})
 
 app.listen(3000, () => {
     console.log('Server in ascolto sulla porta 3000');
