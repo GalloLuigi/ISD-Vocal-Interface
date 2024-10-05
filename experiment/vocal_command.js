@@ -1,3 +1,4 @@
+
 //COMAND CONFIGURATION
 import {ExtConfig} from "./config.js";
 

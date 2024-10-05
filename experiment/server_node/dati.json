@@ -1,0 +1,18 @@
+{
+  "prova": {
+    "1": [
+      {
+        "stringhe": [
+          {
+            "timestamp": "2024-10-05 16:22:30",
+            "stringa": "demente",
+            "is_correct": false
+          }
+        ],
+        "timestampInizio": "2024-10-05 16:22:23",
+        "timestampFine": "2024-10-05 16:22:33",
+        "completato": false
+      }
+    ]
+  }
+}
