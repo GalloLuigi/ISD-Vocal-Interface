@@ -77,7 +77,8 @@ async function inviaDatiAlServer(comand_list,start_experiment,press_next,experim
   console.log("Invio i dati al server...");
 
   //const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
-  const url = '  https://node-js-vocal-interface-server.onrender.com/creaJson'; 
+  //const url = '  https://node-js-vocal-interface-server.onrender.com/creaJson'; 
+  const url = 'http://128.116.224.56:3000/creaJson'; 
 
   const usern = document.getElementById("nav_username").value
   const data = {
