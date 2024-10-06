@@ -22,10 +22,12 @@ var regex_R=/riga[0-9]+/;
 var regex_RR=/dariga[0-9]+a[0-9]+/;
 var regex_NN=/aggiunginotada[0-9]+a[0-9]+/;
 var regex_delete=/cancellanota[0-9]+/;
-var regex_H=/cerca[0-9]+/;
+var regex_H=/sottolinea[0-9]+/;
 var regex_CC=/sostituiscida[0-9]+a[0-9]+/;
 
-var regex_AD=/aggiungida[0-9]+a[0-9]+/;
+//var regex_AD=/aggiungida[0-9]+a[0-9]+/;
+var regex_AD=/aggiungia[0-9]/;
+
 var regex_CD=/cancellada[0-9]+a[0-9]+/;
 
 var regex_A=/approva[0-9]+/;
@@ -48,7 +50,7 @@ const old_config ={
   "Add a note": "aggiungi nota da",
   "Complete Note":"Chiudi nota",
   "Delete note": "cancella nota",
-  "Highlight note": "cerca",
+  "Highlight note": "sottolinea",
   "Correct note": "sostituisci da",
   "Approve correction": "approva"
 };
@@ -406,6 +408,29 @@ function extract_numer_from_StringRR(inputString) {
    
 }
 
+function extractNumbersFromRegex(testString) {
+  // Definisci la regex originale che cerca "aggiungia" seguito da una cifra
+  var regex_AD = /aggiungia([0-9])/g;
+
+  // Stringa di esempio da cui vogliamo estrarre i numeri
+  //var testString = "aggiungia3, aggiungia5, aggiungia7";
+
+  // Trova tutte le occorrenze che corrispondono alla regex
+  var matches = testString.match(regex_AD);
+
+  // Se ci sono corrispondenze
+  if (matches) {
+      // Estrai solo i numeri dalle corrispondenze
+      var numbers = matches.map(function(match) {
+          return match.replace(/[^0-9]/g, ''); // Rimuovi tutto tranne i numeri
+      });
+
+      return numbers; // Ritorna un array con i numeri trovati
+  } else {
+      return []; // Nessuna corrispondenza
+  }
+}
+
  
 
 function getIntegersInRange(start, end) {
@@ -747,11 +772,12 @@ function ADxNy(){
 }
 
 function aggiungi_nota_te(){
-  let wrds = extract_numer_from_StringRR(output_content);                   //prendo i numeri dalla stringa
-  words_number=getIntegersInRange(wrds[0],wrds[1]);               // prendo tutti i numeri nel range
+  //let wrds = extract_numer_from_StringRR(output_content);                   //prendo i numeri dalla stringa
+  let wrds =extractNumbersFromRegex(output_content);
+  words_number=getIntegersInRange(wrds[0],wrds[0]);               // prendo tutti i numeri nel range
   let backupTesto = JSON.parse(JSON.stringify(testo));
   words_number.forEach(k => {
-    let word = map[k];
+    let word = map[0];
     backupTesto[word.row][word.pos] = `<u>${"<span style='color: blue;'>"+k+"</span>"} ${word.word}</u>`;
   });
 
@@ -762,7 +788,7 @@ function aggiungi_nota_te(){
     let finalText = `${"<b>"+key+"</b>"} ${Object.values(value).join(' ')}`;
     modificaTestoDiv(parseInt(key), finalText);
   });
-
+  compile_testo()
   note_flag=true
 
 }
@@ -853,6 +879,9 @@ function highlightNote(id) {
         console.error(`Nota con ID ${id} non trovata.`);
         return;
     }
+
+    let noteid_to_underline=id+"note"
+    underlineDiv(noteid_to_underline)
 
     if(notes[id].startWord_number.length>1){
       let lunghezzaArray = notes[id].startWord_number.length
@@ -1214,6 +1243,10 @@ targetElement.innerHTML= Papers[paperIndexes];
 const button_next = document.getElementById('next');
 button_next.addEventListener('click', async function(butpres) {
   
+  notes = {}
+  compile_testo()
+  //recompile_notes();
+
   let press_next=Date.now();
   
   inviaDatiAlServer(all_command,start_experiment,press_next,experiment_complete)
@@ -1257,3 +1290,29 @@ function startListening() {
 
 // Aggiungi un event listener per il clic sul pulsante
 listenButton.addEventListener('click', startListening);
+
+
+function underlineDiv(divId) {
+  // Trova l'elemento div in base all'ID
+  var element = document.getElementById(divId);
+
+  // Se l'elemento esiste, applica la sottolineatura
+  if (element) {
+      element.style.textDecoration = "underline";
+  } else {
+      alert("Div non trovato con ID: " + divId);
+  }
+}
+
+// Funzione per rimuovere la sottolineatura e ripristinare lo stile originale
+function removeUnderline(divId) {
+  // Trova l'elemento div in base all'ID
+  var element = document.getElementById(divId);
+
+  // Se l'elemento esiste, rimuovi la sottolineatura
+  if (element) {
+      element.style.textDecoration = "none";
+  } else {
+      alert("Div non trovato con ID: " + divId);
+  }
+}

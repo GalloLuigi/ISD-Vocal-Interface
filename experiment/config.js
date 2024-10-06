@@ -6,7 +6,7 @@ const Cfg = {
     "Add a note": "aggiungi nota da",
     "Complete Note":"Chiudi nota",
     "Delete note": "cancella nota",
-    "Highlight note": "cerca",
+    "Highlight note": "sottolinea",
     "Correct note": "sostituisci da",
     "Approve correction": "approva"
 }
