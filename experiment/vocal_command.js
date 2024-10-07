@@ -78,9 +78,9 @@ async function inviaDatiAlServer(comand_list,start_experiment,press_next,experim
 
   console.log("Invio i dati al server...");
 
-  //const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
+  const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
   //const url = '  https://node-js-vocal-interface-server.onrender.com/creaJson'; 
-  const url = 'http://128.116.224.56:3000/creaJson'; 
+  //const url = 'http://128.116.224.56:3000/creaJson'; 
 
   const usern = document.getElementById("nav_username").value
   const data = {
@@ -89,7 +89,9 @@ async function inviaDatiAlServer(comand_list,start_experiment,press_next,experim
       timestampFine: press_next,   
       completato: experiment_complete,     
       username: usern,
-      task: exp_index        
+      task: exp_index
+      //,
+      //text: document.getElementById('target-div').textContent
   };
   
   fetch(url, {
@@ -557,6 +559,76 @@ function coloraTestoInVerde() {
   }
 }
 
+function isEqualToLastElement(stringToCheck, exp_index) {
+  // Otteniamo l'array da ExtConfig.Experiments con l'indice fornito
+  let experimentContent = ExtConfig.Experiments[exp_index];
+
+  // Ottieni tutte le chiavi dell'oggetto in un array
+  let keys = Object.keys(experimentContent);
+
+  // Trova l'ultima chiave
+  let lastKey = keys[keys.length - 1];
+
+  // Usa l'ultima chiave per accedere al valore corrispondente
+  let lastValue = experimentContent[lastKey];
+
+  if(stringToCheck.toLocaleLowerCase()===lastValue.toLocaleLowerCase()){
+    return true;
+  }
+  else{
+  // Se non è un array o è vuoto, restituiamo false
+  return false;
+  }
+
+}
+
+function check_if_is_command(command) {
+  // Controlla i diversi regex per validare il comando
+  if (command === regex_add) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_R)) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_RR)) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_NN)) {
+      return true;
+  }
+  if (command === regex_complete) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_delete)) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_H)) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_CC)) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_A)) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_su)) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_giu)) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_CD)) {
+      return true;
+  }
+  if (generic_Check_String(command, regex_AD)) {
+      return true;
+  }
+  
+  // Se nessuno dei comandi corrisponde, restituisci false
+  return false;
+}
+
+
 var note_flag=false
 let buffer_note=""
 
@@ -596,11 +668,26 @@ if (containsStringInObject(experimentContent, output_content)) {
 is_correct=false;
 }
 
+let len=Object.keys(Experiments[exp_index]).length;
+let is_last;
+if(exp_command_num== Object.keys(Experiments[exp_index]).length&& isEqualToLastElement(output_content,exp_index))
+{
+  is_last=true;
+}
+else{
+  is_last=false;
+}
+
+//let is_command=check_if_is_command(output_content);
+//console.log("THE COMMAND IS" + is_command);
+
     //aggiunta a all_command
     let comando = {
       timestamp: Date.now(),
       stringa: output_content,
-      is_correct: is_correct
+      is_correct: is_correct,
+      is_last: is_last//,
+      //is_command:is_command
       };
 
 
@@ -617,6 +704,8 @@ is_correct=false;
       if(exp_command_num== Object.keys(Experiments[exp_index]).length){
         experiment_complete=true;
       }
+
+
 
       console.log("exp_command_num:"+exp_command_num);
     }else {
@@ -1249,6 +1338,8 @@ button_next.addEventListener('click', async function(butpres) {
 
   let press_next=Date.now();
   
+  console.log(all_command);
+
   inviaDatiAlServer(all_command,start_experiment,press_next,experiment_complete)
   
   //svuoto buffer comandi pronunciati
