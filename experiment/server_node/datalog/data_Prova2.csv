@@ -1,0 +1,3 @@
+username,stringhe,task,done,startTS,endTS
+Prova2,[],1,false,2024-10-07 17:55:22,2024-10-07 17:55:28
+Prova2,"[{""timestamp"":""2024-10-07 17:55:31"",""stringa"":""ha numeri"",""is_correct"":false,""is_last"":false},{""timestamp"":""2024-10-07 17:55:33"",""stringa"":""numeri"",""is_correct"":true,""is_last"":false}]",2,false,2024-10-07 17:55:22,2024-10-07 17:55:34

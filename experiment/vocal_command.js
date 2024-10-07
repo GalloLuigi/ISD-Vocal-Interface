@@ -73,7 +73,7 @@ function modifyConfig() {
 
 }
 
-
+/*
 async function inviaDatiAlServer(comand_list,start_experiment,press_next,experiment_complete) {
 
   console.log("Invio i dati al server...");
@@ -108,6 +108,46 @@ async function inviaDatiAlServer(comand_list,start_experiment,press_next,experim
   .catch((error) => {
       console.error('Errore durante la richiesta:', error);
   });
+}
+*/
+
+async function inviaDatiAlServer(
+  comand_list,
+  start_experiment,
+  press_next,
+  experiment_complete
+) {
+  console.log("Invio i dati al server...");
+
+  const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
+  //const url = "  https://node-js-vocal-interface-server.onrender.com/creaJson";
+
+  const usern = document.getElementById("nav_username").value;
+  const data = {
+    stringhe: comand_list,
+    timestampInizio: start_experiment,
+    timestampFine: press_next,
+    completato: experiment_complete,
+    username: usern,
+    task: exp_index,
+  };
+
+  console.log(JSON.stringify(data))
+
+  fetch(url, {
+    method: "POST", // Metodo POST
+    headers: {
+      "Content-Type": "application/json", // Indica che i dati sono in formato JSON
+    },
+    body: JSON.stringify(data), // Converti l'oggetto data in stringa JSON
+  })
+    .then((response) => response.json()) // Converti la risposta JSON
+    .then((data) => {
+      console.log("Risposta dal server:", data); // Visualizza la risposta
+    })
+    .catch((error) => {
+      console.error("Errore durante la richiesta:", error);
+    });
 }
 
 function convertNumbersToDigits(str) {

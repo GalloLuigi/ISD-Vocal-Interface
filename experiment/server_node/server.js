@@ -146,6 +146,8 @@ app.post('/creaJson', (req, res) => {
         element.timestamp= moment(element.timestamp).format('YYYY-MM-DD HH:mm:ss');
     });
 
+    newData.stringhe = JSON.stringify(newData.stringhe)
+
     newData.startTS=moment(timestampInizio).format('YYYY-MM-DD HH:mm:ss');
     newData.endTS=moment(timestampFine).format('YYYY-MM-DD HH:mm:ss');
 
