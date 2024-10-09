@@ -785,7 +785,7 @@ function listen() {
     console.log("NUMERO COMANDO: " + exp_command_num);
     if (
       output_content.toLowerCase() ===
-      Experiments[exp_index]["Command " + exp_command_num].toLowerCase()
+      String(Experiments[exp_index]["Command " + exp_command_num]).toLowerCase()
     ) {
       document
         .getElementById("Command " + exp_command_num)
