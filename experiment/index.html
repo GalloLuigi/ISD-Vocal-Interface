@@ -2,29 +2,29 @@
 <html>
 
 <head>
-    <style>
-        .piccolo {
-            font-size: 12px;
-        }
-    </style>
-    <!-- Set the character encoding to UTF-8 -->
-    <meta charset="UTF-8">
-    <!-- Specify the compatibility mode for Internet Explorer -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Set the viewport to control the layout on mobile devices -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Set the title of the web page -->
-    <title>PDF voice notebook </title>
-    <!-- Include the PDF.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"
-        integrity="sha512-ml/QKfG3+Yes6TwOzQb7aCNtJF4PUyha6R3w8pSTo/VJSywl7ZreYvvtUso7fKevpsI+pYVVwnu82YO0q3V6eg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- Add some styling for the web page -->
-    <link rel="stylesheet" href="style.css">
+  <style>
+    .piccolo {
+      font-size: 12px;
+    }
+  </style>
+  <!-- Set the character encoding to UTF-8 -->
+  <meta charset="UTF-8">
+  <!-- Specify the compatibility mode for Internet Explorer -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Set the viewport to control the layout on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Set the title of the web page -->
+  <title>PDF voice notebook </title>
+  <!-- Include the PDF.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"
+    integrity="sha512-ml/QKfG3+Yes6TwOzQb7aCNtJF4PUyha6R3w8pSTo/VJSywl7ZreYvvtUso7fKevpsI+pYVVwnu82YO0q3V6eg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Add some styling for the web page -->
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!--
+  <!--
     <nav>
         <div class="text-box" id="copy_of_command">
             <p>Current comand:</p>
@@ -38,187 +38,187 @@
 </div>
     </nav>
     -->
-    <nav>
-        <table style="width: 100%; height: 40px; border-collapse: collapse; table-layout: fixed;">
-            <tr>
-                <td style="padding: 2px; vertical-align: middle; text-align: left;">
-                    <div class="text-box" id="copy_of_command">
-                        <p style="margin: 0; font-size: 12px;">Current command:</p>
-                    </div>
-                </td>
-                <td style="padding: 2px;padding-left: 20px; vertical-align: middle; text-align: left;">
-                    <div id="username_form" style="font-size: 12px;">
-                        <div>Username:</div>
-                        <input type="text" id="nav_username" name="lname" label="sesso" style="font-size: 12px; padding: 2px;">
-                    </div>
-                </td>
-                <td style="padding: 2px; vertical-align: middle; text-align: center;">
-                    <button id="next" style="font-size: 12px; padding: 5px 10px;">Next</button>
-                    <button id="listen" style="font-size: 12px; padding: 5px 10px;">Listen</button>
+  <nav>
+    <table style="width: 100%; height: 40px; border-collapse: collapse; table-layout: fixed;">
+      <tr>
+        <td style="padding: 2px; vertical-align: middle; text-align: left;">
+          <div class="text-box" id="copy_of_command">
+            <p style="margin: 0; font-size: 12px;">Current command:</p>
+          </div>
+        </td>
+        <td style="padding: 2px;padding-left: 20px; vertical-align: middle; text-align: left;">
+          <div id="username_form" style="font-size: 12px;">
+            <div>Username:</div>
+            <input type="text" id="nav_username" name="lname" label="sesso" style="font-size: 12px; padding: 2px;">
+          </div>
+        </td>
+        <td style="padding: 2px; vertical-align: middle; text-align: center;">
+          <button id="next" style="font-size: 12px; padding: 5px 10px;">Next</button>
+          <button id="listen" style="font-size: 12px; padding: 5px 10px;">Listen</button>
 
-                </td>
-            </tr>
-        </table>
-        
-</nav>
+        </td>
+      </tr>
+    </table>
+
+  </nav>
 
 
-    <div id="instructions"></div>
-    <!--
+  <div id="instructions"></div>
+  <!--
     <div id="instructions" style="background-color: #f0f0f0; border: 2px solid #000000; margin-top: 60px; margin-bottom: 40px;">
     </div>
 -->
 
-    <!-- Textarea to display the extracted text -->
-    <textarea style="display: none;" class="pdftext"></textarea>
+  <!-- Textarea to display the extracted text -->
+  <textarea style="display: none;" class="pdftext"></textarea>
 
 
-    <div id="outputElement"></div>
+  <div id="outputElement"></div>
 
-    <div class="container" style=" margin-top: 100px;">
-        <div id="target-div">
-        </div>
-        <div id="wrapper_notes"></div>
-
+  <div class="container" style=" margin-top: 100px;">
+    <div id="target-div">
     </div>
+    <div id="wrapper_notes"></div>
+
+  </div>
 
 
-    <h1 style="display: none;">Modify Configuration:</h1>
+  <h1 style="display: none;">Modify Configuration:</h1>
 
-    <h2 style="display: none;">Select Key to Modify:</h2>
-    <form style="display: none;" id="modify-form">
-        <label for="config-keys-dropdown">Key:</label>
-        <select id="config-keys-dropdown" required></select><br><br>
-        <label for="new-value">New Value:</label>
-        <input type="text" id="new-value" name="new-value" required><br><br>
-        <button type="button" onclick="modifyConfig()">Modify</button>
-    </form>
+  <h2 style="display: none;">Select Key to Modify:</h2>
+  <form style="display: none;" id="modify-form">
+    <label for="config-keys-dropdown">Key:</label>
+    <select id="config-keys-dropdown" required></select><br><br>
+    <label for="new-value">New Value:</label>
+    <input type="text" id="new-value" name="new-value" required><br><br>
+    <button type="button" onclick="modifyConfig()">Modify</button>
+  </form>
 
-    <h2 style="display: none;">Current Configuration:</h2>
-    <pre style="display: none;" id="config-content"></pre>
+  <h2 style="display: none;">Current Configuration:</h2>
+  <pre style="display: none;" id="config-content"></pre>
 
 
 
-    <!-- JavaScript code -->
-    <script>
-        // Set the worker source for PDF.js library
-        pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+  <!-- JavaScript code -->
+  <script>
+    // Set the worker source for PDF.js library
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
 
-        // Get references to various elements
-        let pdfinput = document.querySelector(".selectpdf"); // Reference to the PDF file input field
-        let pwd = document.querySelector(".pwd"); // Reference to the password input field
-        let upload = document.querySelector(".upload"); // Reference to the upload button
-        let afterupload = document.querySelector(".afterupload"); // Reference to the result section
-        let select = document.querySelector("select"); // Reference to the page selection dropdown
-        let download = document.querySelector(".download"); // Reference to the download link
-        let pdftext = document.querySelector(".pdftext"); // Reference to the text area for displaying extracted text
+    // Get references to various elements
+    let pdfinput = document.querySelector(".selectpdf"); // Reference to the PDF file input field
+    let pwd = document.querySelector(".pwd"); // Reference to the password input field
+    let upload = document.querySelector(".upload"); // Reference to the upload button
+    let afterupload = document.querySelector(".afterupload"); // Reference to the result section
+    let select = document.querySelector("select"); // Reference to the page selection dropdown
+    let download = document.querySelector(".download"); // Reference to the download link
+    let pdftext = document.querySelector(".pdftext"); // Reference to the text area for displaying extracted text
 
-        // Event listener for the upload button click
-        /*
-        upload.addEventListener('click', () => {
-            let file = pdfinput.files[0]; // Get the selected PDF file
-            console.log(file);
-            if (file != undefined && file.type == "application/pdf") {
-                let fr = new FileReader(); // Create a new FileReader object
-                fr.readAsDataURL(file); // Read the file as data URL
-                fr.onload = () => {
-                    let res = fr.result; // Get the result of file reading
-                    if (pwd.value == "") {
-                        extractText(res, false); // Extract text without password
-                    } else {
-                        extractText(res, true); // Extract text with password
-                    }
-                }
-            } else {
-                alert("Select a valid PDF file");
-            }
-        });
-        */
-
-        let alltext = []; // Array to store all extracted text
-
-        // Asynchronous function to extract text from the PDF
-        async function extractText(url, pass) {
-            try {
-                let pdf;
-                if (pass) {
-                    pdf = await pdfjsLib.getDocument({ url: url, password: pwd.value }).promise; // Get the PDF document with password
+    // Event listener for the upload button click
+    /*
+    upload.addEventListener('click', () => {
+        let file = pdfinput.files[0]; // Get the selected PDF file
+        console.log(file);
+        if (file != undefined && file.type == "application/pdf") {
+            let fr = new FileReader(); // Create a new FileReader object
+            fr.readAsDataURL(file); // Read the file as data URL
+            fr.onload = () => {
+                let res = fr.result; // Get the result of file reading
+                if (pwd.value == "") {
+                    extractText(res, false); // Extract text without password
                 } else {
-                    pdf = await pdfjsLib.getDocument(url).promise; // Get the PDF document without password
-                }
-                let pages = pdf.numPages; // Get the total number of pages in the PDF
-                for (let i = 1; i <= pages; i++) {
-                    let page = await pdf.getPage(i); // Get the page object for each page
-                    let txt = await page.getTextContent(); // Get the text content of the page
-                    let text = txt.items.map((s) => s.str).join(""); // Concatenate the text items into a single string
-                    alltext.push(text); // Add the extracted text to the array
-                }
-                alltext.map((e, i) => {
-                    select.innerHTML += `<option value="${i + 1}">${i + 1}</option>`; // Add options for each page in the page selection dropdown
-                });
-                afterProcess(); // Display the result section
-            } catch (err) {
-                alert(err.message);
-            }
-        }
-
-
-        function divideTesto(allText, targetDiv, maxCharsPerDiv = 89) {
-            const textDiv = document.getElementById(targetDiv);
-            textDiv.innerHTML = ''; // Pulisci il div prima di aggiungere nuovi elementi
-
-            let currentText = '';
-            for (let i = 0; i < allText[0].length; i++) {
-                currentText += allText[0][i];
-                if (currentText.length === maxCharsPerDiv) {
-                    const newDiv = document.createElement('div');
-                    newDiv.textContent = currentText;
-                    textDiv.appendChild(newDiv);
-                    currentText = '';
+                    extractText(res, true); // Extract text with password
                 }
             }
+        } else {
+            alert("Select a valid PDF file");
         }
+    });
+    */
 
-        // Function to handle the post-processing after text extraction
-        function afterProcess() {
-            pdftext.value = alltext[select.value - 1]; // Display the extracted text for the selected page
-            download.href = "data:text/plain;charset=utf-8," + encodeURIComponent(alltext[select.value - 1]); // Set the download link URL for the extracted text
-            afterupload.style.display = "flex"; // Display the result section
-            document.querySelector(".another").style.display = "unset"; // Display the "Extract Another PDF" button
+    let alltext = []; // Array to store all extracted text
 
-            //Scrivo nelle mie div
-            const textDiv = document.getElementById('target-div');
-
-            //for (const text of alltext) {
-            /*
-                const paragraph = document.createElement('p');
-                paragraph.innerHTML= alltext
-                currentSentence=""
-            */
-            divideTesto(alltext, "target-div");
-            /*
-            for (let i = 0; i < alltext.length; i++) {
-                const currentChar = alltext[i];
-
-                // Append current character to the current sentence
-                currentSentence += currentChar;
-
-                if(alltext.length%89===0){
-                    textDiv.appendChild(currentSentence);
-                    currentSentence=""
-                }
-
-            }
-            */
-
-            //textDiv.appendChild(paragraph);
-            //}
-
+    // Asynchronous function to extract text from the PDF
+    async function extractText(url, pass) {
+      try {
+        let pdf;
+        if (pass) {
+          pdf = await pdfjsLib.getDocument({ url: url, password: pwd.value }).promise; // Get the PDF document with password
+        } else {
+          pdf = await pdfjsLib.getDocument(url).promise; // Get the PDF document without password
         }
-    </script>
+        let pages = pdf.numPages; // Get the total number of pages in the PDF
+        for (let i = 1; i <= pages; i++) {
+          let page = await pdf.getPage(i); // Get the page object for each page
+          let txt = await page.getTextContent(); // Get the text content of the page
+          let text = txt.items.map((s) => s.str).join(""); // Concatenate the text items into a single string
+          alltext.push(text); // Add the extracted text to the array
+        }
+        alltext.map((e, i) => {
+          select.innerHTML += `<option value="${i + 1}">${i + 1}</option>`; // Add options for each page in the page selection dropdown
+        });
+        afterProcess(); // Display the result section
+      } catch (err) {
+        alert(err.message);
+      }
+    }
 
 
-    <script type="module" src="vocal_command.js"></script>
+    function divideTesto(allText, targetDiv, maxCharsPerDiv = 89) {
+      const textDiv = document.getElementById(targetDiv);
+      textDiv.innerHTML = ''; // Pulisci il div prima di aggiungere nuovi elementi
+
+      let currentText = '';
+      for (let i = 0; i < allText[0].length; i++) {
+        currentText += allText[0][i];
+        if (currentText.length === maxCharsPerDiv) {
+          const newDiv = document.createElement('div');
+          newDiv.textContent = currentText;
+          textDiv.appendChild(newDiv);
+          currentText = '';
+        }
+      }
+    }
+
+    // Function to handle the post-processing after text extraction
+    function afterProcess() {
+      pdftext.value = alltext[select.value - 1]; // Display the extracted text for the selected page
+      download.href = "data:text/plain;charset=utf-8," + encodeURIComponent(alltext[select.value - 1]); // Set the download link URL for the extracted text
+      afterupload.style.display = "flex"; // Display the result section
+      document.querySelector(".another").style.display = "unset"; // Display the "Extract Another PDF" button
+
+      //Scrivo nelle mie div
+      const textDiv = document.getElementById('target-div');
+
+      //for (const text of alltext) {
+      /*
+          const paragraph = document.createElement('p');
+          paragraph.innerHTML= alltext
+          currentSentence=""
+      */
+      divideTesto(alltext, "target-div");
+      /*
+      for (let i = 0; i < alltext.length; i++) {
+          const currentChar = alltext[i];
+
+          // Append current character to the current sentence
+          currentSentence += currentChar;
+
+          if(alltext.length%89===0){
+              textDiv.appendChild(currentSentence);
+              currentSentence=""
+          }
+
+      }
+      */
+
+      //textDiv.appendChild(paragraph);
+      //}
+
+    }
+  </script>
+
+
+  <script type="module" src="vocal_command.js"></script>
 
 </body>
 

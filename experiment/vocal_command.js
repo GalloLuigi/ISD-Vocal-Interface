@@ -129,27 +129,35 @@ function getTextAsString(inputText) {
   return text;
 }
 
+let usernameGlobal = false;
 async function inviaDatiAlServer(
   comand_list,
   start_experiment,
   press_next,
   experiment_complete
 ) {
-  console.log("Invio i dati al server...");
+  console.log("Invio i dati al server");
 
+  console.log("printando url");
   const finalText = getTextAsString(testo);
   const finalNotes = JSON.stringify(notes);
 
-  const url = "http://localhost:3000/creaJson"; // URL del tuo endpoint
+  // const url = "http://localhost:3000/creaJson"; // URL del tuo endpoint
+  const url = "https://1e0c-128-116-224-56.ngrok-free.app/"; // URL del tuo endpoint
   //const url = "  https://node-js-vocal-interface-server.onrender.com/creaJson";
 
   const usern = document.getElementById("nav_username").value;
+
+  if (!usernameGlobal) {
+    usernameGlobal = usern;
+  }
+
   const data = {
     stringhe: comand_list,
     timestampInizio: start_experiment,
     timestampFine: press_next,
     completato: experiment_complete,
-    username: usern,
+    username: usernameGlobal,
     task: exp_index,
     finalText: finalText,
     finalNotes: finalNotes,
@@ -818,8 +826,17 @@ function listen() {
     console.log("The command is:" + output_content);
 
     if (note_flag == true) {
-      coloraTestoInVerde();
-      buffer_note = output_content;
+      if (
+        output_content.toLowerCase() != config["Complete Note"].toLowerCase()
+      ) {
+        coloraTestoInVerde();
+        buffer_note = output_content;
+        let txt = notes[last_note].note;
+        txt = txt + " " + buffer_note + " ";
+        notes[last_note].note = txt;
+        buffer_note = "";
+        recompile_notes();
+      }
     } else {
       output_content = output_content.toLowerCase(); // output_content e' una stringa contente l'ultimo comando lanciato
       output_content = output_content.split(" ").join("");
@@ -832,12 +849,6 @@ function listen() {
   recognition.addEventListener("soundend", () => {
     console.log("Audio capturing ended");
     if (note_flag == true && buffer_note != config["Complete Note"]) {
-      recompile_notes();
-      console.log("buffer note finale: " + buffer_note);
-      let txt = notes[last_note].note;
-      txt = txt + " " + buffer_note + " ";
-      notes[last_note].note = txt;
-      buffer_note = "";
       recompile_notes();
       listen();
     } else {
