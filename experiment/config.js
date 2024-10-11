@@ -12,6 +12,16 @@ const Cfg = {
 
 export const ExtConfig = {
   Config: Cfg,
+  PaperList: {
+    [1]: 1,
+    [2]: 2,
+    [3]: 3,
+    [4]: 4,
+    [5]: 5,
+    [6]: 1,
+    [7]: 2,
+  },
+
   Experiments: {
     [1]: {
       "Command 1": Cfg["Add numbers to lines"],
@@ -33,7 +43,8 @@ export const ExtConfig = {
     },
     [2]: {
       "Command 1": Cfg["Add numbers to lines"],
-      "Command 2": Cfg["Select line"] + " 1",
+      "Command 2": Cfg["Select lines"] + " 6" + " a" + " 8",
+      //"Command 2": Cfg["Select line"] + " 1",
       "Command 3": Cfg["Add a note"] + " 3 " + "a" + " 9",
       "Command 4": "Annotazione urgente",
       "Command 5": Cfg["Complete Note"],
@@ -43,11 +54,11 @@ export const ExtConfig = {
       "Command 9": "Da concludere al più presto",
       "Command 10": Cfg["Complete Note"],
       //"Command 11": Cfg["Delete note"] + " 1",
-      "Command 12": Cfg["Select lines"] + " 6" + " a" + " 8",
-      "Command 13": Cfg["Add a note"] + " 5 " + "a" + " 9",
-      "Command 14": "Da stampare",
-      "Command 15": Cfg["Complete Note"],
-      "Command 16": Cfg["Delete note"] + " 1",
+      "Command 11": Cfg["Select lines"] + " 6" + " a" + " 8",
+      "Command 12": Cfg["Add a note"] + " 5 " + "a" + " 9",
+      "Command 13": "Da stampare",
+      "Command 14": Cfg["Complete Note"],
+      "Command 15": Cfg["Delete note"] + " 1",
     },
     [3]: {
       "Command 1": Cfg["Add numbers to lines"],

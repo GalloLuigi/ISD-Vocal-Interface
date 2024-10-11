@@ -1,6 +1,8 @@
 //COMAND CONFIGURATION
 import { ExtConfig } from "./config.js";
 
+const urlToServer = "https://650f-128-116-224-56.ngrok-free.app";
+
 //tutti i comandi detti dall'utente
 var all_command = [];
 
@@ -81,44 +83,6 @@ function modifyConfig() {
   gen_regex_from_config();
 }
 
-/*
-async function inviaDatiAlServer(comand_list,start_experiment,press_next,experiment_complete) {
-
-  console.log("Invio i dati al server...");
-
-  const url = 'http://localhost:3000/creaJson'; // URL del tuo endpoint
-  //const url = '  https://node-js-vocal-interface-server.onrender.com/creaJson'; 
-  //const url = 'http://128.116.224.56:3000/creaJson'; 
-
-  const usern = document.getElementById("nav_username").value
-  const data = {
-      stringhe: comand_list,       
-      timestampInizio: start_experiment,            
-      timestampFine: press_next,   
-      completato: experiment_complete,     
-      username: usern,
-      task: exp_index
-      //,
-      //text: document.getElementById('target-div').textContent
-  };
-  
-  fetch(url, {
-      method: 'POST',                         // Metodo POST
-      headers: {
-          'Content-Type': 'application/json', // Indica che i dati sono in formato JSON
-      },
-      body: JSON.stringify(data)              // Converti l'oggetto data in stringa JSON
-  })
-  .then(response => response.json())          // Converti la risposta JSON
-  .then(data => {
-      console.log('Risposta dal server:', data); // Visualizza la risposta
-  })
-  .catch((error) => {
-      console.error('Errore durante la richiesta:', error);
-  });
-}
-*/
-
 function getTextAsString(inputText) {
   let text = "";
   Object.entries(inputText).forEach(([key, value]) => {
@@ -136,14 +100,11 @@ async function inviaDatiAlServer(
   press_next,
   experiment_complete
 ) {
-  console.log("Invio i dati al server");
-
-  console.log("printando url");
   const finalText = getTextAsString(testo);
   const finalNotes = JSON.stringify(notes);
 
   // const url = "http://localhost:3000/creaJson"; // URL del tuo endpoint
-  const url = "https://1e0c-128-116-224-56.ngrok-free.app/"; // URL del tuo endpoint
+  const url = urlToServer; // URL del tuo endpoint
   //const url = "  https://node-js-vocal-interface-server.onrender.com/creaJson";
 
   const usern = document.getElementById("nav_username").value;
@@ -491,10 +452,8 @@ function extract_numer_from_String(str) {
   const matches = str.match(regex); // Extract matches using regex.match()
   if (matches) {
     test.push(matches[0]);
-    console.log("Extracted numbers:", matches);
     return test;
   } else {
-    console.log("No numbers found in the string.");
   }
 }
 
@@ -736,7 +695,6 @@ let buffer_note = "";
 var experiment_complete = false;
 
 function listen() {
-  console.log("Listen...");
   var speech = true;
   window.SpeechRecognition = window.webkitSpeechRecognition;
 
@@ -790,7 +748,6 @@ function listen() {
     }
 
     output_content = convertNumbersToDigits(output_content);
-    console.log("NUMERO COMANDO: " + exp_command_num);
     if (
       output_content.toLowerCase() ===
       String(Experiments[exp_index]["Command " + exp_command_num]).toLowerCase()
@@ -803,13 +760,9 @@ function listen() {
       if (exp_command_num == Object.keys(Experiments[exp_index]).length) {
         experiment_complete = true;
       }
-
-      console.log("exp_command_num:" + exp_command_num);
     } else {
       errors++;
       //Logger(exp_command_num, false)
-      console.log("Error in command:" + errors);
-      console.log("Error: The command is:" + output_content);
       write_output_command = output_content;
       coloraTestoInRosso();
       writeInDiv("Current comand: " + output_content);
@@ -823,7 +776,6 @@ function listen() {
       is_command: is_command,
     };
     all_command.push(comando);
-    console.log("The command is:" + output_content);
 
     if (note_flag == true) {
       if (
@@ -840,14 +792,11 @@ function listen() {
     } else {
       output_content = output_content.toLowerCase(); // output_content e' una stringa contente l'ultimo comando lanciato
       output_content = output_content.split(" ").join("");
-      console.log("The command is:" + output_content);
     }
-    console.log(transcript);
   });
 
   //recognition.addEventListener("audioend", () => {
   recognition.addEventListener("soundend", () => {
-    console.log("Audio capturing ended");
     if (note_flag == true && buffer_note != config["Complete Note"]) {
       recompile_notes();
       listen();
@@ -1227,8 +1176,6 @@ function approveCorrection(id) {
     return;
   }
 
-  console.log(notes[id]);
-
   const note_text = notes[id].note.trim();
   let splitted_note_text = note_text.split(" ");
   let words_number = getIntegersInRange(note.startWord, note.endWord);
@@ -1297,9 +1244,6 @@ function check_command() {
   }
 
   writeInDiv("Current comand:" + write_output_command);
-
-  console.log("PRINTANTO OUTPUT:");
-  console.log(output_content);
 
   //Annulla effetto comando vuoto/ vecchio comando che puo' erroneamente essere letto piu' volte
   if (output_content == "") {
@@ -1449,7 +1393,8 @@ function generate_experiment(commands) {
 let paperIndexes = 1;
 
 const targetElement = document.getElementById("target-div"); //prendo in input il div
-targetElement.innerHTML = Papers[paperIndexes];
+document.getElementById("task_number").innerHTML = "Task: " + exp_index;
+targetElement.innerHTML = Papers[ExtConfig.PaperList[exp_index]];
 const button_next = document.getElementById("next");
 button_next.addEventListener("click", async function (butpres) {
   let press_next = Date.now();
@@ -1466,18 +1411,14 @@ button_next.addEventListener("click", async function (butpres) {
   //svuoto buffer comandi pronunciati
   all_command = [];
 
-  paperIndexes++;
   exp_index++;
   exp_command_num = 1;
-
-  if (!Papers[paperIndexes]) {
-    paperIndexes = 1;
-  }
-  targetElement.innerHTML = Papers[paperIndexes];
 
   if (!Experiments[exp_index]) {
     exp_index = 1;
   }
+
+  targetElement.innerHTML = Papers[ExtConfig.PaperList[exp_index]];
   generate_experiment(Experiments[exp_index]);
 
   if (document.getElementById("next").textContent == "Fine") {
@@ -1488,12 +1429,12 @@ button_next.addEventListener("click", async function (butpres) {
   if (exp_index == 5) {
     document.getElementById("next").textContent = "Fine";
   }
+  document.getElementById("task_number").innerHTML = "Task: " + exp_index;
 });
 
 const listenButton = document.getElementById("listen");
 
 function startListening() {
-  console.log("Il pulsante è stato premuto! Funzione avviata.");
   listen();
 }
 

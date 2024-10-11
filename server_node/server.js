@@ -101,11 +101,6 @@ app.post("/", (req, res) => {
   res.send(JSON.stringify("Hello World!"));
 });
 
-// app.get("/", (req, res) => {
-//   res.send("Hello World!");
-//   console.log("Hello World!");
-// });
-
 app.listen(3000, () => {
   console.log("Server in ascolto sulla porta 3000");
 });
