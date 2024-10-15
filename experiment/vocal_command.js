@@ -1,7 +1,7 @@
 //COMAND CONFIGURATION
 import { ExtConfig } from "./config.js";
 
-const urlToServer = "https://bfb9-128-116-224-56.ngrok-free.app";
+const urlToServer = ExtConfig.urlToServer;
 
 //tutti i comandi detti dall'utente
 var all_command = [];
