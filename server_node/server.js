@@ -73,10 +73,6 @@ app.post("/", (req, res) => {
     } = req.body;
 
     console.log(username);
-
-    if (parseInt(task) <= 1) {
-      return;
-    }
     // Dati da salvare nel file
     const newData = {
       username: username,

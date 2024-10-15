@@ -11,7 +11,6 @@ var start_experiment = Date.now();
 var is_select_bool = false;
 
 let old_command = ""; //ultimo comando lanciato
-let add_flag;
 let words_number;
 let words_number_lenght;
 let nuovo_div_note;
@@ -49,9 +48,7 @@ const config = ExtConfig.Config;
 // Create a list of sentences (text)
 let testo = {};
 var map = new Map();
-var word_count = 0;
 let notes = {};
-var number_of_rows = 0;
 var last_row_number = [];
 let last_note = 0;
 
@@ -68,20 +65,20 @@ const old_config = {
 
 generate_experiment(Experiments[exp_index]);
 
-function modifyConfig() {
-  const selectedKey = document.getElementById("config-keys-dropdown").value;
-  const newValue = document.getElementById("new-value").value;
+// function modifyConfig() {
+//   const selectedKey = document.getElementById("config-keys-dropdown").value;
+//   const newValue = document.getElementById("new-value").value;
 
-  if (selectedKey && newValue) {
-    config[selectedKey] = newValue;
-    updateConfigDisplay();
-    document.getElementById("modify-form").reset();
-  } else {
-    alert("Please select a key and enter a new value.");
-  }
+//   if (selectedKey && newValue) {
+//     config[selectedKey] = newValue;
+//     updateConfigDisplay();
+//     document.getElementById("modify-form").reset();
+//   } else {
+//     alert("Please select a key and enter a new value.");
+//   }
 
-  gen_regex_from_config();
-}
+//   gen_regex_from_config();
+// }
 
 function getTextAsString(inputText) {
   let text = "";
@@ -103,10 +100,6 @@ async function inviaDatiAlServer(
   const finalText = getTextAsString(testo);
   const finalNotes = JSON.stringify(notes);
 
-  // const url = "http://localhost:3000/creaJson"; // URL del tuo endpoint
-  const url = urlToServer; // URL del tuo endpoint
-  //const url = "  https://node-js-vocal-interface-server.onrender.com/creaJson";
-
   const usern = document.getElementById("nav_username").value;
 
   if (!usernameGlobal) {
@@ -123,21 +116,26 @@ async function inviaDatiAlServer(
     finalText: finalText,
     finalNotes: finalNotes,
   };
-
-  fetch(url, {
-    method: "POST", // Metodo POST
-    headers: {
-      "Content-Type": "application/json", // Indica che i dati sono in formato JSON
-    },
-    body: JSON.stringify(data), // Converti l'oggetto data in stringa JSON
-  })
-    .then((response) => response.json()) // Converti la risposta JSON
-    .then((data) => {
-      console.log("Risposta dal server:", data); // Visualizza la risposta
+  start_experiment = Date.now();
+  try {
+    fetch(urlToServer, {
+      method: "POST", // Metodo POST
+      headers: {
+        "Content-Type": "application/json", // Indica che i dati sono in formato JSON
+      },
+      body: JSON.stringify(data), // Converti l'oggetto data in stringa JSON
     })
-    .catch((error) => {
-      console.error("Errore durante la richiesta:", error);
-    });
+      .then((response) => response.json()) // Converti la risposta JSON
+      .then((data) => {
+        console.log("Risposta dal server:", data); // Visualizza la risposta
+      })
+      .catch((error) => {
+        console.error("Errore durante la richiesta:", error);
+      });
+  } catch (error) {
+    console.log("errore: ");
+    console.log(error);
+  }
 }
 
 function convertNumbersToDigits(str) {
@@ -349,14 +347,6 @@ function split_sentence_Into_Words(inputString) {
     // If no matches (no words found), return an empty array
     return [];
   }
-}
-
-function isAlpha(ch) {
-  return /^[A-Z]$/i.test(ch);
-}
-
-function isDigit(str) {
-  return /^\d+$/.test(str);
 }
 
 function estraiFrasiDaDiv(input_text) {
@@ -822,7 +812,6 @@ listen();
 //setInterval(listen, 5000); // 5000 milliseconds = 5 seconds
 
 function add() {
-  add_flag = true;
   compile_testo();
   old_command = output_content; //aggiorno old command
 }
