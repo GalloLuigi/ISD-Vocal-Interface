@@ -1,7 +1,7 @@
 //COMAND CONFIGURATION
 import { ExtConfig } from "./config.js";
 
-const urlToServer = "https://650f-128-116-224-56.ngrok-free.app";
+const urlToServer = "https://bfb9-128-116-224-56.ngrok-free.app";
 
 //tutti i comandi detti dall'utente
 var all_command = [];
@@ -923,7 +923,7 @@ function ADxNy() {
 function aggiungi_nota_te() {
   //let wrds = extract_numer_from_StringRR(output_content);                   //prendo i numeri dalla stringa
   let wrds = extractNumbersFromRegex(output_content);
-  words_number = getIntegersInRange(wrds[0+1], wrds[0+1]); // prendo tutti i numeri nel range
+  words_number = getIntegersInRange(wrds[0 + 1], wrds[0 + 1]); // prendo tutti i numeri nel range
   let backupTesto = JSON.parse(JSON.stringify(testo));
   words_number.forEach((k) => {
     let word = map[1];
