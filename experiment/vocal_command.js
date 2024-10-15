@@ -47,7 +47,7 @@ const Papers = ExtConfig.Papers;
 const config = ExtConfig.Config;
 
 // Create a list of sentences (text)
-const testo = {};
+let testo = {};
 var map = new Map();
 var word_count = 0;
 let notes = {};
@@ -211,6 +211,30 @@ function convertNumbersToDigits(str) {
   });
 }
 
+function editTextAndSplit(test) {
+  let risultato = "";
+  let parole = test.split(" ");
+  let bloccoCorrente = "";
+
+  parole.forEach((parola) => {
+    // Controlla se aggiungere la parola corrente supererebbe il limite
+    if ((bloccoCorrente + parola).length <= ExtConfig.splitLength) {
+      bloccoCorrente += parola + " ";
+    } else {
+      // Chiude il blocco corrente e ne apre uno nuovo
+      risultato += `<div>${bloccoCorrente.trim()}</div>\n`;
+      bloccoCorrente = parola + " "; // Inizia un nuovo blocco con la parola corrente
+    }
+  });
+
+  // Aggiunge l'ultimo blocco se non vuoto
+  if (bloccoCorrente.trim().length > 0) {
+    risultato += `<div>${bloccoCorrente.trim()}</div>`;
+  }
+
+  return risultato;
+}
+
 function updateConfigDisplay() {
   document.getElementById("config-content").textContent = JSON.stringify(
     config,
@@ -335,56 +359,30 @@ function isDigit(str) {
   return /^\d+$/.test(str);
 }
 
+function estraiFrasiDaDiv(input_text) {
+  // Usa una regex per catturare il testo tra i tag <div> e </div>
+  let regex = /<div>(.*?)<\/div>/g;
+  let array = [];
+  let match;
+
+  // Scorre tutto il testo e cattura i match
+  while ((match = regex.exec(input_text)) !== null) {
+    array.push(match[1]); // Aggiunge solo il contenuto catturato (senza i tag)
+  }
+
+  return array;
+}
+
 function compile_testo() {
-  let sentences = [];
   const targetElement = document.getElementById("target-div"); //prendo in input il div
-  const textContent = targetElement.textContent; //estrapolo il testo
   let index = 1;
   last_row_number = [];
   if (Object.keys(testo).length === 0) {
-    let currentSentence = ""; // Variable to hold the current sentence being constructed
+    let sentences = estraiFrasiDaDiv(
+      editTextAndSplit(Papers[ExtConfig.PaperList[exp_index]])
+    );
 
-    // Iterate over the text content character by character
-    for (let i = 0; i < textContent.length; i++) {
-      const currentChar = textContent[i];
-
-      // Append current character to the current sentence
-      currentSentence += currentChar;
-
-      // Check if we've reached the 50-character limit
-
-      if (currentSentence.length == 89) {
-        if (
-          (isAlpha(currentChar) || isDigit(currentChar)) &&
-          textContent[i + 1] &&
-          (isAlpha(textContent[i + 1]) || isDigit(textContent[i + 1]))
-        ) {
-          currentSentence += "-"; // Aggiungi il trattino alla fine
-        }
-        if (
-          textContent.charCodeAt(i) === textContent.charCodeAt(i + 1) &&
-          textContent.charCodeAt(i) === 32
-        ) {
-          currentSentence = currentSentence.substring(
-            0,
-            currentSentence.length - 11
-          );
-          currentSentence += "-";
-        }
-
-        // If so, add the current sentence to the sentences array
-        number_of_rows++;
-        sentences.push(currentSentence);
-
-        // Reset the current sentence variable
-        currentSentence = "";
-      }
-    }
-
-    // Add any remaining characters to the last sentence
-    if (currentSentence.length > 0) {
-      sentences.push(currentSentence);
-    }
+    console.log(sentences);
 
     sentences.forEach((sentence) => {
       if (!testo[index]) {
@@ -574,6 +572,11 @@ function modificaTestoDiv(idDiv, nuovoTesto) {
 }
 
 function recompile_notes(keepUnderline) {
+  Object.entries(testo).forEach(([key, value]) => {
+    const index = String(key);
+    document.getElementById(index + "note").innerHTML = "&nbsp;";
+  });
+
   if (notes) {
     let wrapper = document.getElementById("wrapper_notes");
     let notes_dict = {};
@@ -1388,25 +1391,24 @@ function generate_experiment(commands) {
   }
 }
 
-//Button Next
-
-let paperIndexes = 1;
-
 const targetElement = document.getElementById("target-div"); //prendo in input il div
 document.getElementById("task_number").innerHTML = "Task: " + exp_index;
-targetElement.innerHTML = Papers[ExtConfig.PaperList[exp_index]];
+targetElement.innerHTML = editTextAndSplit(
+  Papers[ExtConfig.PaperList[exp_index]]
+);
 const button_next = document.getElementById("next");
 button_next.addEventListener("click", async function (butpres) {
   let press_next = Date.now();
-  inviaDatiAlServer(
+  await inviaDatiAlServer(
     all_command,
     start_experiment,
     press_next,
     experiment_complete
   );
+
   notes = {};
-  compile_testo();
-  //recompile_notes();
+  recompile_notes();
+  testo = {};
 
   //svuoto buffer comandi pronunciati
   all_command = [];
@@ -1418,7 +1420,9 @@ button_next.addEventListener("click", async function (butpres) {
     exp_index = 1;
   }
 
-  targetElement.innerHTML = Papers[ExtConfig.PaperList[exp_index]];
+  targetElement.innerHTML = editTextAndSplit(
+    Papers[ExtConfig.PaperList[exp_index]]
+  );
   generate_experiment(Experiments[exp_index]);
 
   if (document.getElementById("next").textContent == "Fine") {
@@ -1426,10 +1430,11 @@ button_next.addEventListener("click", async function (butpres) {
       "Inserisci nuovo nome utente";
   }
 
-  if (exp_index == 5) {
+  if (!Experiments[exp_index + 1]) {
     document.getElementById("next").textContent = "Fine";
   }
   document.getElementById("task_number").innerHTML = "Task: " + exp_index;
+  //compile_testo();
 });
 
 const listenButton = document.getElementById("listen");
