@@ -100,6 +100,7 @@ async function inviaDatiAlServer(
   if (exp_index <= 1) {
     return;
   }
+
   const finalText = getTextAsString(testo);
   const finalNotes = JSON.stringify(notes);
 
@@ -119,7 +120,7 @@ async function inviaDatiAlServer(
     finalText: finalText,
     finalNotes: finalNotes,
   };
-  start_experiment = Date.now();
+
   try {
     fetch(urlToServer, {
       method: "POST", // Metodo POST
@@ -1397,6 +1398,10 @@ button_next.addEventListener("click", async function (butpres) {
     press_next,
     experiment_complete
   );
+
+  if (exp_index == 1) {
+    start_experiment = Date.now();
+  }
 
   notes = {};
   recompile_notes();
