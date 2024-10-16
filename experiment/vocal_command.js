@@ -848,7 +848,7 @@ function RxRy() {
 
   last_row_number = rows; //Aggiorno campo contente detta ultima riga
 
-  let start_index = 0;
+  let start_index = 1;
   let start_map = {};
   for (const r of rows) {
     let ret = addNumberToEndOfWords(parseInt(r), start_index, start_map);
