@@ -15,7 +15,7 @@ const Cfg = {
 export const ExtConfig = {
   Config: Cfg,
   splitLength: 80,
-  urlToServer: "https://68ac-128-116-224-56.ngrok-free.app",
+  urlToServer: "https://1cde-128-116-224-56.ngrok-free.app",
   PaperList: {
     [1]: 1,
     [2]: 2,
