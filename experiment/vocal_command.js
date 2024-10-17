@@ -6,7 +6,7 @@ const urlToServer = ExtConfig.urlToServer;
 //tutti i comandi detti dall'utente
 var all_command = [];
 
-var start_experiment = Date.now();
+var timestamp_start_experiment = Date.now();
 
 var is_select_bool = false;
 
@@ -1394,13 +1394,13 @@ button_next.addEventListener("click", async function (butpres) {
   let press_next = Date.now();
   await inviaDatiAlServer(
     all_command,
-    start_experiment,
+    timestamp_start_experiment,
     press_next,
     experiment_complete
   );
 
   if (exp_index == 1) {
-    start_experiment = Date.now();
+    timestamp_start_experiment = Date.now();
   }
 
   notes = {};
